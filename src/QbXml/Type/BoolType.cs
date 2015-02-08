@@ -22,8 +22,7 @@ namespace QBSync.QbXml.Type
 
         public override string ToString()
         {
-            // TODO
-            return "";
+            return value.ToString(CultureInfo.InvariantCulture).ToLowerInvariant();
         }
 
         public static implicit operator BoolType(bool value)

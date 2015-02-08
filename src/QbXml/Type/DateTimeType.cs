@@ -27,11 +27,6 @@ namespace QBSync.QbXml.Type
 
         public static implicit operator DateTimeType(DateTime value)
         {
-            if (value == null)
-            {
-                return null;
-            }
-
             return new DateTimeType(value);
         }
     }
