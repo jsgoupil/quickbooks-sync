@@ -23,7 +23,7 @@ namespace QBSync.QuickbooksDesktopSync.Tests.QbXml
         {
             var customerRet = "<CustomerRet><ListID>80000001-1422671082</ListID><IsActive>true</IsActive><TimeCreated>2015-01-30T18:24:42-08:00</TimeCreated><TimeModified>2015-01-30T18:24:42-08:00</TimeModified><EditSequence>1422671082</EditSequence><Name>Jean-S&#233;bastien Goupil</Name><FullName>Jean-S&#233;bastien Goupil</FullName></CustomerRet>";
 
-            var customerResponse = new CustomerResponse();
+            var customerResponse = new CustomerQueryResponse();
             var response = customerResponse.ParseResponse(QuickbooksTestHelper.CreateQbXmlWithEnvelope(customerRet));
             var customers = response.Object;
             var customer = customers[0];
@@ -38,7 +38,7 @@ namespace QBSync.QuickbooksDesktopSync.Tests.QbXml
         {
             var customerRet = "<CustomerRet><AdditionalContactRef><ContactName>Name1</ContactName><ContactValue>Value1</ContactValue></AdditionalContactRef><AdditionalContactRef><ContactName>Name2</ContactName><ContactValue>Value2</ContactValue></AdditionalContactRef></CustomerRet>";
 
-            var customerResponse = new CustomerResponse();
+            var customerResponse = new CustomerQueryResponse();
             var response = customerResponse.ParseResponse(QuickbooksTestHelper.CreateQbXmlWithEnvelope(customerRet));
             var customers = response.Object;
             var customer = customers[0];
@@ -56,7 +56,7 @@ namespace QBSync.QuickbooksDesktopSync.Tests.QbXml
         {
             var customerRet = "<CustomerRet><JobStatus>InProgress</JobStatus></CustomerRet>";
 
-            var customerResponse = new CustomerResponse();
+            var customerResponse = new CustomerQueryResponse();
             var response = customerResponse.ParseResponse(QuickbooksTestHelper.CreateQbXmlWithEnvelope(customerRet));
             var customers = response.Object;
             var customer = customers[0];

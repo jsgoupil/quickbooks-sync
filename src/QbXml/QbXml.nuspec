@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://raw.githubusercontent.com/jsgoupil/quickbooks-sync/master/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/jsgoupil/quickbooks-sync</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <copyright>Copyright (c) 2015 Jean-Sébastien Goupil</copyright>
+    <tags>quickbooks qbxml</tags>
+  </metadata>
+</package>

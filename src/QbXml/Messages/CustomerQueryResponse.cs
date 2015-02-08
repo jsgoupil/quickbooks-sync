@@ -12,9 +12,9 @@ using System.Reflection;
 
 namespace QBSync.QbXml.Messages
 {
-    public class CustomerResponse : IteratorResponse<Customer[]>
+    public class CustomerQueryResponse : IteratorResponse<Customer[]>
     {
-        public CustomerResponse()
+        public CustomerQueryResponse()
             : base("CustomerQueryRs")
         {
         }
