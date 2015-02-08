@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{90BE199D-5652-46B9-9C96-DFA9229B129C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>QBSync.QbXml</RootNamespace>
+    <AssemblyName>QBSync.QbXml</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="IteratorResponse.cs" />
+    <Compile Include="Messages\CustomerQueryResponse.cs" />
+    <Compile Include="Messages\CustomerQueryRequest.cs" />
+    <Compile Include="Filters\ClassFilter.cs" />
+    <Compile Include="Filters\CurrencyFilter.cs" />
+    <Compile Include="Objects\AdditionalNote.cs" />
+    <Compile Include="Objects\Address.cs" />
+    <Compile Include="Objects\AddressBlock.cs" />
+    <Compile Include="Objects\ContactType.cs" />
+    <Compile Include="Objects\ContactRef.cs" />
+    <Compile Include="Objects\CreditCard.cs" />
+    <Compile Include="Objects\DataExt.cs" />
+    <Compile Include="Objects\DataType.cs" />
+    <Compile Include="Objects\JobStatus.cs" />
+    <Compile Include="Objects\PreferredDeliveryMethod.cs" />
+    <Compile Include="Objects\Ref.cs" />
+    <Compile Include="Objects\Customer.cs" />
+    <Compile Include="Objects\ShipAddress.cs" />
+    <Compile Include="QbXmlResponseMsg.cs" />
+    <Compile Include="QbXmlResponse.cs" />
+    <Compile Include="Struct\StatusSeverity.cs" />
+    <Compile Include="Struct\ActiveStatus.cs" />
+    <Compile Include="Struct\CustomerQueryRequestFilter.cs" />
+    <Compile Include="Struct\MatchCriterion.cs" />
+    <Compile Include="Filters\NameFilter.cs" />
+    <Compile Include="Filters\NameRangeFilter.cs" />
+    <Compile Include="IteratorRequest.cs" />
+    <Compile Include="QbXmlRequest.cs" />
+    <Compile Include="Filters\TotalBalanceFilter.cs" />
+    <Compile Include="Struct\Operator.cs" />
+    <Compile Include="Type\BoolType.cs" />
+    <Compile Include="Type\AmtType.cs" />
+    <Compile Include="Type\DateTimeType.cs" />
+    <Compile Include="Type\GuidType.cs" />
+    <Compile Include="Type\IntType.cs" />
+    <Compile Include="Type\IStringConvertible.cs" />
+    <Compile Include="Type\StrType.cs" />
+    <Compile Include="Type\IdType.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="QbXml\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
