@@ -5,7 +5,7 @@ using System.Web.Services;
 using System.Web.Services.Protocols;
 using System.Xml.Serialization;
 
-namespace QBSync.QbWebConnector
+namespace QBSync.WebConnector
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.18020")]
     [System.Web.Services.WebServiceAttribute(Namespace = "http://developer.intuit.com/")]

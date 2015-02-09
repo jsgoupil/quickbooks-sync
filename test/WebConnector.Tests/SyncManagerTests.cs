@@ -1,14 +1,14 @@
 ﻿using Moq;
 using NUnit.Framework;
-using QBSync.QbWebConnector;
+using QBSync.WebConnector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Moq.Protected;
-using QbSync.QbWebConnector.Tests.Helpers;
+using QBSync.WebConnector.Tests.Helpers;
 
-namespace QbSync.QbWebConnector.Tests
+namespace QBSync.WebConnector.Tests
 {
     [TestFixture]
     class SyncManagerTests

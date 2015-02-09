@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package >
+<package>
   <metadata>
     <id>$id$</id>
     <version>$version$</version>
@@ -9,8 +9,19 @@
     <licenseUrl>https://raw.githubusercontent.com/jsgoupil/quickbooks-sync/master/LICENSE.md</licenseUrl>
     <projectUrl>https://github.com/jsgoupil/quickbooks-sync</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>Web service to talk with Web Connector from QuickBooks to sync with Quickbooks Desktop.</summary>
     <description>$description$</description>
     <copyright>Copyright (c) 2015 Jean-Sébastien Goupil</copyright>
-    <tags>quickbooks qbxml webconnector</tags>
+    <tags>quickbooks qbxml webconnector webservice service</tags>
+    <language>en-US</language>
+    <frameworkAssemblies>
+        <frameworkAssembly assemblyName="System.Web.Services" targetFramework="" />
+    </frameworkAssemblies>
+    <dependencies>
+      <dependency id="QBSync.QbXml" version="0.0.2" />
+    </dependencies>
   </metadata>
+  <files>
+    <file src=".\Services\QBConnectorSync.asmx" target="QBConnectorSync.asmx" /> 
+  </files>
 </package>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web.Services;
 
-namespace QBSync.QbWebConnector
+namespace QBSync.WebConnector
 {
     [WebService(Namespace = "http://developer.intuit.com/")]
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]

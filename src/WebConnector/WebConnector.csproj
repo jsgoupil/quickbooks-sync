@@ -7,8 +7,8 @@
     <ProjectGuid>{295C6B66-72D5-42DE-9713-DB8CFD3508BD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>QBSync.QbWebConnector</RootNamespace>
-    <AssemblyName>QBSync.QbWebConnector</AssemblyName>
+    <RootNamespace>QBSync.WebConnector</RootNamespace>
+    <AssemblyName>QBSync.WebConnector</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -46,18 +46,21 @@
     <Compile Include="LogDirection.cs" />
     <Compile Include="LogMessageType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service\QbWebConnectorSvc.cs">
+    <Compile Include="QbWebConnectorSvc.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="StepQueryResponse.cs" />
     <Compile Include="SyncManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Service\QBConnectorSync.asmx" />
-    <Compile Include="Service\QBConnectorSync.asmx.cs">
+    <Content Include="Services\QBConnectorSync.asmx" />
+    <Compile Include="Services\QBConnectorSync.asmx.cs">
       <DependentUpon>QBConnectorSync.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WebConnector.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

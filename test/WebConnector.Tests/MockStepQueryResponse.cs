@@ -1,11 +1,11 @@
 ﻿using Moq;
-using QBSync.QbWebConnector;
+using QBSync.WebConnector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace QbSync.QbWebConnector.Tests
+namespace QBSync.WebConnector.Tests
 {
     class MockStepQueryResponse1 : StepQueryResponse
     {

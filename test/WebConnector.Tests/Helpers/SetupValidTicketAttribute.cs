@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace QbSync.QbWebConnector.Tests.Helpers
+namespace QBSync.WebConnector.Tests.Helpers
 {
     class SetupValidTicketAttribute : AuthenticatorAttribute
     {
         public SetupValidTicketAttribute()
         {
-            AuthenticatedTicket = new QBSync.QbWebConnector.AuthenticatedTicket
+            AuthenticatedTicket = new QBSync.WebConnector.AuthenticatedTicket
             {
                 Authenticated = true,
                 CurrentStep = 0,

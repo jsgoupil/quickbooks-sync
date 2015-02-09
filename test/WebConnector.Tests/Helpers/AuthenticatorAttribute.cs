@@ -1,12 +1,12 @@
 ﻿using Moq;
 using NUnit.Framework;
-using QBSync.QbWebConnector;
+using QBSync.WebConnector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace QbSync.QbWebConnector.Tests.Helpers
+namespace QBSync.WebConnector.Tests.Helpers
 {
     class AuthenticatorAttribute : TestActionAttribute
     {

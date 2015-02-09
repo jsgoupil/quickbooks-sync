@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace QBSync.QbWebConnector
+namespace QBSync.WebConnector
 {
     public class SyncManager
     {

@@ -7,3 +7,6 @@ md .\publish
 
 tools\nuget\nuget.exe pack .\src\QbXml\QbXml.csproj -OutputDirectory .\publish
 if %errorlevel% neq 0 exit /b %errorlevel%
+
+tools\nuget\nuget.exe pack .\src\WebConnector\WebConnector.csproj -OutputDirectory .\publish
+if %errorlevel% neq 0 exit /b %errorlevel%

@@ -7,8 +7,8 @@
     <ProjectGuid>{0F73DBB5-3752-4427-B8D2-DDACF3252FD8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>QbSync.QbWebConnector.Tests</RootNamespace>
-    <AssemblyName>QbSync.QbWebConnector.Tests</AssemblyName>
+    <RootNamespace>QbSync.WebConnector.Tests</RootNamespace>
+    <AssemblyName>QbSync.WebConnector.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -73,9 +73,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\QbWebConnector\QbWebConnector.csproj">
+    <ProjectReference Include="..\..\src\WebConnector\WebConnector.csproj">
       <Project>{295c6b66-72d5-42de-9713-db8cfd3508bd}</Project>
-      <Name>QbWebConnector</Name>
+      <Name>WebConnector</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
