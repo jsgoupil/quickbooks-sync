@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 
-namespace QBSync.QbXml
+namespace QbSync.QbXml
 {
     public abstract class QbXmlRequest
     {

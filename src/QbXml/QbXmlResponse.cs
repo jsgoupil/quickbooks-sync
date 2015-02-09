@@ -1,6 +1,6 @@
-﻿using QBSync.QbXml.Struct;
-using QBSync.QbXml.Type;
-using QBSync.QuickbooksDesktopSync.Extensions;
+﻿using QbSync.QbXml.Struct;
+using QbSync.QbXml.Type;
+using QbSync.QuickbooksDesktopSync.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Xml;
 
-namespace QBSync.QbXml
+namespace QbSync.QbXml
 {
     public class QbXmlResponse<T>
     {

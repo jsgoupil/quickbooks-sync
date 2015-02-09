@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using QBSync.QbXml;
-using QBSync.QbXml.Messages;
-using QBSync.QbXml.Objects;
+using QbSync.QbXml;
+using QbSync.QbXml.Messages;
+using QbSync.QbXml.Objects;
 using Moq.Protected;
 
 namespace QbSync.WebConnector.Tests
@@ -82,7 +82,7 @@ namespace QbSync.WebConnector.Tests
                     "<JobStatus>None</JobStatus>" +
                 "</CustomerRet>" +
                 "</CustomerQueryRs></QBXMLMsgsRs></QBXML>";
-            
+
             var stepQueryWithIteratorMock = new Mock<StepQueryWithIterator<CustomerQueryRequest, CustomerQueryResponse, Customer[]>>(step);
             stepQueryWithIteratorMock.CallBase = true;
 
@@ -111,7 +111,7 @@ namespace QbSync.WebConnector.Tests
                     "<JobStatus>None</JobStatus>" +
                 "</CustomerRet>" +
                 "</CustomerQueryRs></QBXMLMsgsRs></QBXML>";
-            
+
             var stepQueryWithIteratorMock = new Mock<StepQueryWithIterator<CustomerQueryRequest, CustomerQueryResponse, Customer[]>>(step);
             stepQueryWithIteratorMock.CallBase = true;
 

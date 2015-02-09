@@ -1,13 +1,13 @@
-﻿using QBSync.QbXml.Struct;
-using QBSync.QbXml.Type;
+﻿using QbSync.QbXml.Struct;
+using QbSync.QbXml.Type;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using QBSync.QuickbooksDesktopSync.Extensions;
+using QbSync.QuickbooksDesktopSync.Extensions;
 
-namespace QBSync.QbXml.Filters
+namespace QbSync.QbXml.Filters
 {
     public class NameFilter
     {

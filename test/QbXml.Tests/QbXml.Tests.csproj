@@ -7,8 +7,8 @@
     <ProjectGuid>{BBDA696E-1ACB-4D34-A79F-4DF35C62F56A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>QBSync.QbXml.Tests</RootNamespace>
-    <AssemblyName>QBSync.QbXml.Tests</AssemblyName>
+    <RootNamespace>QbSync.QbXml.Tests</RootNamespace>
+    <AssemblyName>QbSync.QbXml.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

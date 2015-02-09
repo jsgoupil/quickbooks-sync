@@ -1,16 +1,16 @@
-﻿using QBSync.QbXml.Struct;
+﻿using QbSync.QbXml.Struct;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using QBSync.QuickbooksDesktopSync.Extensions;
-using QBSync.QbXml.Type;
-using QBSync.QbXml.Filters;
-using QBSync.QbXml.Objects;
+using QbSync.QuickbooksDesktopSync.Extensions;
+using QbSync.QbXml.Type;
+using QbSync.QbXml.Filters;
+using QbSync.QbXml.Objects;
 using System.Reflection;
 
-namespace QBSync.QbXml.Messages
+namespace QbSync.QbXml.Messages
 {
     public class CustomerQueryResponse : IteratorResponse<Customer[]>
     {

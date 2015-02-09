@@ -1,18 +1,18 @@
-﻿using QBSync.QuickbooksDesktopSync.Extensions;
+﻿using QbSync.QuickbooksDesktopSync.Extensions;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using QBSync.QbXml.Struct;
-using QBSync.QbXml;
-using QBSync.QbXml.Type;
-using QBSync.QbXml.Filters;
-using QBSync.QbXml.Messages;
-using QBSync.QuickbooksDesktopSync.Tests.Helpers;
+using QbSync.QbXml.Struct;
+using QbSync.QbXml;
+using QbSync.QbXml.Type;
+using QbSync.QbXml.Filters;
+using QbSync.QbXml.Messages;
+using QbSync.QuickbooksDesktopSync.Tests.Helpers;
 
-namespace QBSync.QuickbooksDesktopSync.Tests.QbXml
+namespace QbSync.QuickbooksDesktopSync.Tests.QbXml
 {
     [TestFixture]
     class CustomerQueryRequestTests

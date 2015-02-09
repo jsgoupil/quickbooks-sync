@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QBSync.WebConnector
+namespace QbSync.WebConnector
 {
     public interface IAuthenticator
     {

@@ -7,8 +7,8 @@
     <ProjectGuid>{295C6B66-72D5-42DE-9713-DB8CFD3508BD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>QBSync.WebConnector</RootNamespace>
-    <AssemblyName>QBSync.WebConnector</AssemblyName>
+    <RootNamespace>QbSync.WebConnector</RootNamespace>
+    <AssemblyName>QbSync.WebConnector</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

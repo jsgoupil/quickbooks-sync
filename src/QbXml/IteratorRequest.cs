@@ -1,11 +1,11 @@
-﻿using QBSync.QbXml.Type;
+﻿using QbSync.QbXml.Type;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
 
-namespace QBSync.QbXml
+namespace QbSync.QbXml
 {
     public abstract class IteratorRequest : QbXmlRequest
     {

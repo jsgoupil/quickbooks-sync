@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
-namespace QBSync.QbXml.Type
+namespace QbSync.QbXml.Type
 {
     public class DateTimeType : IStringConvertible
     {

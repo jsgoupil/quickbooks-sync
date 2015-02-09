@@ -1,4 +1,4 @@
-﻿using QBSync.QbXml.Type;
+﻿using QbSync.QbXml.Type;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Xml;
 
-namespace QBSync.QuickbooksDesktopSync.Extensions
+namespace QbSync.QuickbooksDesktopSync.Extensions
 {
     public static class Extensions
     {

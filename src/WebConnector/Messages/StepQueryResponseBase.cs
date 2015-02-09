@@ -1,5 +1,5 @@
-﻿using QBSync.QbXml;
-using QBSync.WebConnector;
+﻿using QbSync.QbXml;
+using QbSync.WebConnector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,7 +62,7 @@ namespace QbSync.WebConnector.Messages
         {
         }
 
-        protected abstract internal void SaveMessage(int stepNumber, string key, string value);
-        protected abstract internal string RetrieveMessage(int step, string key);
+        protected abstract void SaveMessage(int stepNumber, string key, string value);
+        protected abstract string RetrieveMessage(int stepNumber, string key);
     }
 }
