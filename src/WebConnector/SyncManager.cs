@@ -10,7 +10,7 @@ namespace QBSync.WebConnector
     {
         public delegate StepQueryResponse StepInvoker(AuthenticatedTicket authenticatedTicket);
 
-        private IAuthenticator authenticator;
+        protected IAuthenticator authenticator;
 
         public SyncManager(IAuthenticator authenticator)
         {

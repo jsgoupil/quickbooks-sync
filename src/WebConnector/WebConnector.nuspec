@@ -18,10 +18,10 @@
         <frameworkAssembly assemblyName="System.Web.Services" targetFramework="" />
     </frameworkAssemblies>
     <dependencies>
-      <dependency id="QBSync.QbXml" version="0.0.2" />
+      <dependency id="QBSync.QbXml" version="0.0.0.2" />
     </dependencies>
   </metadata>
   <files>
-    <file src=".\Services\QBConnectorSync.asmx" target="QBConnectorSync.asmx" /> 
+    <file src=".\Services\QBConnectorSync.asmx" target=".\Services\QBConnectorSync.asmx" />
   </files>
 </package>
