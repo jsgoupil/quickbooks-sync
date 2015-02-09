@@ -32,13 +32,12 @@ namespace QbSync.QbXml
                 XmlNode responseNode = rs.Item(0);
 
                 // Check the status code, info, and severity
-                XmlAttributeCollection rsAttributes = responseNode.Attributes;
                 var qbXmlResponse = new QbXmlMsgResponse<T>
                 {
-                    RequestId = Convert.ToInt32(rsAttributes.GetNamedItem("requestID").Value),
-                    StatusCode = Convert.ToInt32(rsAttributes.GetNamedItem("statusCode").Value),
-                    StatusSeverity = (StatusSeverity)Enum.Parse(typeof(StatusSeverity), rsAttributes.GetNamedItem("statusSeverity").Value),
-                    StatusMessage = rsAttributes.GetNamedItem("statusMessage").Value,
+                    RequestId = responseNode.ReadAttribute("requestID") == null ? null : (int?)Convert.ToInt32(responseNode.ReadAttribute("requestID")),
+                    StatusCode = responseNode.ReadAttribute("statusCode") == null ? null : (int?)Convert.ToInt32(responseNode.ReadAttribute("statusCode")),
+                    StatusSeverity = responseNode.ReadAttribute("statusSeverity") == null ? null : (StatusSeverity?)Enum.Parse(typeof(StatusSeverity), responseNode.ReadAttribute("statusSeverity")),
+                    StatusMessage = responseNode.ReadAttribute("statusMessage"),
                 };
 
                 ProcessResponse(responseNode, qbXmlResponse);

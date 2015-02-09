@@ -33,6 +33,18 @@ namespace QbSync.QuickbooksDesktopSync.Extensions
             return null;
         }
 
+        public static string ReadAttribute(this XmlNode node, string attributeName)
+        {
+            var attributeCollection = node.Attributes;
+            var attribute = attributeCollection.GetNamedItem(attributeName);
+            if (attribute != null)
+            {
+                return attribute.Value;
+            }
+
+            return null;
+        }
+
         public static XmlElement CreateElementWithValue(this XmlDocument xmlDocument, string tagName, string innerText)
         {
             var elem = xmlDocument.CreateElement(tagName);
