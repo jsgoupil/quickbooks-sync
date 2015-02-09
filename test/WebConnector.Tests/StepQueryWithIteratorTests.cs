@@ -1,15 +1,10 @@
 ﻿using Moq;
+using Moq.Protected;
 using NUnit.Framework;
-using QbSync.WebConnector.Messages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using QbSync.QbXml;
 using QbSync.QbXml.Messages;
 using QbSync.QbXml.Objects;
-using Moq.Protected;
+using QbSync.WebConnector.Messages;
+using System.Xml;
 
 namespace QbSync.WebConnector.Tests
 {

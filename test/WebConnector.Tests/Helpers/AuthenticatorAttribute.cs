@@ -1,10 +1,5 @@
 ﻿using Moq;
 using NUnit.Framework;
-using QbSync.WebConnector;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace QbSync.WebConnector.Tests.Helpers
 {

@@ -1,14 +1,6 @@
-﻿using QbSync.QbXml.Struct;
-using System;
-using System.Collections.Generic;
+﻿using QbSync.QbXml.Objects;
 using System.Linq;
-using System.Text;
 using System.Xml;
-using QbSync.QuickbooksDesktopSync.Extensions;
-using QbSync.QbXml.Type;
-using QbSync.QbXml.Filters;
-using QbSync.QbXml.Objects;
-using System.Reflection;
 
 namespace QbSync.QbXml.Messages
 {

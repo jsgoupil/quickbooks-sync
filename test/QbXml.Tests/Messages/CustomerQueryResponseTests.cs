@@ -1,17 +1,8 @@
-﻿using QbSync.QuickbooksDesktopSync.Extensions;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using QbSync.QbXml.Struct;
-using QbSync.QbXml;
-using QbSync.QbXml.Type;
-using QbSync.QbXml.Filters;
+﻿using NUnit.Framework;
 using QbSync.QbXml.Messages;
-using QbSync.QuickbooksDesktopSync.Tests.Helpers;
 using QbSync.QbXml.Objects;
+using QbSync.QuickbooksDesktopSync.Tests.Helpers;
+using System.Linq;
 
 namespace QbSync.QuickbooksDesktopSync.Tests.QbXml
 {

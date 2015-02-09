@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace QbSync.QuickbooksDesktopSync.Tests.Helpers
+﻿namespace QbSync.QuickbooksDesktopSync.Tests.Helpers
 {
     class QuickbooksTestHelper
     {

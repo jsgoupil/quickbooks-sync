@@ -1,9 +1,4 @@
-﻿using Moq;
-using QbSync.WebConnector;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 
 namespace QbSync.WebConnector.Tests
 {
@@ -36,6 +31,7 @@ namespace QbSync.WebConnector.Tests
             throw new NotImplementedException();
         }
     }
+
     class MockStepQueryResponse2 : StepQueryResponse
     {
         public MockStepQueryResponse2(AuthenticatedTicket authenticatedTicket)
