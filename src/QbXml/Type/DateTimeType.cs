@@ -19,7 +19,7 @@ namespace QbSync.QbXml.Type
 
         public override string ToString()
         {
-            return value.ToString("s", CultureInfo.InvariantCulture); // TODO QBSync confirm timezone
+            return value.ToString("s", CultureInfo.InvariantCulture); // TODO QbSync confirm timezone
         }
 
         public static implicit operator DateTimeType(DateTime value)

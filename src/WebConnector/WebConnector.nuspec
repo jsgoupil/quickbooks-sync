@@ -18,7 +18,7 @@
         <frameworkAssembly assemblyName="System.Web.Services" targetFramework="" />
     </frameworkAssemblies>
     <dependencies>
-      <dependency id="QBSync.QbXml" version="0.0.0.2" />
+      <dependency id="QbSync.QbXml" version="0.0.0.2" />
     </dependencies>
   </metadata>
   <files>

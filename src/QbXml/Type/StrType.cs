@@ -11,7 +11,7 @@
 
         public override string ToString()
         {
-            // TODO QBSync to we need to encode?
+            // TODO QbSync to we need to encode?
             return value;
         }
 
