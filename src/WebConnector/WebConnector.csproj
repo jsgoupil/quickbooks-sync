@@ -45,6 +45,8 @@
     <Compile Include="IAuthenticator.cs" />
     <Compile Include="LogDirection.cs" />
     <Compile Include="LogMessageType.cs" />
+    <Compile Include="Messages\StepQueryResponseBase.cs" />
+    <Compile Include="Messages\StepQueryWithIterator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QbWebConnectorSvc.cs">
       <SubType>Component</SubType>
@@ -61,6 +63,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="WebConnector.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QbXml\QbXml.csproj">
+      <Project>{90be199d-5652-46b9-9c96-dfa9229b129c}</Project>
+      <Name>QbXml</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

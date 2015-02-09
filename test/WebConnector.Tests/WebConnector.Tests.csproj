@@ -66,6 +66,7 @@
     <Compile Include="Helpers\SetupValidTicketAttribute.cs" />
     <Compile Include="MockStepQueryResponse.cs" />
     <Compile Include="Helpers\SetupInvalidTicketAttribute.cs" />
+    <Compile Include="StepQueryWithIteratorTests.cs" />
     <Compile Include="SyncManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -73,6 +74,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\QbXml\QbXml.csproj">
+      <Project>{90be199d-5652-46b9-9c96-dfa9229b129c}</Project>
+      <Name>QbXml</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\WebConnector\WebConnector.csproj">
       <Project>{295c6b66-72d5-42de-9713-db8cfd3508bd}</Project>
       <Name>WebConnector</Name>

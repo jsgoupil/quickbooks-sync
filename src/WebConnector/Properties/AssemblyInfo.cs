@@ -33,4 +33,4 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("0.0.0.3")]
-[assembly: InternalsVisibleTo("QbWebConnector.Tests")]
+[assembly: InternalsVisibleTo("QbSync.WebConnector.Tests")]

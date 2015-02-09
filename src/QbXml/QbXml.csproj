@@ -7,8 +7,8 @@
     <ProjectGuid>{90BE199D-5652-46B9-9C96-DFA9229B129C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>QBSync.QbXml</RootNamespace>
-    <AssemblyName>QBSync.QbXml</AssemblyName>
+    <RootNamespace>QbSync.QbXml</RootNamespace>
+    <AssemblyName>QbSync.QbXml</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

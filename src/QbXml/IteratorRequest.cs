@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace QBSync.QbXml
 {
-    public class IteratorRequest : QbXmlRequest
+    public abstract class IteratorRequest : QbXmlRequest
     {
         public IteratorRequest(string rootElementName)
             : base(rootElementName)
