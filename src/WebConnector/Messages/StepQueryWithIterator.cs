@@ -9,8 +9,8 @@ namespace QbSync.WebConnector.Messages
         internal const string IteratorKey = "Iterator";
         private bool gotoNextStep = true;
 
-        public StepQueryWithIterator(int step)
-            : base(step)
+        public StepQueryWithIterator(AuthenticatedTicket authenticatedTicket)
+            : base(authenticatedTicket)
         {
         }
 
@@ -18,7 +18,7 @@ namespace QbSync.WebConnector.Messages
         {
             base.ExecuteRequest(request);
 
-            var savedMessage = RetrieveMessage(step, IteratorKey);
+            var savedMessage = RetrieveMessage(authenticatedTicket.CurrentStep, IteratorKey);
             if (!string.IsNullOrEmpty(savedMessage))
             {
                 request.IteratorID = savedMessage;
@@ -33,7 +33,7 @@ namespace QbSync.WebConnector.Messages
             if (response.IteratorRemainingCount.HasValue && response.IteratorRemainingCount.Value > 0)
             {
                 gotoNextStep = false;
-                SaveMessage(step, IteratorKey, response.IteratorID);
+                SaveMessage(authenticatedTicket.CurrentStep, IteratorKey, response.IteratorID);
             }
 
             base.ExecuteResponse(response);

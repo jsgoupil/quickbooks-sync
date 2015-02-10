@@ -6,11 +6,11 @@ namespace QbSync.WebConnector.Messages
         where T : QbXmlRequest, new()
         where Y : QbXmlResponse<YResult>, new()
     {
-        protected int step;
+        protected AuthenticatedTicket authenticatedTicket;
 
-        public StepQueryResponseBase(int step)
+        public StepQueryResponseBase(AuthenticatedTicket authenticatedTicket)
         {
-            this.step = step;
+            this.authenticatedTicket = authenticatedTicket;
         }
 
         public virtual string SendXML()
