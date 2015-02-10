@@ -94,7 +94,7 @@ If a user is not authenticated, make sure to return a ticket value, but set the 
 Extend the `QbSync.WebConnector.SyncManager` and overrides only the methods that you really need. You will most likely need a database context, make sure you get it from your constructor. From your constructor, register the steps you want to execute:
 
 ```C#
-public SyncManager(HBTI_EF db_context, IOwinContext owinContext, IAuthenticator authenticator)
+public SyncManager(ApplicationDbContext db_context, IOwinContext owinContext, IAuthenticator authenticator)
   : base(authenticator)
 {
   this.db_context = db_context;
