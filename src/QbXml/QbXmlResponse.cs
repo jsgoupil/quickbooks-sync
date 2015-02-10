@@ -1,6 +1,6 @@
-﻿using QbSync.QbXml.Struct;
+﻿using QbSync.QbXml.Extensions;
+using QbSync.QbXml.Struct;
 using QbSync.QbXml.Type;
-using QbSync.QuickbooksDesktopSync.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

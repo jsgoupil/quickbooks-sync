@@ -9,7 +9,7 @@
     <licenseUrl>https://raw.githubusercontent.com/jsgoupil/quickbooks-sync/master/LICENSE.md</licenseUrl>
     <projectUrl>https://github.com/jsgoupil/quickbooks-sync</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <summary>Web service to talk with Web Connector from QuickBooks to sync with Quickbooks Desktop.</summary>
+    <summary>Web service to talk with Web Connector from QuickBooks to sync with QuickBooks Desktop.</summary>
     <description>$description$</description>
     <copyright>Copyright (c) 2015 Jean-Sébastien Goupil</copyright>
     <tags>quickbooks qbxml webconnector webservice service</tags>

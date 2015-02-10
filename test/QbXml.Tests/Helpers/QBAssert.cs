@@ -1,6 +1,6 @@
 ﻿using QbSync.QbXml.Type;
 
-namespace QbSync.QuickbooksDesktopSync.Tests.Helpers
+namespace QbSync.QbXml.Tests.Helpers
 {
     public class QBAssert
     {

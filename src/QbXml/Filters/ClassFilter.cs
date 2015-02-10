@@ -1,5 +1,5 @@
-﻿using QbSync.QbXml.Type;
-using QbSync.QuickbooksDesktopSync.Extensions;
+﻿using QbSync.QbXml.Extensions;
+using QbSync.QbXml.Type;
 using System;
 using System.Collections.Generic;
 using System.Xml;

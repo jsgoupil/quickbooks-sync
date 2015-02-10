@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace QbSync.QuickbooksDesktopSync.Extensions
+namespace QbSync.QbXml.Extensions
 {
     public static class Extensions
     {

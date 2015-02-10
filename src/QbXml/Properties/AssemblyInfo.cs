@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Quickbooks Sync - QbXml")]
-[assembly: AssemblyDescription("Create requests and parse responses from Quickbooks QbXml.")]
+[assembly: AssemblyTitle("QuickBooks Sync - QbXml")]
+[assembly: AssemblyDescription("Create requests and parse responses from QuickBooks QbXml.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Jean-Sébastien Goupil")]
-[assembly: AssemblyProduct("QuickbooksSync")]
+[assembly: AssemblyProduct("QbSync")]
 [assembly: AssemblyCopyright("Copyright © Jean-Sébastien Goupil 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

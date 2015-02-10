@@ -1,15 +1,15 @@
 ﻿using NUnit.Framework;
+using QbSync.QbXml.Extensions;
 using QbSync.QbXml.Filters;
 using QbSync.QbXml.Messages;
 using QbSync.QbXml.Struct;
+using QbSync.QbXml.Tests.Helpers;
 using QbSync.QbXml.Type;
-using QbSync.QuickbooksDesktopSync.Extensions;
-using QbSync.QuickbooksDesktopSync.Tests.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 
-namespace QbSync.QuickbooksDesktopSync.Tests.QbXml
+namespace QbSync.QbXml.Tests.QbXml
 {
     [TestFixture]
     class CustomerQueryRequestTests

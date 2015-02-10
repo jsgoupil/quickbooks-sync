@@ -1,6 +1,6 @@
-﻿namespace QbSync.QuickbooksDesktopSync.Tests.Helpers
+﻿namespace QbSync.QbXml.Tests.Helpers
 {
-    class QuickbooksTestHelper
+    class QuickBooksTestHelper
     {
         public static string CreateQbXmlWithEnvelope(string inner)
         {
