@@ -18,7 +18,7 @@ namespace QbSync.WebConnector.Messages
         {
             base.ExecuteRequest(request);
 
-            var savedMessage = RetrieveMessage(authenticatedTicket.CurrentStep, IteratorKey);
+            var savedMessage = RetrieveMessage(authenticatedTicket.Ticket, authenticatedTicket.CurrentStep, IteratorKey);
             if (!string.IsNullOrEmpty(savedMessage))
             {
                 request.IteratorID = savedMessage;
@@ -33,7 +33,7 @@ namespace QbSync.WebConnector.Messages
             if (response.IteratorRemainingCount.HasValue && response.IteratorRemainingCount.Value > 0)
             {
                 gotoNextStep = false;
-                SaveMessage(authenticatedTicket.CurrentStep, IteratorKey, response.IteratorID);
+                SaveMessage(authenticatedTicket.Ticket, authenticatedTicket.CurrentStep, IteratorKey, response.IteratorID);
             }
 
             base.ExecuteResponse(response);
@@ -43,5 +43,8 @@ namespace QbSync.WebConnector.Messages
         {
             return gotoNextStep;
         }
+
+        protected abstract void SaveMessage(string ticket, int stepNumber, string key, string value);
+        protected abstract string RetrieveMessage(string ticket, int stepNumber, string key);
     }
 }

@@ -51,7 +51,7 @@ namespace QbSync.WebConnector.Tests
             var updateCustomerMock = new Mock<StepQueryWithIterator<CustomerQueryRequest, CustomerQueryResponse, Customer[]>>(authenticatedTicket);
             updateCustomerMock
                 .Protected()
-                .Setup<string>("RetrieveMessage", ItExpr.Is<int>(n => n == authenticatedTicket.CurrentStep), ItExpr.Is<string>(s => s == iteratorKey))
+                .Setup<string>("RetrieveMessage", ItExpr.Is<string>(s => s == authenticatedTicket.Ticket), ItExpr.Is<int>(n => n == authenticatedTicket.CurrentStep), ItExpr.Is<string>(s => s == iteratorKey))
                 .Returns(iteratorID);
             updateCustomerMock.CallBase = true;
 
@@ -131,7 +131,7 @@ namespace QbSync.WebConnector.Tests
 
             stepQueryWithIteratorMock
                 .Protected()
-                .Verify("SaveMessage", Times.Once(), ItExpr.Is<int>(n => n == authenticatedTicket.CurrentStep), ItExpr.Is<string>(s => s == iteratorKey), ItExpr.Is<string>(s => s == iteratorID));
+                .Verify("SaveMessage", Times.Once(), ItExpr.Is<string>(s => s == authenticatedTicket.Ticket), ItExpr.Is<int>(n => n == authenticatedTicket.CurrentStep), ItExpr.Is<string>(s => s == iteratorKey), ItExpr.Is<string>(s => s == iteratorID));
             Assert.AreEqual(0, ret);
         }
     }

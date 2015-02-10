@@ -23,6 +23,13 @@ namespace QbSync.WebConnector
             set;
         }
 
+        /// <summary>
+        /// Authenticate a login/password and return important information regarding if more requests
+        /// should be executed immediately.
+        /// </summary>
+        /// <param name="login">Login.</param>
+        /// <param name="password">Password.</param>
+        /// <returns>Array of 4 strings. 0: ticket; 1: nvu if invalid user, or empty string if valid; 2: time to wait in seconds before coming back; 3: not used</returns>
         public virtual string[] Authenticate(string login, string password)
         {
             var authenticatedTicket = authenticator.GetAuthenticationFromLogin(login, password);
@@ -52,7 +59,7 @@ namespace QbSync.WebConnector
                 else
                 {
                     ret[1] = "none"; // No work is necessary
-                    ret[2] = waitTime.ToString(); // Come back in 1h
+                    ret[2] = waitTime.ToString();
                 }
             }
 
@@ -61,11 +68,20 @@ namespace QbSync.WebConnector
             return ret;
         }
 
+        /// <summary>
+        /// Returns the server version to the Web Connector.
+        /// </summary>
+        /// <returns>Server version.</returns>
         public virtual string ServerVersion()
         {
             return Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 
+        /// <summary>
+        /// Indicates which version the Web Connector is using.
+        /// </summary>
+        /// <param name="version">Web Connector Client version.</param>
+        /// <returns>An empty string if everything is fine, W:&lt;message&gt; if warning; E:&lt;message&gt; if error.</returns>
         public virtual string ClientVersion(string version)
         {
             var requiredVersion = GetMinimumRequiredVersion();
@@ -79,6 +95,16 @@ namespace QbSync.WebConnector
             return string.Empty;
         }
 
+        /// <summary>
+        /// The Web Connector is asking what has to be done to its database. Return an XML command.
+        /// </summary>
+        /// <param name="ticket">The ticket.</param>
+        /// <param name="strHCPResponse">First time use, an XML containing information about the QuickBooks client database.</param>
+        /// <param name="strCompanyFileName">The QuickBooks file opened on the client.</param>
+        /// <param name="qbXMLCountry">Country code.</param>
+        /// <param name="qbXMLMajorVers">QbXml Major Version.</param>
+        /// <param name="qbXMLMinorVers">QbXml Minor Version.</param>
+        /// <returns></returns>
         public virtual string SendRequestXML(string ticket, string strHCPResponse, string strCompanyFileName, string qbXMLCountry, int qbXMLMajorVers, int qbXMLMinorVers)
         {
             var authenticatedTicket = authenticator.GetAuthenticationFromTicket(ticket);
@@ -117,6 +143,14 @@ namespace QbSync.WebConnector
             return result;
         }
 
+        /// <summary>
+        /// Response from the Web Connector based on the previous comamnd sent.
+        /// </summary>
+        /// <param name="ticket">The ticket.</param>
+        /// <param name="response">The XML response.</param>
+        /// <param name="hresult">Code in case of an error.</param>
+        /// <param name="message">Human message in case of an error.</param>
+        /// <returns></returns>
         public virtual int ReceiveRequestXML(string ticket, string response, string hresult, string message)
         {
             var authenticatedTicket = authenticator.GetAuthenticationFromTicket(ticket);
@@ -149,6 +183,11 @@ namespace QbSync.WebConnector
             return result;
         }
 
+        /// <summary>
+        /// Gets the last error that happened. This method is called only if an error is found.
+        /// </summary>
+        /// <param name="ticket">The ticket.</param>
+        /// <returns>Tell the Web Connector what is the error.</returns>
         public virtual string GetLastError(string ticket)
         {
             var authenticatedTicket = authenticator.GetAuthenticationFromTicket(ticket);
@@ -173,6 +212,13 @@ namespace QbSync.WebConnector
             return result;
         }
 
+        /// <summary>
+        /// An error happened with the Web Conenctor.
+        /// </summary>
+        /// <param name="ticket">The ticket.</param>
+        /// <param name="hresult">Code in case of an error.</param>
+        /// <param name="message">Human message in case of an error.</param>
+        /// <returns>Tell the Web Connector what is the error.</returns>
         public virtual string ConnectionError(string ticket, string hresult, string message)
         {
             var authenticatedTicket = authenticator.GetAuthenticationFromTicket(ticket);
@@ -190,6 +236,11 @@ namespace QbSync.WebConnector
             return result;
         }
 
+        /// <summary>
+        /// Closing the conneciton.
+        /// </summary>
+        /// <param name="ticket">The ticket</param>
+        /// <returns>String to display to the user.</returns>
         public virtual string CloseConnection(string ticket)
         {
             var authenticatedTicket = authenticator.GetAuthenticationFromTicket(ticket);
@@ -208,6 +259,11 @@ namespace QbSync.WebConnector
             return result;
         }
 
+        /// <summary>
+        /// Registers a step to use.
+        /// </summary>
+        /// <param name="stepNumber">Step Number.</param>
+        /// <param name="type">Type to create.</param>
         public void RegisterStep(int stepNumber, Type type)
         {
             if (!type.GetInterfaces().Contains(typeof(StepQueryResponse)))
@@ -218,6 +274,12 @@ namespace QbSync.WebConnector
             StepSync[stepNumber] = type;
         }
 
+        /// <summary>
+        /// Invoke a step based on the previously registered type.
+        /// </summary>
+        /// <param name="type">Type.</param>
+        /// <param name="authenticatedTicket">The authenticated ticket.</param>
+        /// <returns>Created step.</returns>
         protected internal virtual StepQueryResponse Invoke(Type type, AuthenticatedTicket authenticatedTicket)
         {
             return Activator.CreateInstance(type, authenticatedTicket) as StepQueryResponse;

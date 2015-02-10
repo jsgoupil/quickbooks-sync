@@ -56,8 +56,5 @@ namespace QbSync.WebConnector.Messages
         protected virtual void ExecuteResponse(QbXmlMsgResponse<YResult> response)
         {
         }
-
-        protected abstract void SaveMessage(int stepNumber, string key, string value);
-        protected abstract string RetrieveMessage(int stepNumber, string key);
     }
 }
