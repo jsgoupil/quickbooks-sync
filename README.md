@@ -11,17 +11,17 @@ Here is a couple of ideas how you can make some requests and parse responses.
 *Create a request XML with QbXml*
 ```C#
 public class CustomerRequest {
-    public CustomerRequest() 
-    {
-        var customerRequest = new QBSync.QbXml.Messages.CustomerQueryRequest()
+  public CustomerRequest() 
+  {
+    var customerRequest = new QBSync.QbXml.Messages.CustomerQueryRequest()
 
-        // Add some filters here
-        customerRequest.MaxReturned = 100;
-        customerRequest.FromModifiedDate = new DateTimeType(DateTime.Now);
+    // Add some filters here
+    customerRequest.MaxReturned = 100;
+    customerRequest.FromModifiedDate = new DateTimeType(DateTime.Now);
 
-        // Get the XML
-        var xml = customerRequest.GetRequest();
-    }
+    // Get the XML
+    var xml = customerRequest.GetRequest();
+  }
 }
 ```
 
@@ -29,13 +29,13 @@ public class CustomerRequest {
 ```C#
 public class CustomerResponse
 {
-    public void LoadResponse() 
-    {
-        var customerResponse = new QBSync.QbXml.Messages.CustomerQueryResponse();
+  public void LoadResponse() 
+  {
+    var customerResponse = new QBSync.QbXml.Messages.CustomerQueryResponse();
 
-        // Receive customer objects, corresponding to the xml
-        var customers = customerResponse.ParseResponse(xml);
-    }
+    // Receive customer objects, corresponding to the xml
+    var customers = customerResponse.ParseResponse(xml);
+  }
 }
 ```
 
@@ -63,11 +63,11 @@ Multiple connections are done between the Web Connector and your website. There 
 
 ### Step 1. Create an Authenticator ###
 ```C#
-    public interface IAuthenticator
-    {
-		AuthenticatedTicket GetAuthenticationFromLogin(string login, string password);
-		AuthenticatedTicket GetAuthenticationFromTicket(string ticket);
-	}
+public interface IAuthenticator
+{
+  AuthenticatedTicket GetAuthenticationFromLogin(string login, string password);
+  AuthenticatedTicket GetAuthenticationFromTicket(string ticket);
+}
 ```
 
 1. GetAuthenticationFromLogin - Authenticate a user from its login/password combination
@@ -76,12 +76,12 @@ Multiple connections are done between the Web Connector and your website. There 
 The AuthenticatedTicket contains 3 properties:
 
 ```C#
-    public class AuthenticatedTicket
-    {
-		public virtual string Ticket { get; set; }
-		public virtual int CurrentStep { get; set; }
-		public virtual bool Authenticated { get; set; }
-	}
+public class AuthenticatedTicket
+{
+  public virtual string Ticket { get; set; }
+  public virtual int CurrentStep { get; set; }
+  public virtual bool Authenticated { get; set; }
+}
 ```
 
 1. Ticket - Exchanged with the Web Connector. It acts as a session identifier.
@@ -94,14 +94,14 @@ If a user is not authenticated, make sure to return a ticket value, but set the 
 Extend the `QbSync.WebConnector.SyncManager` and overrides only the methods that you really need. You will most likely need a database context, make sure you get it from your constructor. From your constructor, register the steps you want to execute:
 
 ```C#
-        public SyncManager(HBTI_EF db_context, IOwinContext owinContext, IAuthenticator authenticator)
-            : base(authenticator)
-        {
-            this.db_context = db_context;
-            this.owinContext = owinContext;
+public SyncManager(HBTI_EF db_context, IOwinContext owinContext, IAuthenticator authenticator)
+  : base(authenticator)
+{
+  this.db_context = db_context;
+  this.owinContext = owinContext;
 
-            RegisterStep(0, typeof(CustomerQuery));
-        }
+  RegisterStep(0, typeof(CustomerQuery));
+}
 ```
 
 **Important methods to override:**
@@ -127,10 +127,10 @@ Extend the `QbSync.WebConnector.SyncManager` and overrides only the methods that
 The registration allows you to create a StepManager with any dependencies that you would like. Here is an example:
 
 ```C#
-    QbSync.WebConnector.QBConnectorSync.SyncManager = (QbSync.WebConnector.QBConnectorSync qbConnectorSync) =>
-    {
-        return new MyOwn.SyncManager(kernel.Get<ApplicationDbContext>(), qbConnectorSync.Context.GetOwinContext());
-    };
+QbSync.WebConnector.QBConnectorSync.SyncManager = (QbSync.WebConnector.QBConnectorSync qbConnectorSync) =>
+{
+  return new MyOwn.SyncManager(kernel.Get<ApplicationDbContext>(), qbConnectorSync.Context.GetOwinContext());
+};
 ```
 
 ### Step 4. Creating a step ###
@@ -139,31 +139,31 @@ Since all steps will require a database manipulation on your side, you have to i
 
 Here is an example:
 ```C#
-    public class CustomerQuery : StepQueryResponseBase<CustomerQueryRequest, CustomerQueryResponse, QbSync.QbXml.Objects.Customer[]>
-    {
-        private ApplicationDbContext db_context;
+public class CustomerQuery : StepQueryResponseBase<CustomerQueryRequest, CustomerQueryResponse, QbSync.QbXml.Objects.Customer[]>
+{
+  private ApplicationDbContext db_context;
 
-        public CustomerQuery(AuthenticatedTicketContext authenticatedTicket, ApplicationDbContext db_context)
-            : base(authenticatedTicket, messageService)
-        {
-            this.db_context = db_context;
-        }
+  public CustomerQuery(AuthenticatedTicketContext authenticatedTicket, ApplicationDbContext db_context)
+    : base(authenticatedTicket, messageService)
+  {
+    this.db_context = db_context;
+  }
 
-        protected override void ExecuteRequest(CustomerQueryRequest request)
-        {
-            base.ExecuteRequest(request);
+  protected override void ExecuteRequest(CustomerQueryRequest request)
+  {
+    base.ExecuteRequest(request);
 
-            // Do some operations on the customerRequest to get only specific ones
-            customerRequest.FromModifiedDate = new DateTimeType(DateTime.Now);
-        }
+    // Do some operations on the customerRequest to get only specific ones
+    customerRequest.FromModifiedDate = new DateTimeType(DateTime.Now);
+  }
 
-        protected override void ExecuteResponse(QbSync.QbXml.QbXmlMsgResponse<QbSync.QbXml.Objects.Customer[]> response)
-        {
-            base.ExecuteResponse(response);
+  protected override void ExecuteResponse(QbSync.QbXml.QbXmlMsgResponse<QbSync.QbXml.Objects.Customer[]> response)
+  {
+    base.ExecuteResponse(response);
 
-            // Execute some operations with your database.
-        }
-    }
+    // Execute some operations with your database.
+  }
+}
 ```
 
 - The 3 generic classes are provided by the QbXml NuGet package. You associate the request, response and the object that would be returned with a response.
@@ -177,8 +177,8 @@ return Activator.CreateInstance(type, authenticatedTicket, db_context) as QbSync
 When you make a request to the QuickBooks database, you might receive millions of objects back. Your server or the database won't be able to handle that many; you have to break the query into batches. We have everything handled for you, but we need to save another state to the database. Instead of deriving from `StepQueryResponseBase`, you have to derive from `StepQueryWithIterator` and implement 2 methods.
 
 ```C#
-        protected abstract void SaveMessage(string ticket, int stepNumber, string key, string value);
-        protected abstract string RetrieveMessage(string ticket, int stepNumber, string key);
+protected abstract void SaveMessage(string ticket, int stepNumber, string key, string value);
+protected abstract string RetrieveMessage(string ticket, int stepNumber, string key);
 ```
 
 Save the message to the database based on its ticket, `stepNumber` and key. Then retrieve it from the same keys.
@@ -187,7 +187,6 @@ By default, if you derive from the iterator, the query is batched by 100 objects
 
 ### Step X ###
 You can register other steps such as `UpdateCustomer`, `InvoiceQuery`, etc. Just make your own!
-
 
 
 ## Contributing
