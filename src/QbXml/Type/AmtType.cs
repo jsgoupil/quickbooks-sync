@@ -22,9 +22,24 @@ namespace QbSync.QbXml.Type
             return value.ToString("F", CultureInfo.InvariantCulture);
         }
 
+        public decimal ToDecimal()
+        {
+            return value;
+        }
+
         public static implicit operator AmtType(decimal value)
         {
             return new AmtType(value);
+        }
+
+        public static implicit operator decimal(AmtType type)
+        {
+            if (type != null)
+            {
+                return type.ToDecimal();
+            }
+
+            return default(decimal);
         }
     }
 }

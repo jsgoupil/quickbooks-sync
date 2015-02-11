@@ -22,9 +22,24 @@ namespace QbSync.QbXml.Type
             return value.ToString("B", CultureInfo.InvariantCulture);
         }
 
+        public Guid ToGuid()
+        {
+            return value;
+        }
+
         public static implicit operator GuidType(Guid value)
         {
             return new GuidType(value);
+        }
+
+        public static implicit operator Guid(GuidType type)
+        {
+            if (type != null)
+            {
+                return type.ToGuid();
+            }
+
+            return default(Guid);
         }
     }
 }

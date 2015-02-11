@@ -2,6 +2,7 @@
 using QbSync.QbXml.Extensions;
 using QbSync.QbXml.Filters;
 using QbSync.QbXml.Messages;
+using QbSync.QbXml.Messages.Requests;
 using QbSync.QbXml.Struct;
 using QbSync.QbXml.Tests.Helpers;
 using QbSync.QbXml.Type;

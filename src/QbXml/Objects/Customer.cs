@@ -44,11 +44,11 @@ namespace QbSync.QbXml.Objects
         public StrType JobDesc { get; set; }
         public Ref JobTypeRef { get; set; }
         public StrType Notes { get; set; }
-        public IEnumerable<AdditionalNote> AdditionalNotesRet { get; set; }
+        public IEnumerable<AdditionalNoteRet> AdditionalNotesRet { get; set; }
         public PreferredDeliveryMethod PreferredDeliveryMethod { get; set; }
         public Ref PriceLevelRef { get; set; }
         public GuidType ExternalGUID { get; set; }
         public Ref CurrencyRef { get; set; }
-        public IEnumerable<DataExt> DataExtRet { get; set; }
+        public IEnumerable<DataExtRet> DataExtRet { get; set; }
     }
 }

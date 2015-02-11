@@ -59,11 +59,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Messages\Requests\DataExtDelRequestTests.cs" />
+    <Compile Include="Messages\Requests\DataExtModRequestTests.cs" />
+    <Compile Include="Messages\Requests\DataExtAddRequestTests.cs" />
     <Compile Include="Helpers\QBAssert.cs" />
     <Compile Include="Helpers\QuickbooksTestHelper.cs" />
+    <Compile Include="Messages\Responses\DataExtDelResponseErrorRecoveryTests.cs" />
+    <Compile Include="Messages\Responses\DataExtDelResponseTests.cs" />
+    <Compile Include="Messages\Responses\DataExtModResponseTests.cs" />
+    <Compile Include="Messages\Responses\DataExtAddResponseTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Messages\CustomerQueryResponseTests.cs" />
-    <Compile Include="Messages\CustomerQueryRequestTests.cs" />
+    <Compile Include="Messages\Responses\CustomerQueryResponseTests.cs" />
+    <Compile Include="Messages\Requests\CustomerQueryRequestTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1,7 +1,8 @@
 ﻿using Moq;
 using Moq.Protected;
 using NUnit.Framework;
-using QbSync.QbXml.Messages;
+using QbSync.QbXml.Messages.Requests;
+using QbSync.QbXml.Messages.Responses;
 using QbSync.QbXml.Objects;
 using QbSync.WebConnector.Messages;
 using System;
@@ -106,7 +107,6 @@ namespace QbSync.WebConnector.Tests
                 Ticket = Guid.NewGuid().ToString(),
                 CurrentStep = 4
             };
-            var iteratorKey = StepQueryWithIterator<CustomerQueryRequest, CustomerQueryResponse, Customer[]>.IteratorKey;
             var iteratorID = "{eb05f701-e727-472f-8ade-6753c4f67a46}";
             var xml = @"<?xml version=""1.0"" ?><QBXML><QBXMLMsgsRs><CustomerQueryRs requestID=""1"" statusCode=""0"" statusSeverity=""Info"" statusMessage=""Status OK"" iteratorRemainingCount=""18"" iteratorID=""" + iteratorID + @""">" +
                 "<CustomerRet>" +
@@ -128,10 +128,6 @@ namespace QbSync.WebConnector.Tests
             stepQueryWithIteratorMock.CallBase = true;
 
             var ret = stepQueryWithIteratorMock.Object.ReceiveXML(xml, string.Empty, string.Empty);
-
-            stepQueryWithIteratorMock
-                .Protected()
-                .Verify("SaveMessage", Times.Once(), ItExpr.Is<string>(s => s == authenticatedTicket.Ticket), ItExpr.Is<int>(n => n == authenticatedTicket.CurrentStep), ItExpr.Is<string>(s => s == iteratorKey), ItExpr.Is<string>(s => s == iteratorID));
             Assert.AreEqual(0, ret);
         }
     }

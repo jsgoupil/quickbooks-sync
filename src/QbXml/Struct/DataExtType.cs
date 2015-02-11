@@ -1,6 +1,6 @@
-﻿namespace QbSync.QbXml.Objects
+﻿namespace QbSync.QbXml.Struct
 {
-    public enum DataType
+    public enum DataExtType
     {
         AMTTYPE,
         DATETIMETYPE,

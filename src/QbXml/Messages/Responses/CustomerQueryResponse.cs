@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Xml;
 
-namespace QbSync.QbXml.Messages
+namespace QbSync.QbXml.Messages.Responses
 {
-    public class CustomerQueryResponse : IteratorResponse<Customer[]>
+    public class CustomerQueryResponse : QbXmlResponse<Customer[]>
     {
         public CustomerQueryResponse()
             : base("CustomerQueryRs")
@@ -15,7 +15,7 @@ namespace QbSync.QbXml.Messages
         {
             base.ProcessResponse(responseNode, qbXmlResponse);
 
-            var customerRetList = responseNode.SelectNodes("//CustomerRet"); // XPath Query
+            var customerRetList = responseNode.SelectNodes("//CustomerRet");
             qbXmlResponse.Object = WalkTypes(typeof(Customer), customerRetList).OfType<Customer>().ToArray();
         }
     }

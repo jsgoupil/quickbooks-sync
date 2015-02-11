@@ -41,10 +41,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="Messages\Requests\DataExtDelRequest.cs" />
+    <Compile Include="Messages\Requests\DataExtAddRequest.cs" />
+    <Compile Include="Messages\Requests\DataExtRequest.cs" />
+    <Compile Include="Messages\Requests\DataExtModRequest.cs" />
+    <Compile Include="Messages\Responses\DataExtDelResponse.cs" />
+    <Compile Include="Messages\Responses\DataExtModResponse.cs" />
+    <Compile Include="Messages\Responses\DataExtAddResponse.cs" />
+    <Compile Include="Objects\DataExtDelRet.cs" />
+    <Compile Include="Objects\ErrorRecovery.cs" />
+    <Compile Include="Objects\DataExtRet.cs" />
+    <Compile Include="QbXmlResponseMsgWithErrorRecovery.cs" />
+    <Compile Include="QbXmlResponseWithErrorRecovery.cs" />
+    <Compile Include="Struct\OtherDataExtType.cs" />
+    <Compile Include="Objects\TxnDataExt.cs" />
+    <Compile Include="Objects\ListDataExt.cs" />
+    <Compile Include="Struct\DataExtFilter.cs" />
+    <Compile Include="Struct\TxnDataExtType.cs" />
+    <Compile Include="Struct\ListDataExtType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IteratorResponse.cs" />
-    <Compile Include="Messages\CustomerQueryResponse.cs" />
-    <Compile Include="Messages\CustomerQueryRequest.cs" />
+    <Compile Include="Messages\Responses\CustomerQueryResponse.cs" />
+    <Compile Include="Messages\Requests\CustomerQueryRequest.cs" />
     <Compile Include="Filters\ClassFilter.cs" />
     <Compile Include="Filters\CurrencyFilter.cs" />
     <Compile Include="Objects\AdditionalNote.cs" />
@@ -53,8 +71,7 @@
     <Compile Include="Objects\ContactType.cs" />
     <Compile Include="Objects\ContactRef.cs" />
     <Compile Include="Objects\CreditCard.cs" />
-    <Compile Include="Objects\DataExt.cs" />
-    <Compile Include="Objects\DataType.cs" />
+    <Compile Include="Struct\DataExtType.cs" />
     <Compile Include="Objects\JobStatus.cs" />
     <Compile Include="Objects\PreferredDeliveryMethod.cs" />
     <Compile Include="Objects\Ref.cs" />

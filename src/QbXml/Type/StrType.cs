@@ -24,5 +24,15 @@
 
             return new StrType(value);
         }
+
+        public static implicit operator string(StrType type)
+        {
+            if (type != null)
+            {
+                return type.ToString();
+            }
+
+            return default(string);
+        }
     }
 }

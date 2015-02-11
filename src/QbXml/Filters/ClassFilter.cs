@@ -8,7 +8,7 @@ namespace QbSync.QbXml.Filters
 {
     public class ClassFilter
     {
-        public IEnumerable<IdType> ListId
+        public IEnumerable<IdType> ListID
         {
             get;
             set;
@@ -36,9 +36,9 @@ namespace QbSync.QbXml.Filters
         {
             CheckFilters();
 
-            if (ListId != null)
+            if (ListID != null)
             {
-                parent.AppendTags("ListId", ListId);
+                parent.AppendTags("ListID", ListID);
             }
 
             if (FullName != null)
@@ -59,7 +59,7 @@ namespace QbSync.QbXml.Filters
 
         private void CheckFilters()
         {
-            if (ListId != null && FullName != null && ListIdWithChildren != null && FullNameWithChildren != null)
+            if (ListID != null && FullName != null && ListIdWithChildren != null && FullNameWithChildren != null)
             {
                 throw new ArgumentException("You cannot set ListId, FullName, ListIdWithChildren, or FullNameWithChildren at the same time.");
             }

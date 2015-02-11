@@ -15,18 +15,30 @@ namespace QbSync.WebConnector.Messages
 
         public virtual string SendXML()
         {
-            var request = CreateRequest();
-            ExecuteRequest(request);
-            return request.GetRequest();
+            var requestObject = CreateRequest();
+            if (requestObject != null)
+            {
+                ExecuteRequest(requestObject);
+
+                return requestObject.GetRequest();
+            }
+
+            return null;
         }
 
         public virtual int ReceiveXML(string response, string hresult, string message)
         {
             var responseObject = CreateResponse();
-            var msgResponseObject = responseObject.ParseResponse(response);
-            ExecuteResponse(msgResponseObject);
 
-            return 0;
+            if (responseObject != null)
+            {
+                var msgResponseObject = responseObject.ParseResponse(response);
+                ExecuteResponse(msgResponseObject);
+
+                return 0;
+            }
+
+            return -1;
         }
 
         public virtual bool GotoNextStep()

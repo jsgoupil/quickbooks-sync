@@ -22,9 +22,24 @@ namespace QbSync.QbXml.Type
             return value.ToString("s", CultureInfo.InvariantCulture); // TODO QbSync confirm timezone
         }
 
+        public DateTime ToDateTime()
+        {
+            return value;
+        }
+
         public static implicit operator DateTimeType(DateTime value)
         {
             return new DateTimeType(value);
+        }
+
+        public static implicit operator DateTime(DateTimeType type)
+        {
+            if (type != null)
+            {
+                return type.ToDateTime();
+            }
+
+            return default(DateTime);
         }
     }
 }

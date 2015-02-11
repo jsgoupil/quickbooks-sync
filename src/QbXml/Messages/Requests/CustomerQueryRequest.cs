@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace QbSync.QbXml.Messages
+namespace QbSync.QbXml.Messages.Requests
 {
     public class CustomerQueryRequest : IteratorRequest
     {
@@ -29,9 +29,10 @@ namespace QbSync.QbXml.Messages
         public ClassFilter ClassFilter { get; set; }
         public GuidType OwnerID { get; set; }
 
-        protected override void BuildRequest(XmlDocument doc, XmlElement parent)
+        protected override void BuildRequest(XmlElement parent)
         {
-            base.BuildRequest(doc, parent);
+            var doc = parent.OwnerDocument;
+            base.BuildRequest(parent);
 
             if (Filter == CustomerQueryRequestFilter.ListId)
             {
@@ -56,7 +57,7 @@ namespace QbSync.QbXml.Messages
 
                 if (ActiveStatus.HasValue)
                 {
-                    parent.AppendChild(parent.OwnerDocument.CreateElementWithValue("ActiveStatus", ActiveStatus.Value.ToString()));
+                    parent.AppendChild(doc.CreateElementWithValue("ActiveStatus", ActiveStatus.Value.ToString()));
                 }
 
                 if (FromModifiedDate != null)

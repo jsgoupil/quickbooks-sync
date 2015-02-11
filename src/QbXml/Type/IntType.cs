@@ -22,9 +22,24 @@ namespace QbSync.QbXml.Type
             return value.ToString(CultureInfo.InvariantCulture);
         }
 
+        public int ToInt()
+        {
+            return value;
+        }
+
         public static implicit operator IntType(int value)
         {
             return new IntType(value);
+        }
+
+        public static implicit operator int(IntType type)
+        {
+            if (type != null)
+            {
+                return type.ToInt();
+            }
+
+            return default(int);
         }
     }
 }

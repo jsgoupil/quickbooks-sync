@@ -33,12 +33,12 @@ namespace QbSync.QbXml
             XmlElement req = requestXmlDoc.CreateElement(rootElementName);
             inner.AppendChild(req);
 
-            BuildRequest(requestXmlDoc, req);
+            BuildRequest(req);
 
             return requestXmlDoc.OuterXml;
         }
 
-        protected virtual void BuildRequest(XmlDocument doc, XmlElement parent)
+        protected virtual void BuildRequest(XmlElement parent)
         {
         }
     }

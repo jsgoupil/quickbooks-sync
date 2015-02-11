@@ -22,9 +22,24 @@ namespace QbSync.QbXml.Type
             return value.ToString(CultureInfo.InvariantCulture).ToLowerInvariant();
         }
 
+        public bool ToBoolean()
+        {
+            return value;
+        }
+
         public static implicit operator BoolType(bool value)
         {
             return new BoolType(value);
+        }
+
+        public static implicit operator bool(BoolType type)
+        {
+            if (type != null)
+            {
+                return type.ToBoolean();
+            }
+
+            return default(bool);
         }
     }
 }

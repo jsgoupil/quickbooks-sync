@@ -25,9 +25,9 @@ namespace QbSync.QbXml
             set;
         }
 
-        protected override void BuildRequest(XmlDocument doc, XmlElement parent)
+        protected override void BuildRequest(XmlElement parent)
         {
-            base.BuildRequest(doc, parent);
+            base.BuildRequest(parent);
 
             if (MaxReturned != null)
             {

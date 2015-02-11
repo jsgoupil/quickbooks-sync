@@ -32,13 +32,11 @@ namespace QbSync.QbXml
                 XmlNode responseNode = rs.Item(0);
 
                 // Check the status code, info, and severity
-                var qbXmlResponse = new QbXmlMsgResponse<T>
-                {
-                    RequestId = responseNode.ReadAttribute("requestID") == null ? null : (int?)Convert.ToInt32(responseNode.ReadAttribute("requestID")),
-                    StatusCode = responseNode.ReadAttribute("statusCode") == null ? null : (int?)Convert.ToInt32(responseNode.ReadAttribute("statusCode")),
-                    StatusSeverity = responseNode.ReadAttribute("statusSeverity") == null ? null : (StatusSeverity?)Enum.Parse(typeof(StatusSeverity), responseNode.ReadAttribute("statusSeverity")),
-                    StatusMessage = responseNode.ReadAttribute("statusMessage"),
-                };
+                var qbXmlResponse = CreateQbXmlMsgResponse();
+                qbXmlResponse.RequestId = responseNode.ReadAttribute("requestID") == null ? null : (int?)Convert.ToInt32(responseNode.ReadAttribute("requestID"));
+                qbXmlResponse.StatusCode = responseNode.ReadAttribute("statusCode") == null ? null : (int?)Convert.ToInt32(responseNode.ReadAttribute("statusCode"));
+                qbXmlResponse.StatusSeverity = responseNode.ReadAttribute("statusSeverity") == null ? null : (StatusSeverity?)Enum.Parse(typeof(StatusSeverity), responseNode.ReadAttribute("statusSeverity"));
+                qbXmlResponse.StatusMessage = responseNode.ReadAttribute("statusMessage");
 
                 ProcessResponse(responseNode, qbXmlResponse);
 
@@ -50,6 +48,11 @@ namespace QbSync.QbXml
 
         protected virtual void ProcessResponse(XmlNode responseNode, QbXmlMsgResponse<T> qbXmlResponse)
         {
+        }
+
+        protected virtual QbXmlMsgResponse<T> CreateQbXmlMsgResponse()
+        {
+            return new QbXmlMsgResponse<T>();
         }
 
         protected static IEnumerable<object> WalkTypes(System.Type type, XmlNodeList xmlNodeList)
