@@ -41,14 +41,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="Messages\Requests\DataExtDefQueryRequest.cs" />
+    <Compile Include="Messages\Requests\DataExtDefDelRequest.cs" />
+    <Compile Include="Messages\Requests\DataExtDefModRequest.cs" />
+    <Compile Include="Messages\Requests\DataExtDefAddRequest.cs" />
     <Compile Include="Messages\Requests\DataExtDelRequest.cs" />
     <Compile Include="Messages\Requests\DataExtAddRequest.cs" />
+    <Compile Include="Messages\Requests\DataExtDefRequest.cs" />
     <Compile Include="Messages\Requests\DataExtRequest.cs" />
     <Compile Include="Messages\Requests\DataExtModRequest.cs" />
+    <Compile Include="Messages\Responses\DataExtDefDelResponse.cs" />
+    <Compile Include="Messages\Responses\DataExtDefModResponse.cs" />
+    <Compile Include="Messages\Responses\DataExtDefAddResponse.cs" />
     <Compile Include="Messages\Responses\DataExtDelResponse.cs" />
+    <Compile Include="Messages\Responses\DataExtDefQueryResponse.cs" />
     <Compile Include="Messages\Responses\DataExtModResponse.cs" />
     <Compile Include="Messages\Responses\DataExtAddResponse.cs" />
+    <Compile Include="Objects\DataExtDefDelRet.cs" />
     <Compile Include="Objects\DataExtDelRet.cs" />
+    <Compile Include="Objects\DataExtDefRet.cs" />
     <Compile Include="Objects\ErrorRecovery.cs" />
     <Compile Include="Objects\DataExtRet.cs" />
     <Compile Include="QbXmlResponseMsgWithErrorRecovery.cs" />
@@ -97,6 +108,7 @@
     <Compile Include="Type\IStringConvertible.cs" />
     <Compile Include="Type\StrType.cs" />
     <Compile Include="Type\IdType.cs" />
+    <Compile Include="Struct\AssignToObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="QbXml.nuspec" />

@@ -31,8 +31,9 @@ namespace QbSync.QbXml.Messages.Requests
 
         protected override void BuildRequest(XmlElement parent)
         {
-            var doc = parent.OwnerDocument;
             base.BuildRequest(parent);
+
+            var doc = parent.OwnerDocument;
 
             if (Filter == CustomerQueryRequestFilter.ListId)
             {

@@ -2,6 +2,7 @@
 using QbSync.QbXml.Struct;
 using QbSync.QbXml.Type;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -55,7 +56,7 @@ namespace QbSync.QbXml
             return new QbXmlMsgResponse<T>();
         }
 
-        protected static IEnumerable<object> WalkTypes(System.Type type, XmlNodeList xmlNodeList)
+        protected static IEnumerable WalkTypes(System.Type type, XmlNodeList xmlNodeList)
         {
             var listType = typeof(List<>);
             var concreteType = listType.MakeGenericType(type);
@@ -66,43 +67,50 @@ namespace QbSync.QbXml
                 concreteType.GetMethod("Add").Invoke(instance, new object[] { value });
             }
 
-            return (IEnumerable<object>)instance;
+            return (IEnumerable)instance;
         }
 
         protected static object WalkType(System.Type type, XmlNode xmlNode)
         {
-            var propertyInfos = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-            var instance = Activator.CreateInstance(type);
-
-            foreach (var propertyInfo in propertyInfos)
+            if (type.IsEnum)
             {
-                var node = xmlNode.SelectSingleNode(propertyInfo.Name);
-                if (node != null)
+                return Enum.Parse(type, xmlNode.InnerText);
+            }
+            else
+            {
+                var propertyInfos = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+                var instance = Activator.CreateInstance(type);
+
+                foreach (var propertyInfo in propertyInfos)
                 {
-                    if (propertyInfo.PropertyType.IsEnum)
+                    var node = xmlNode.SelectSingleNode(propertyInfo.Name);
+                    if (node != null)
                     {
-                        var enumValue = Enum.Parse(propertyInfo.PropertyType, xmlNode.ReadNode(propertyInfo.Name));
-                        propertyInfo.SetValue(instance, enumValue, null);
-                    }
-                    else if (propertyInfo.PropertyType.GetInterfaces().Contains(typeof(IStringConvertible)))
-                    {
-                        var str = xmlNode.ReadNode(propertyInfo.Name);
-                        var baseInstance = Activator.CreateInstance(propertyInfo.PropertyType, str);
-                        propertyInfo.SetValue(instance, baseInstance, null);
-                    }
-                    else if (typeof(IEnumerable<object>).IsAssignableFrom(propertyInfo.PropertyType))
-                    {
-                        var list = WalkTypes(propertyInfo.PropertyType.GetGenericArguments()[0], xmlNode.SelectNodes(propertyInfo.Name));
-                        propertyInfo.SetValue(instance, list, null);
-                    }
-                    else
-                    {
-                        Console.WriteLine("TEST");
+                        if (propertyInfo.PropertyType.IsEnum)
+                        {
+                            var enumValue = Enum.Parse(propertyInfo.PropertyType, xmlNode.ReadNode(propertyInfo.Name));
+                            propertyInfo.SetValue(instance, enumValue, null);
+                        }
+                        else if (propertyInfo.PropertyType.GetInterfaces().Contains(typeof(IStringConvertible)))
+                        {
+                            var str = xmlNode.ReadNode(propertyInfo.Name);
+                            var baseInstance = Activator.CreateInstance(propertyInfo.PropertyType, str);
+                            propertyInfo.SetValue(instance, baseInstance, null);
+                        }
+                        else if (propertyInfo.PropertyType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+                        {
+                            var list = WalkTypes(propertyInfo.PropertyType.GetGenericArguments()[0], xmlNode.SelectNodes(propertyInfo.Name));
+                            propertyInfo.SetValue(instance, list, null);
+                        }
+                        else
+                        {
+                            Console.WriteLine("DEBUG");
+                        }
                     }
                 }
-            }
 
-            return instance;
+                return instance;
+            }
         }
     }
 }
