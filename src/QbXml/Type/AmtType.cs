@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace QbSync.QbXml.Type
 {
-    public class AmtType : IStringConvertible
+    public class AmtType : IStringConvertible, IComparable<AmtType>
     {
         private decimal value;
 
@@ -78,6 +78,11 @@ namespace QbSync.QbXml.Type
             }
 
             return default(decimal);
+        }
+
+        public int CompareTo(AmtType other)
+        {
+            return this.value.CompareTo(other.value);
         }
     }
 }

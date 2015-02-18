@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace QbSync.QbXml.Type
 {
-    public class BoolType : IStringConvertible
+    public class BoolType : IStringConvertible, IComparable<BoolType>
     {
         private bool value;
 
@@ -78,6 +78,11 @@ namespace QbSync.QbXml.Type
             }
 
             return default(bool);
+        }
+
+        public int CompareTo(BoolType other)
+        {
+            return this.value.CompareTo(other.value);
         }
     }
 }

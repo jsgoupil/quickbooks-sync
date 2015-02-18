@@ -1,6 +1,8 @@
-﻿namespace QbSync.QbXml.Type
+﻿using System;
+
+namespace QbSync.QbXml.Type
 {
-    public class StrType : IStringConvertible
+    public class StrType : IStringConvertible, IComparable<StrType>
     {
         private string value;
 
@@ -71,6 +73,11 @@
             }
 
             return default(string);
+        }
+
+        public int CompareTo(StrType other)
+        {
+            return this.value.CompareTo(other.value);
         }
     }
 }

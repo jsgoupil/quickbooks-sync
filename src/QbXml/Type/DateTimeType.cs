@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace QbSync.QbXml.Type
 {
-    public class DateTimeType : IStringConvertible
+    public class DateTimeType : IStringConvertible, IComparable<DateTimeType>
     {
         private DateTime value;
 
@@ -19,7 +19,15 @@ namespace QbSync.QbXml.Type
 
         public override string ToString()
         {
-            return value.ToString("s", CultureInfo.InvariantCulture); // TODO QbSync confirm timezone
+            var k = value.ToString(" K", CultureInfo.InvariantCulture).Trim();
+
+            // QuickBooks doesn't support Z format.
+            if (k == "Z")
+            {
+                k = string.Empty;
+            }
+
+            return value.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture) + k;
         }
 
         public DateTime ToDateTime()
@@ -78,6 +86,11 @@ namespace QbSync.QbXml.Type
             }
 
             return default(DateTime);
+        }
+
+        public int CompareTo(DateTimeType other)
+        {
+            return this.value.CompareTo(other.value);
         }
     }
 }

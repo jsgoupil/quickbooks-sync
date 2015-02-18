@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace QbSync.QbXml.Type
 {
-    public class IntType : IStringConvertible
+    public class IntType : IStringConvertible, IComparable<IntType>
     {
         private int value;
 
@@ -78,6 +78,11 @@ namespace QbSync.QbXml.Type
             }
 
             return default(int);
+        }
+
+        public int CompareTo(IntType other)
+        {
+            return this.value.CompareTo(other.value);
         }
     }
 }

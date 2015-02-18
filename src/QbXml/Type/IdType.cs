@@ -1,6 +1,8 @@
-﻿namespace QbSync.QbXml.Type
+﻿using System;
+
+namespace QbSync.QbXml.Type
 {
-    public class IdType : IStringConvertible
+    public class IdType : IStringConvertible, IComparable<IdType>
     {
         private string value;
 
@@ -60,6 +62,11 @@
             }
 
             return new IdType(value);
+        }
+
+        public int CompareTo(IdType other)
+        {
+            return this.value.CompareTo(other.value);
         }
     }
 }

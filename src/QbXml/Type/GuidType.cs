@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace QbSync.QbXml.Type
 {
-    public class GuidType : IStringConvertible
+    public class GuidType : IStringConvertible, IComparable<GuidType>
     {
         private Guid value;
 
@@ -78,6 +78,11 @@ namespace QbSync.QbXml.Type
             }
 
             return default(Guid);
+        }
+
+        public int CompareTo(GuidType other)
+        {
+            return this.value.CompareTo(other.value);
         }
     }
 }
