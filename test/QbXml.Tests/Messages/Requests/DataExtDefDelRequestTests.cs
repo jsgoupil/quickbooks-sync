@@ -30,6 +30,7 @@ namespace QbSync.QbXml.Tests.QbXml
             var node = requestXmlDoc.SelectSingleNode("//DataExtDefDelRq");
             QBAssert.AreEqual(dataExtDefDelRequest.OwnerID, node.ReadNode("OwnerID"));
             QBAssert.AreEqual(dataExtDefDelRequest.DataExtName, node.ReadNode("DataExtName"));
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
         }
     }
 }

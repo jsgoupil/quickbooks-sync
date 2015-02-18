@@ -32,6 +32,7 @@ namespace QbSync.QbXml.Tests.QbXml
             QBAssert.AreEqual(dataExtAddRequest.DataExtName, node.ReadNode("DataExtName"));
             QBAssert.AreEqual(dataExtAddRequest.DataExtValue, node.ReadNode("DataExtValue"));
             Assert.AreEqual("Company", node.ReadNode("OtherDataExtType"));
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
         }
 
         [Test]
@@ -68,6 +69,7 @@ namespace QbSync.QbXml.Tests.QbXml
             var node2 = node.SelectSingleNode("ListObjRef");
             QBAssert.AreEqual(dataExtAddRequest.ListDataExt.ListObjRef.FullName, node2.ReadNode("FullName"));
             QBAssert.AreEqual(dataExtAddRequest.ListDataExt.ListObjRef.ListID, node2.ReadNode("ListID"));
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
         }
 
         [Test]
@@ -99,6 +101,7 @@ namespace QbSync.QbXml.Tests.QbXml
             Assert.AreEqual("Charge", node.ReadNode("TxnDataExtType"));
             QBAssert.AreEqual(dataExtAddRequest.TxnDataExt.TxnID, node.ReadNode("TxnID"));
             QBAssert.AreEqual(dataExtAddRequest.TxnDataExt.TxnLineID, node.ReadNode("TxnLineID"));
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
         }
     }
 }

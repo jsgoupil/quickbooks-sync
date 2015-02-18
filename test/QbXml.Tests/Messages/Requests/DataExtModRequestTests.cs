@@ -32,9 +32,7 @@ namespace QbSync.QbXml.Tests.QbXml
             QBAssert.AreEqual(dataExtModRequest.DataExtName, node.ReadNode("DataExtName"));
             QBAssert.AreEqual(dataExtModRequest.DataExtValue, node.ReadNode("DataExtValue"));
             Assert.AreEqual("Company", node.ReadNode("OtherDataExtType"));
-
-            // The order matters for Quickbooks... yep :(
-            Assert.AreEqual("OwnerID", node.FirstChild.Name);
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
         }
 
         [Test]
@@ -71,6 +69,7 @@ namespace QbSync.QbXml.Tests.QbXml
             var node2 = node.SelectSingleNode("ListObjRef");
             QBAssert.AreEqual(dataExtModRequest.ListDataExt.ListObjRef.FullName, node2.ReadNode("FullName"));
             QBAssert.AreEqual(dataExtModRequest.ListDataExt.ListObjRef.ListID, node2.ReadNode("ListID"));
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
         }
 
         [Test]
@@ -102,6 +101,7 @@ namespace QbSync.QbXml.Tests.QbXml
             Assert.AreEqual("Charge", node.ReadNode("TxnDataExtType"));
             QBAssert.AreEqual(dataExtModRequest.TxnDataExt.TxnID, node.ReadNode("TxnID"));
             QBAssert.AreEqual(dataExtModRequest.TxnDataExt.TxnLineID, node.ReadNode("TxnLineID"));
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
         }
     }
 }

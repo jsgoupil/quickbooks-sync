@@ -1,0 +1,155 @@
+
+<!-- ============================================================================= -->
+<!--                                                                               -->
+<!-- qbxmlso130.xsd                                                                -->
+<!--                                                                               -->
+<!-- qbXML version 13.0                                                            -->
+<!--                                                                               -->
+<!-- (c) 2013 Intuit Inc. All rights reserved.                                     -->
+<!--                                                                               -->
+<!-- Use is subject to a qbXML Developer Agreement available at:                   -->
+<!--          http://developer.intuit.com/legal/                                   -->
+<!--                                                                               -->
+<!-- ============================================================================= -->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+<!-- ============================================================================= -->
+<!--      Macros                                                                   -->
+<!-- ============================================================================= -->
+
+<xsd:group name="CLogin">
+	<xsd:sequence>
+		<xsd:element ref="ApplicationLogin"/>
+		<xsd:element ref="ConnectionTicket"/>
+	</xsd:sequence>
+</xsd:group>
+
+<xsd:group name="DLogin">
+	<xsd:sequence>
+		<xsd:element ref="ApplicationLogin"/>
+		<xsd:element ref="ConnectionTicket"/>
+	</xsd:sequence>
+</xsd:group>
+
+<xsd:group name="TLogin">
+	<xsd:sequence>
+		<xsd:element ref="SessionTicket"/>
+		<xsd:element ref="AuthID" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:group>
+
+
+
+<!-- ============================================================================= -->
+<!--      Message Sets                                                             -->
+<!-- ============================================================================= -->
+
+<!-- Message Set Request/Response Pairs and contained requests  -->
+<xsd:element name="SignonMsgsRq">
+	<xsd:complexType>
+		<xsd:choice maxOccurs="unbounded">
+			<xsd:element name="SignonAppCertRq" type="SignonAppCertRqType"/>
+			<xsd:element name="SignonDesktopRq" type="SignonDesktopRqType"/>
+			<xsd:element name="SignonTicketRq" type="SignonTicketRqType"/>
+		</xsd:choice>
+	</xsd:complexType>
+</xsd:element>
+
+<xsd:element name="SignonMsgsRs">
+	<xsd:complexType>
+		<xsd:choice maxOccurs="unbounded">
+			<xsd:element name="SignonAppCertRs" type="SignonAppCertRsType"/>
+			<xsd:element name="SignonDesktopRs" type="SignonDesktopRsType"/>
+			<xsd:element name="SignonTicketRs" type="SignonTicketRsType"/>
+		</xsd:choice>
+	</xsd:complexType>
+</xsd:element>
+
+<!-- ============================================================================= -->
+<!--      Request Detail                                                           -->
+<!-- ============================================================================= -->
+
+
+<!-- Signon Requests -->
+<xsd:complexType name="SignonAppCertRqType">
+	<xsd:sequence>
+		<xsd:element ref="ClientDateTime"/>
+		<xsd:group ref="CLogin"/>
+		<xsd:element ref="InstallationID" minOccurs="0"/>
+		<xsd:element ref="Language"/>
+		<xsd:element ref="AppID"/>
+		<xsd:element ref="AppVer"/>
+	</xsd:sequence>
+	<xsd:attribute name="requestID" type="STRTYPE"/>
+</xsd:complexType>
+
+<xsd:complexType name="SignonDesktopRqType">
+	<xsd:sequence>
+		<xsd:element ref="ClientDateTime"/>
+		<xsd:group ref="DLogin"/>
+		<xsd:element ref="InstallationID" minOccurs="0"/>
+		<xsd:element ref="Language"/>
+		<xsd:element ref="AppID"/>
+		<xsd:element ref="AppVer"/>
+	</xsd:sequence>
+	<xsd:attribute name="requestID" type="STRTYPE"/>
+</xsd:complexType>
+
+<xsd:complexType name="SignonTicketRqType">
+	<xsd:sequence>
+		<xsd:element ref="ClientDateTime"/>
+		<xsd:group ref="TLogin"/>
+		<xsd:element ref="InstallationID" minOccurs="0"/>
+		<xsd:element ref="Language"/>
+		<xsd:element ref="AppID"/>
+		<xsd:element ref="AppVer"/>
+	</xsd:sequence>
+	<xsd:attribute name="requestID" type="STRTYPE"/>
+</xsd:complexType>
+
+
+
+<!-- ============================================================================= -->
+<!--      Response Detail                                                          -->
+<!-- ============================================================================= -->
+
+
+<!-- Signon Responses -->
+<xsd:complexType name="SignonAppCertRsType">
+	<xsd:sequence>
+		<xsd:element ref="ServerDateTime"/>
+		<xsd:element ref="SessionTicket" minOccurs="0"/>
+	</xsd:sequence>
+	<xsd:attribute name="requestID" type="STRTYPE"/>
+	<xsd:attribute name="statusCode" type="INTTYPE" use="required"/>
+	<xsd:attribute name="statusSeverity" type="STRTYPE" use="required"/>
+	<xsd:attribute name="statusMessage" type="STRTYPE"/>
+</xsd:complexType>
+
+<xsd:complexType name="SignonDesktopRsType">
+	<xsd:sequence>
+		<xsd:element ref="ServerDateTime"/>
+		<xsd:element ref="SessionTicket" minOccurs="0"/>
+	</xsd:sequence>
+	<xsd:attribute name="requestID" type="STRTYPE"/>
+	<xsd:attribute name="statusCode" type="INTTYPE" use="required"/>
+	<xsd:attribute name="statusSeverity" type="STRTYPE" use="required"/>
+	<xsd:attribute name="statusMessage" type="STRTYPE"/>
+</xsd:complexType>
+
+<xsd:complexType name="SignonTicketRsType">
+	<xsd:sequence>
+		<xsd:element ref="ServerDateTime"/>
+		<xsd:element ref="SessionTicket" minOccurs="0"/>
+	</xsd:sequence>
+	<xsd:attribute name="requestID" type="STRTYPE"/>
+	<xsd:attribute name="statusCode" type="INTTYPE" use="required"/>
+	<xsd:attribute name="statusSeverity" type="STRTYPE" use="required"/>
+	<xsd:attribute name="statusMessage" type="STRTYPE"/>
+</xsd:complexType>
+
+
+
+
+</xsd:schema>

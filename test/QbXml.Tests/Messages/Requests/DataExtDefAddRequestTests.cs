@@ -53,9 +53,7 @@ namespace QbSync.QbXml.Tests.QbXml
             Assert.AreEqual("ABC", node3.Item(0).InnerText);
             Assert.AreEqual("DEF", node3.Item(1).InnerText);
             Assert.AreNotEqual("DataExtDefAdd", node3.Item(0).ParentNode.Name);
-
-            // The order matters for Quickbooks... yep :(
-            Assert.AreEqual("OwnerID", node.FirstChild.Name);
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
         }
     }
 }

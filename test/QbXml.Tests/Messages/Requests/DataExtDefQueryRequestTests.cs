@@ -42,6 +42,7 @@ namespace QbSync.QbXml.Tests.QbXml
             Assert.AreEqual(2, node3.Count);
             Assert.AreEqual("ABC", node3.Item(0).InnerText);
             Assert.AreEqual("DEF", node3.Item(1).InnerText);
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
         }
 
         [Test]
@@ -76,6 +77,7 @@ namespace QbSync.QbXml.Tests.QbXml
             Assert.AreEqual(2, node3.Count);
             Assert.AreEqual("ABC", node3.Item(0).InnerText);
             Assert.AreEqual("DEF", node3.Item(1).InnerText);
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
         }
 
         [Test]

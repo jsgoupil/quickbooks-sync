@@ -27,6 +27,7 @@ namespace QbSync.QbXml.Tests.QbXml
             Assert.AreEqual(1, requestXmlDoc.GetElementsByTagName("CustomerQueryRq").Count);
             Assert.AreEqual(0, requestXmlDoc.GetElementsByTagName("ListID").Count);
             Assert.AreEqual(0, requestXmlDoc.GetElementsByTagName("FullName").Count);
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
         }
 
         [Test]
@@ -46,6 +47,7 @@ namespace QbSync.QbXml.Tests.QbXml
             Assert.AreEqual(customerQueryRequest.ListID.Count(), requestXmlDoc.GetElementsByTagName("ListID").Count);
             QBAssert.AreEqual(list[0], requestXmlDoc.GetElementsByTagName("ListID").Item(0).InnerText);
             QBAssert.AreEqual(list[1], requestXmlDoc.GetElementsByTagName("ListID").Item(1).InnerText);
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
         }
 
         [Test]
@@ -65,6 +67,7 @@ namespace QbSync.QbXml.Tests.QbXml
             Assert.AreEqual(customerQueryRequest.FullName.Count(), requestXmlDoc.GetElementsByTagName("FullName").Count);
             QBAssert.AreEqual(list[0], requestXmlDoc.GetElementsByTagName("FullName").Item(0).InnerText);
             QBAssert.AreEqual(list[1], requestXmlDoc.GetElementsByTagName("FullName").Item(1).InnerText);
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
         }
 
         [Test]
@@ -86,6 +89,7 @@ namespace QbSync.QbXml.Tests.QbXml
             Assert.AreEqual(1, nameRangeFilter.Count);
             QBAssert.AreEqual(customerQueryRequest.NameRangeFilter.FromName, nameRangeFilter.Item(0).ReadNode("./FromName"));
             QBAssert.AreEqual(customerQueryRequest.NameRangeFilter.ToName, nameRangeFilter.Item(0).ReadNode("./ToName"));
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
         }
     }
 }

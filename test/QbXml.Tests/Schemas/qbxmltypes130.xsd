@@ -1,0 +1,151 @@
+
+<!-- ============================================================================= -->
+<!--                                                                               -->
+<!-- qbxmltypes130.xsd                                                             -->
+<!--                                                                               -->
+<!-- qbXML version 13.0                                                            -->
+<!--                                                                               -->
+<!-- (c) 2013 Intuit Inc. All rights reserved.                                     -->
+<!--                                                                               -->
+<!-- Use is subject to a qbXML Developer Agreement available at:                   -->
+<!--          http://developer.intuit.com/legal/                                   -->
+<!--                                                                               -->
+<!-- ============================================================================= -->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+<xsd:simpleType name="IDTYPE">
+  <xsd:restriction base="xsd:string">
+    <xsd:maxLength value="36"/>
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:simpleType name="STRTYPE">
+  <xsd:restriction base="xsd:string">
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:simpleType name="BOOLTYPE">
+  <xsd:union>
+    <xsd:simpleType>
+      <xsd:restriction base="xsd:boolean">
+      </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType>
+      <xsd:restriction base="xsd:token">
+        <xsd:enumeration value=""/>
+      </xsd:restriction>
+    </xsd:simpleType>
+  </xsd:union>
+</xsd:simpleType>
+
+<xsd:simpleType name="DATETYPE">
+  <xsd:union>
+    <xsd:simpleType>
+      <xsd:restriction base="xsd:date">
+      </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType>
+      <xsd:restriction base="xsd:token">
+        <xsd:enumeration value=""/>
+      </xsd:restriction>
+    </xsd:simpleType>
+  </xsd:union>
+</xsd:simpleType>
+
+<xsd:simpleType name="DATETIMETYPE">
+  <xsd:union>
+    <xsd:simpleType>
+      <xsd:restriction base="xsd:string">
+        <xsd:pattern value="([0-9]{4}\-[0-9]{1,2}\-[0-9]{1,2}(T[0-9]{1,2}(:[0-9]{1,2}(:[0-9]{1,2}([+\-]{1}[0-9]{1,2}:[0-9]{1,2})?)?)?)?)?" />
+      </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType>
+      <xsd:restriction base="xsd:token">
+        <xsd:enumeration value=""/>
+      </xsd:restriction>
+    </xsd:simpleType>
+  </xsd:union>
+</xsd:simpleType>
+
+<xsd:simpleType name="TIMEINTERVALTYPE">
+  <xsd:union>
+    <xsd:simpleType>
+      <xsd:restriction base="xsd:duration">
+        <xsd:pattern value="[+\-]?PT([0-9]+H)?([0-9]+M)?([0-9]+S)?" />
+      </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType>
+      <xsd:restriction base="xsd:token">
+        <xsd:enumeration value=""/>
+      </xsd:restriction>
+    </xsd:simpleType>
+  </xsd:union>
+</xsd:simpleType>
+
+<xsd:simpleType name="AMTTYPE">
+  <xsd:restriction base="xsd:string">
+    <xsd:pattern value="([+\-]?[0-9]{1,13}(\.[0-9]{2})?)?"/>
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:simpleType name="PRICETYPE">
+  <xsd:restriction base="xsd:string">
+    <xsd:pattern value="([+\-]?[0-9]{1,10}(\.[0-9]{1,5})?)?"/>
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:simpleType name="QUANTYPE">
+  <xsd:restriction base="xsd:string">
+    <xsd:pattern value="([+\-]?[0-9]{1,10}(\.[0-9]{1,5})?)?"/>
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:simpleType name="PERCENTTYPE">
+  <xsd:restriction base="xsd:string">
+    <xsd:pattern value="([+\-]?[0-9]{1,10}(\.[0-9]{1,5})?)?"/>
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:simpleType name="ENUMTYPE">
+  <xsd:restriction base="xsd:string">
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:simpleType name="INTTYPE">
+  <xsd:restriction base="xsd:integer">
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:simpleType name="GUIDTYPE">
+  <xsd:restriction base="xsd:string">
+    <xsd:pattern value="0|(\{[0-9a-fA-F]{8}(\-([0-9a-fA-F]{4})){3}\-[0-9a-fA-F]{12}\})"/>
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:simpleType name="UUIDTYPE">
+  <xsd:restriction base="xsd:string">
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:simpleType name="MACROTYPE">
+  <xsd:restriction base="xsd:string">
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:simpleType name="FLOATTYPE">
+  <xsd:union>
+    <xsd:simpleType>
+      <xsd:restriction base="xsd:decimal">
+      </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType>
+      <xsd:restriction base="xsd:token">
+        <xsd:enumeration value=""/>
+      </xsd:restriction>
+    </xsd:simpleType>
+  </xsd:union>
+</xsd:simpleType>
+
+
+</xsd:schema>

@@ -47,7 +47,6 @@
     <Compile Include="Messages\Requests\DataExtDefAddRequest.cs" />
     <Compile Include="Messages\Requests\DataExtDelRequest.cs" />
     <Compile Include="Messages\Requests\DataExtAddRequest.cs" />
-    <Compile Include="Messages\Requests\DataExtDefRequest.cs" />
     <Compile Include="Messages\Requests\DataExtRequest.cs" />
     <Compile Include="Messages\Requests\DataExtModRequest.cs" />
     <Compile Include="Messages\Responses\DataExtDefDelResponse.cs" />
