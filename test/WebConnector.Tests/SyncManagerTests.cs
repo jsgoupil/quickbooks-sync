@@ -167,15 +167,6 @@ namespace QbSync.WebConnector.Tests
         }
 
         [Test]
-        [ExpectedException(ExpectedException = typeof(Exception), ExpectedMessage = "The type System.Object does not implement StepQueryResponse.")]
-        public void SendRequestXML_InvalidStep()
-        {
-            var syncManagerMock = new Mock<SyncManager>(null);
-            syncManagerMock.CallBase = true;
-            syncManagerMock.Object.RegisterStep(0, typeof(object));
-        }
-
-        [Test]
         [SetupValidTicket]
         public void SendRequestXML_WithValidTicket_FirstStepHasWork()
         {
@@ -188,17 +179,15 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock.CallBase = true;
 
             var expectedResult = "abc";
-            var stepQueryResponseMock = new Mock<StepQueryResponse>();
-            stepQueryResponseMock
-                .Setup(m => m.SendXML())
+            var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
+            stepQueryResponseMock1
+                .Setup(m => m.SendXML(AuthenticatedTicket))
                 .Returns(expectedResult);
+            stepQueryResponseMock1
+                .Setup(m => m.GetName())
+                .Returns("Mock1");
 
-            syncManagerMock
-                .Protected()
-                .Setup<StepQueryResponse>("Invoke", ItExpr.Is<Type>((t) => t == typeof(MockStepQueryResponse1)), ItExpr.IsAny<AuthenticatedTicket>())
-                .Returns(stepQueryResponseMock.Object);
-
-            syncManagerMock.Object.RegisterStep(0, typeof(MockStepQueryResponse1));
+            syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
 
             var result = syncManagerMock.Object.SendRequestXML(guid, null, null, null, 1, 1);
 
@@ -206,7 +195,7 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock
                 .Protected()
                 .Verify("SaveChanges", Times.Once());
-            Assert.AreEqual(0, AuthenticatedTicket.CurrentStep);
+            Assert.AreEqual(AuthenticatedTicket.InitialStep, AuthenticatedTicket.CurrentStep);
         }
 
         [Test]
@@ -225,24 +214,21 @@ namespace QbSync.WebConnector.Tests
             var expectedResult = "abc";
             var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
             stepQueryResponseMock1
-                .Setup(m => m.SendXML())
+                .Setup(m => m.SendXML(AuthenticatedTicket))
                 .Returns((string)null);
+            stepQueryResponseMock1
+                .Setup(m => m.GetName())
+                .Returns("Mock1");
             var stepQueryResponseMock2 = new Mock<StepQueryResponse>();
             stepQueryResponseMock2
-                .Setup(m => m.SendXML())
+                .Setup(m => m.SendXML(AuthenticatedTicket))
                 .Returns(expectedResult);
+            stepQueryResponseMock2
+                .Setup(m => m.GetName())
+                .Returns("Mock2");
 
-            syncManagerMock
-                .Protected()
-                .Setup<StepQueryResponse>("Invoke", ItExpr.Is<Type>((t) => t == typeof(MockStepQueryResponse1)), ItExpr.IsAny<AuthenticatedTicket>())
-                .Returns(stepQueryResponseMock1.Object);
-            syncManagerMock
-                .Protected()
-                .Setup<StepQueryResponse>("Invoke", ItExpr.Is<Type>((t) => t == typeof(MockStepQueryResponse2)), ItExpr.IsAny<AuthenticatedTicket>())
-                .Returns(stepQueryResponseMock2.Object);
-
-            syncManagerMock.Object.RegisterStep(0, typeof(MockStepQueryResponse1));
-            syncManagerMock.Object.RegisterStep(1, typeof(MockStepQueryResponse2));
+            syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
+            syncManagerMock.Object.RegisterStep(stepQueryResponseMock2.Object);
 
             var result = syncManagerMock.Object.SendRequestXML(guid, null, null, null, 1, 1);
 
@@ -250,7 +236,56 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock
                 .Protected()
                 .Verify("SaveChanges", Times.Once());
-            Assert.AreEqual(1, AuthenticatedTicket.CurrentStep);
+            Assert.AreEqual(stepQueryResponseMock2.Object.GetName(), AuthenticatedTicket.CurrentStep);
+        }
+
+        [Test]
+        [SetupValidTicket]
+        public void SendRequestXML_WithValidTicket_With3Steps()
+        {
+            var guid = Guid.NewGuid().ToString();
+
+            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            syncManagerMock
+                .Protected()
+                .Setup("SaveChanges");
+
+            syncManagerMock.CallBase = true;
+
+            var expectedResult = "abc";
+            var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
+            stepQueryResponseMock1
+                .Setup(m => m.SendXML(AuthenticatedTicket))
+                .Returns((string)null);
+            stepQueryResponseMock1
+                .Setup(m => m.GetName())
+                .Returns("Mock1");
+            var stepQueryResponseMock2 = new Mock<StepQueryResponse>();
+            stepQueryResponseMock2
+                .Setup(m => m.SendXML(AuthenticatedTicket))
+                .Returns((string)null);
+            stepQueryResponseMock2
+                .Setup(m => m.GetName())
+                .Returns("Mock2");
+            var stepQueryResponseMock3 = new Mock<StepQueryResponse>();
+            stepQueryResponseMock3
+                .Setup(m => m.SendXML(AuthenticatedTicket))
+                .Returns(expectedResult);
+            stepQueryResponseMock3
+                .Setup(m => m.GetName())
+                .Returns("Mock3");
+
+            syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
+            syncManagerMock.Object.RegisterStep(stepQueryResponseMock2.Object);
+            syncManagerMock.Object.RegisterStep(stepQueryResponseMock3.Object);
+
+            var result = syncManagerMock.Object.SendRequestXML(guid, null, null, null, 1, 1);
+
+            Assert.AreEqual(expectedResult, result);
+            syncManagerMock
+                .Protected()
+                .Verify("SaveChanges", Times.Once());
+            Assert.AreEqual(stepQueryResponseMock3.Object.GetName(), AuthenticatedTicket.CurrentStep);
         }
 
         [Test]
@@ -267,15 +302,13 @@ namespace QbSync.WebConnector.Tests
 
             var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
             stepQueryResponseMock1
-                .Setup(m => m.SendXML())
+                .Setup(m => m.SendXML(AuthenticatedTicket))
                 .Returns((string)null);
+            stepQueryResponseMock1
+                .Setup(m => m.GetName())
+                .Returns("Mock1");
 
-            syncManagerMock
-                .Protected()
-                .Setup<StepQueryResponse>("Invoke", ItExpr.Is<Type>((t) => t == typeof(MockStepQueryResponse1)), ItExpr.IsAny<AuthenticatedTicket>())
-                .Returns(stepQueryResponseMock1.Object);
-
-            syncManagerMock.Object.RegisterStep(0, typeof(MockStepQueryResponse1));
+            syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
 
             var result = syncManagerMock.Object.SendRequestXML(guid, null, null, null, 1, 1);
 
@@ -283,7 +316,7 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock
                 .Protected()
                 .Verify("SaveChanges", Times.Once());
-            Assert.AreEqual(1, AuthenticatedTicket.CurrentStep);
+            Assert.AreEqual(null, AuthenticatedTicket.CurrentStep);
         }
 
         [Test]
@@ -318,20 +351,18 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock.CallBase = true;
 
             var expectedResult = 0;
-            var stepQueryResponseMock = new Mock<StepQueryResponse>();
-            stepQueryResponseMock
-                .Setup(m => m.ReceiveXML(null, null, null))
+            var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
+            stepQueryResponseMock1
+                .Setup(m => m.ReceiveXML(AuthenticatedTicket, null, null, null))
                 .Returns(expectedResult);
-            stepQueryResponseMock
+            stepQueryResponseMock1
                 .Setup(m => m.GotoNextStep())
                 .Returns(true);
+            stepQueryResponseMock1
+                .Setup(m => m.GetName())
+                .Returns("Mock1");
 
-            syncManagerMock
-                .Protected()
-                .Setup<StepQueryResponse>("Invoke", ItExpr.Is<Type>((t) => t == typeof(MockStepQueryResponse1)), ItExpr.IsAny<AuthenticatedTicket>())
-                .Returns(stepQueryResponseMock.Object);
-
-            syncManagerMock.Object.RegisterStep(0, typeof(MockStepQueryResponse1));
+            syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
 
             var result = syncManagerMock.Object.ReceiveRequestXML(guid, null, null, null);
 
@@ -339,7 +370,7 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock
                 .Protected()
                 .Verify("SaveChanges", Times.Once());
-            Assert.AreEqual(1, AuthenticatedTicket.CurrentStep);
+            Assert.AreEqual(null, AuthenticatedTicket.CurrentStep);
         }
 
         [Test]
@@ -355,20 +386,18 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock.CallBase = true;
 
             var expectedResult = 0;
-            var stepQueryResponseMock = new Mock<StepQueryResponse>();
-            stepQueryResponseMock
-                .Setup(m => m.ReceiveXML(null, null, null))
+            var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
+            stepQueryResponseMock1
+                .Setup(m => m.ReceiveXML(AuthenticatedTicket, null, null, null))
                 .Returns(expectedResult);
-            stepQueryResponseMock
+            stepQueryResponseMock1
                 .Setup(m => m.GotoNextStep())
                 .Returns(false);
+            stepQueryResponseMock1
+                .Setup(m => m.GetName())
+                .Returns("Mock1");
 
-            syncManagerMock
-                .Protected()
-                .Setup<StepQueryResponse>("Invoke", ItExpr.Is<Type>((t) => t == typeof(MockStepQueryResponse1)), ItExpr.IsAny<AuthenticatedTicket>())
-                .Returns(stepQueryResponseMock.Object);
-
-            syncManagerMock.Object.RegisterStep(0, typeof(MockStepQueryResponse1));
+            syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
 
             var result = syncManagerMock.Object.ReceiveRequestXML(guid, null, null, null);
 
@@ -376,7 +405,7 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock
                 .Protected()
                 .Verify("SaveChanges", Times.Once());
-            Assert.AreEqual(0, AuthenticatedTicket.CurrentStep);
+            Assert.AreEqual(AuthenticatedTicket.InitialStep, AuthenticatedTicket.CurrentStep);
         }
 
         [Test]
@@ -392,17 +421,15 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock.CallBase = true;
 
             var expectedResult = -1;
-            var stepQueryResponseMock = new Mock<StepQueryResponse>();
-            stepQueryResponseMock
-                .Setup(m => m.ReceiveXML(null, null, null))
+            var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
+            stepQueryResponseMock1
+                .Setup(m => m.ReceiveXML(AuthenticatedTicket, null, null, null))
                 .Returns(expectedResult);
+            stepQueryResponseMock1
+                .Setup(m => m.GetName())
+                .Returns("Mock1");
 
-            syncManagerMock
-                .Protected()
-                .Setup<StepQueryResponse>("Invoke", ItExpr.Is<Type>((t) => t == typeof(MockStepQueryResponse1)), ItExpr.IsAny<AuthenticatedTicket>())
-                .Returns(stepQueryResponseMock.Object);
-
-            syncManagerMock.Object.RegisterStep(0, typeof(MockStepQueryResponse1));
+            syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
 
             var result = syncManagerMock.Object.ReceiveRequestXML(guid, null, null, null);
 
@@ -410,7 +437,7 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock
                 .Protected()
                 .Verify("SaveChanges", Times.Once());
-            Assert.AreEqual(0, AuthenticatedTicket.CurrentStep);
+            Assert.AreEqual(AuthenticatedTicket.InitialStep, AuthenticatedTicket.CurrentStep);
         }
 
         [Test]
@@ -445,17 +472,15 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock.CallBase = true;
 
             var expectedResult = "abc";
-            var stepQueryResponseMock = new Mock<StepQueryResponse>();
-            stepQueryResponseMock
-                .Setup(m => m.LastError())
+            var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
+            stepQueryResponseMock1
+                .Setup(m => m.LastError(AuthenticatedTicket))
                 .Returns(expectedResult);
+            stepQueryResponseMock1
+                .Setup(m => m.GetName())
+                .Returns("Mock1");
 
-            syncManagerMock
-                .Protected()
-                .Setup<StepQueryResponse>("Invoke", ItExpr.Is<Type>((t) => t == typeof(MockStepQueryResponse1)), ItExpr.IsAny<AuthenticatedTicket>())
-                .Returns(stepQueryResponseMock.Object);
-
-            syncManagerMock.Object.RegisterStep(0, typeof(MockStepQueryResponse1));
+            syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
 
             var result = syncManagerMock.Object.GetLastError(guid);
 
@@ -463,7 +488,7 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock
                 .Protected()
                 .Verify("SaveChanges", Times.Once());
-            Assert.AreEqual(0, AuthenticatedTicket.CurrentStep);
+            Assert.AreEqual(AuthenticatedTicket.InitialStep, AuthenticatedTicket.CurrentStep);
         }
 
         [Test]
@@ -502,7 +527,7 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock
                 .Protected()
                 .Verify("SaveChanges", Times.Once());
-            Assert.AreEqual(0, AuthenticatedTicket.CurrentStep);
+            Assert.AreEqual(AuthenticatedTicket.InitialStep, AuthenticatedTicket.CurrentStep);
         }
 
         [Test]

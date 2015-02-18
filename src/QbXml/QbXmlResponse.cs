@@ -97,14 +97,15 @@ namespace QbSync.QbXml
                             var baseInstance = Activator.CreateInstance(propertyInfo.PropertyType, str);
                             propertyInfo.SetValue(instance, baseInstance, null);
                         }
-                        else if (propertyInfo.PropertyType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+                        else if (propertyInfo.PropertyType.IsGenericType && propertyInfo.PropertyType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
                         {
                             var list = WalkTypes(propertyInfo.PropertyType.GetGenericArguments()[0], xmlNode.SelectNodes(propertyInfo.Name));
                             propertyInfo.SetValue(instance, list, null);
                         }
                         else
                         {
-                            Console.WriteLine("DEBUG");
+                            var obj = WalkType(propertyInfo.PropertyType, node);
+                            propertyInfo.SetValue(instance, obj, null);
                         }
                     }
                 }

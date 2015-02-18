@@ -15,6 +15,44 @@
             return value;
         }
 
+        public override bool Equals(object obj)
+        {
+            var objType = obj as StrType;
+            if (objType != null)
+            {
+                return value == objType.value;
+            }
+
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return value.GetHashCode();
+        }
+
+        public static bool operator ==(StrType a, StrType b)
+        {
+            // If both are null, or both are same instance, return true.
+            if (System.Object.ReferenceEquals(a, b))
+            {
+                return true;
+            }
+
+            // If one is null, but not both, return false.
+            if (((object)a == null) || ((object)b == null))
+            {
+                return false;
+            }
+
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(StrType a, StrType b)
+        {
+            return !(a == b);
+        }
+
         public static implicit operator StrType(string value)
         {
             if (value == null)

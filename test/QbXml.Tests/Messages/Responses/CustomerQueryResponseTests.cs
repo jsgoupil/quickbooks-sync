@@ -26,6 +26,22 @@ namespace QbSync.QbXml.Tests.QbXml
         }
 
         [Test]
+        public void BasicCustomerResponseTest_WithObject()
+        {
+            var customerRet = "<CustomerRet><ShipAddress><City>Seattle</City><State>WA</State></ShipAddress></CustomerRet>";
+
+            var customerResponse = new CustomerQueryResponse();
+            var response = customerResponse.ParseResponse(QuickBooksTestHelper.CreateQbXmlWithEnvelope(customerRet, "CustomerQueryRs"));
+            var customers = response.Object;
+            var customer = customers[0];
+
+            Assert.AreEqual(1, customers.Length);
+            Assert.IsNotNull(customer.ShipAddress);
+            QBAssert.AreEqual("Seattle", customer.ShipAddress.City);
+            QBAssert.AreEqual("WA", customer.ShipAddress.State);
+        }
+
+        [Test]
         public void BasicCustomerResponseTest_WithIEnumerable()
         {
             var customerRet = "<CustomerRet><AdditionalContactRef><ContactName>Name1</ContactName><ContactValue>Value1</ContactValue></AdditionalContactRef><AdditionalContactRef><ContactName>Name2</ContactName><ContactValue>Value2</ContactValue></AdditionalContactRef></CustomerRet>";

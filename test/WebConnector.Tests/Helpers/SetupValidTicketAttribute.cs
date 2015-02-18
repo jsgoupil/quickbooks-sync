@@ -9,7 +9,7 @@ namespace QbSync.WebConnector.Tests.Helpers
             AuthenticatedTicket = new AuthenticatedTicket
             {
                 Authenticated = true,
-                CurrentStep = 0,
+                CurrentStep = AuthenticatedTicket.InitialStep,
                 Ticket = Guid.NewGuid().ToString()
             };
         }

@@ -6,34 +6,34 @@ namespace QbSync.WebConnector.Messages
         where T : QbXmlRequest, new()
         where Y : QbXmlResponse<YResult>, new()
     {
-        protected AuthenticatedTicket authenticatedTicket;
-
-        public StepQueryResponseBase(AuthenticatedTicket authenticatedTicket)
+        public StepQueryResponseBase()
         {
-            this.authenticatedTicket = authenticatedTicket;
         }
 
-        public virtual string SendXML()
+        public abstract string GetName();
+
+        public virtual string SendXML(AuthenticatedTicket authenticatedTicket)
         {
-            var requestObject = CreateRequest();
+            var requestObject = CreateRequest(authenticatedTicket);
             if (requestObject != null)
             {
-                ExecuteRequest(requestObject);
-
-                return requestObject.GetRequest();
+                if (ExecuteRequest(authenticatedTicket, requestObject))
+                {
+                    return requestObject.GetRequest();
+                }
             }
 
             return null;
         }
 
-        public virtual int ReceiveXML(string response, string hresult, string message)
+        public virtual int ReceiveXML(AuthenticatedTicket authenticatedTicket, string response, string hresult, string message)
         {
-            var responseObject = CreateResponse();
+            var responseObject = CreateResponse(authenticatedTicket);
 
-            if (responseObject != null)
+            if (responseObject != null && !string.IsNullOrEmpty(response))
             {
                 var msgResponseObject = responseObject.ParseResponse(response);
-                ExecuteResponse(msgResponseObject);
+                ExecuteResponse(authenticatedTicket, msgResponseObject);
 
                 return 0;
             }
@@ -46,26 +46,27 @@ namespace QbSync.WebConnector.Messages
             return true;
         }
 
-        public virtual string LastError()
+        public virtual string LastError(AuthenticatedTicket authenticatedTicket)
         {
             return string.Empty;
         }
 
-        protected virtual T CreateRequest()
+        protected virtual T CreateRequest(AuthenticatedTicket authenticatedTicket)
         {
             return new T();
         }
 
-        protected virtual Y CreateResponse()
+        protected virtual Y CreateResponse(AuthenticatedTicket authenticatedTicket)
         {
             return new Y();
         }
 
-        protected virtual void ExecuteRequest(T request)
+        protected virtual bool ExecuteRequest(AuthenticatedTicket authenticatedTicket, T request)
         {
+            return true;
         }
 
-        protected virtual void ExecuteResponse(QbXmlMsgResponse<YResult> response)
+        protected virtual void ExecuteResponse(AuthenticatedTicket authenticatedTicket, QbXmlMsgResponse<YResult> response)
         {
         }
     }

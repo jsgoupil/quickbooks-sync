@@ -100,7 +100,7 @@ public SyncManager(ApplicationDbContext db_context, IOwinContext owinContext, IA
   this.db_context = db_context;
   this.owinContext = owinContext;
 
-  RegisterStep(0, typeof(CustomerQuery));
+  RegisterStep(new CustomerQuery(this.db_context));
 }
 ```
 
@@ -143,35 +143,31 @@ public class CustomerQuery : StepQueryResponseBase<CustomerQueryRequest, Custome
 {
   private ApplicationDbContext db_context;
 
-  public CustomerQuery(AuthenticatedTicketContext authenticatedTicket, ApplicationDbContext db_context)
-    : base(authenticatedTicket, messageService)
+  public CustomerQuery(ApplicationDbContext db_context)
+    : base()
   {
     this.db_context = db_context;
   }
 
-  protected override void ExecuteRequest(CustomerQueryRequest request)
+  protected override bool ExecuteRequest(AuthenticatedTicketContext authenticatedTicket, CustomerQueryRequest request)
   {
-    base.ExecuteRequest(request);
-
     // Do some operations on the customerRequest to get only specific ones
     customerRequest.FromModifiedDate = new DateTimeType(DateTime.Now);
+
+    // Return false if you want to prevent the request to execute and go to the next step.
+    return base.ExecuteRequest(authenticatedTicket, request);
   }
 
-  protected override void ExecuteResponse(QbSync.QbXml.QbXmlMsgResponse<QbSync.QbXml.Objects.Customer[]> response)
+  protected override void ExecuteResponse(AuthenticatedTicketContext authenticatedTicket, QbSync.QbXml.QbXmlMsgResponse<QbSync.QbXml.Objects.Customer[]> response)
   {
-    base.ExecuteResponse(response);
+    base.ExecuteResponse(authenticatedTicket, response);
 
     // Execute some operations with your database.
   }
 }
 ```
 
-- The 3 generic classes are provided by the QbXml NuGet package. You associate the request, response and the object that would be returned with a response.
-- There is a custom constructor that takes an `ApplicationDbContext`. In order to create such step, override the Invoke method from the `SyncManager` as such:
-
-```C#
-return Activator.CreateInstance(type, authenticatedTicket, db_context) as QbSync.WebConnector.StepQueryResponse;
-```
+The 3 generic classes are provided by the QbXml NuGet package. You associate the request, response and the object that would be returned with a response.
 
 ### Step 4.1. Creating a step with an iterator ###
 When you make a request to the QuickBooks database, you might receive millions of objects back. Your server or the database won't be able to handle that many; you have to break the query into batches. We have everything handled for you, but we need to save another state to the database. Instead of deriving from `StepQueryResponseBase`, you have to derive from `StepQueryWithIterator` and implement 2 methods.

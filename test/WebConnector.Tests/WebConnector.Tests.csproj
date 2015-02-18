@@ -64,7 +64,6 @@
   <ItemGroup>
     <Compile Include="Helpers\AuthenticatorAttribute.cs" />
     <Compile Include="Helpers\SetupValidTicketAttribute.cs" />
-    <Compile Include="MockStepQueryResponse.cs" />
     <Compile Include="Helpers\SetupInvalidTicketAttribute.cs" />
     <Compile Include="StepQueryWithIteratorTests.cs" />
     <Compile Include="SyncManagerTests.cs" />

@@ -7,17 +7,15 @@ namespace QbSync.WebConnector
 {
     public class SyncManager
     {
-        public delegate StepQueryResponse StepInvoker(AuthenticatedTicket authenticatedTicket);
-
         protected IAuthenticator authenticator;
 
         public SyncManager(IAuthenticator authenticator)
         {
             this.authenticator = authenticator;
-            StepSync = new Dictionary<int, Type>();
+            StepSync = new List<StepQueryResponse>();
         }
 
-        internal IDictionary<int, Type> StepSync
+        internal List<StepQueryResponse> StepSync
         {
             get;
             set;
@@ -114,15 +112,14 @@ namespace QbSync.WebConnector
 
             if (authenticatedTicket != null)
             {
-                Type objectType = null;
-                while (StepSync.TryGetValue(authenticatedTicket.CurrentStep, out objectType))
+                StepQueryResponse stepQueryResponse = null;
+                while ((stepQueryResponse = FindStep(authenticatedTicket.CurrentStep)) != null)
                 {
-                    var stepQueryResponse = Invoke(objectType, authenticatedTicket);
-                    result = stepQueryResponse.SendXML();
+                    result = stepQueryResponse.SendXML(authenticatedTicket);
 
                     if (result == null)
                     {
-                        authenticatedTicket.CurrentStep++;
+                        authenticatedTicket.CurrentStep = FindNextStepName(authenticatedTicket.CurrentStep);
                     }
                     else
                     {
@@ -160,18 +157,17 @@ namespace QbSync.WebConnector
 
             if (authenticatedTicket != null)
             {
-                Type objectType = null;
-                if (StepSync.TryGetValue(authenticatedTicket.CurrentStep, out objectType))
+                StepQueryResponse stepQueryResponse =  FindStep(authenticatedTicket.CurrentStep);
+                if (stepQueryResponse != null)
                 {
-                    var stepQueryResponse = Invoke(objectType, authenticatedTicket);
-                    result = stepQueryResponse.ReceiveXML(response, hresult, message);
+                    result = stepQueryResponse.ReceiveXML(authenticatedTicket, response, hresult, message);
 
                     if (result >= 0)
                     {
                         // We go to the next step if we are asked to
                         if (stepQueryResponse.GotoNextStep())
                         {
-                            authenticatedTicket.CurrentStep++;
+                            authenticatedTicket.CurrentStep = FindNextStepName(authenticatedTicket.CurrentStep);
                         }
                     }
                 }
@@ -197,11 +193,10 @@ namespace QbSync.WebConnector
 
             if (authenticatedTicket != null)
             {
-                Type objectType = null;
-                if (StepSync.TryGetValue(authenticatedTicket.CurrentStep, out objectType))
+                StepQueryResponse stepQueryResponse = FindStep(authenticatedTicket.CurrentStep);
+                if (stepQueryResponse != null)
                 {
-                    var stepQueryResponse = Invoke(objectType, authenticatedTicket);
-                    result = stepQueryResponse.LastError();
+                    result = stepQueryResponse.LastError(authenticatedTicket);
                 }
 
             }
@@ -262,27 +257,10 @@ namespace QbSync.WebConnector
         /// <summary>
         /// Registers a step to use.
         /// </summary>
-        /// <param name="stepNumber">Step Number.</param>
-        /// <param name="type">Type to create.</param>
-        public void RegisterStep(int stepNumber, Type type)
+        /// <param name="stepQueryResponse">Step.</param>
+        public void RegisterStep(StepQueryResponse stepQueryResponse)
         {
-            if (!type.GetInterfaces().Contains(typeof(StepQueryResponse)))
-            {
-                throw new Exception("The type " + type.FullName + " does not implement StepQueryResponse.");
-            }
-
-            StepSync[stepNumber] = type;
-        }
-
-        /// <summary>
-        /// Invoke a step based on the previously registered type.
-        /// </summary>
-        /// <param name="type">Type.</param>
-        /// <param name="authenticatedTicket">The authenticated ticket.</param>
-        /// <returns>Created step.</returns>
-        protected internal virtual StepQueryResponse Invoke(Type type, AuthenticatedTicket authenticatedTicket)
-        {
-            return Activator.CreateInstance(type, authenticatedTicket) as StepQueryResponse;
+            StepSync.Add(stepQueryResponse);
         }
 
         /// <summary>
@@ -320,6 +298,50 @@ namespace QbSync.WebConnector
         /// <returns>Minimum version.</returns>
         protected internal virtual Version GetMinimumRequiredVersion() {
             return new Version(2, 1, 0, 30);
+        }
+
+        /// <summary>
+        /// Finds the step based on its name.
+        /// </summary>
+        /// <param name="step">Step name.</param>
+        /// <returns>The step associated with the name.</returns>
+        protected internal StepQueryResponse FindStep(string step)
+        {
+            if (step == AuthenticatedTicket.InitialStep)
+            {
+                return StepSync.FirstOrDefault();
+            }
+
+            return StepSync.FirstOrDefault(s => s.GetName() == step);
+        }
+
+        /// <summary>
+        /// Finds the next step after the step name.
+        /// </summary>
+        /// <param name="step">Step name.</param>
+        /// <returns>The next step name or null if none.</returns>
+        protected internal string FindNextStepName(string step)
+        {
+            if (step == AuthenticatedTicket.InitialStep)
+            {
+                if (StepSync.Count >= 2)
+                {
+                    return StepSync[1].GetName();
+                }
+            }
+
+            for (var i = 0; i < StepSync.Count; i++)
+            {
+                if (StepSync[i].GetName() == step)
+                {
+                    if (i + 1 < StepSync.Count)
+                    {
+                        return StepSync[i + 1].GetName();
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }

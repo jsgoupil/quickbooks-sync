@@ -9,15 +9,13 @@ namespace QbSync.WebConnector.Messages
         internal const string IteratorKey = "Iterator";
         private bool gotoNextStep = true;
 
-        public StepQueryWithIterator(AuthenticatedTicket authenticatedTicket)
-            : base(authenticatedTicket)
+        public StepQueryWithIterator()
+            : base()
         {
         }
 
-        protected override void ExecuteRequest(T request)
+        protected override bool ExecuteRequest(AuthenticatedTicket authenticatedTicket, T request)
         {
-            base.ExecuteRequest(request);
-
             var savedMessage = RetrieveMessage(authenticatedTicket.Ticket, authenticatedTicket.CurrentStep, IteratorKey);
             if (!string.IsNullOrEmpty(savedMessage))
             {
@@ -25,9 +23,11 @@ namespace QbSync.WebConnector.Messages
             }
 
             request.MaxReturned = 100;
+
+            return base.ExecuteRequest(authenticatedTicket, request);
         }
 
-        protected override void ExecuteResponse(QbXmlMsgResponse<YResult> response)
+        protected override void ExecuteResponse(AuthenticatedTicket authenticatedTicket, QbXmlMsgResponse<YResult> response)
         {
             // We have more that can come our way.
             if (response.IteratorRemainingCount.HasValue && response.IteratorRemainingCount.Value > 0)
@@ -36,7 +36,7 @@ namespace QbSync.WebConnector.Messages
                 SaveMessage(authenticatedTicket.Ticket, authenticatedTicket.CurrentStep, IteratorKey, response.IteratorID);
             }
 
-            base.ExecuteResponse(response);
+            base.ExecuteResponse(authenticatedTicket, response);
         }
 
         public override bool GotoNextStep()
@@ -44,7 +44,7 @@ namespace QbSync.WebConnector.Messages
             return gotoNextStep;
         }
 
-        protected abstract void SaveMessage(string ticket, int stepNumber, string key, string value);
-        protected abstract string RetrieveMessage(string ticket, int stepNumber, string key);
+        protected abstract void SaveMessage(string ticket, string step, string key, string value);
+        protected abstract string RetrieveMessage(string ticket, string step, string key);
     }
 }

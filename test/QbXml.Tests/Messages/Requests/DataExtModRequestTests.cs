@@ -32,6 +32,9 @@ namespace QbSync.QbXml.Tests.QbXml
             QBAssert.AreEqual(dataExtModRequest.DataExtName, node.ReadNode("DataExtName"));
             QBAssert.AreEqual(dataExtModRequest.DataExtValue, node.ReadNode("DataExtValue"));
             Assert.AreEqual("Company", node.ReadNode("OtherDataExtType"));
+
+            // The order matters for Quickbooks... yep :(
+            Assert.AreEqual("OwnerID", node.FirstChild.Name);
         }
 
         [Test]

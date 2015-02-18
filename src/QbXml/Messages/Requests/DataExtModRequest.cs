@@ -17,9 +17,11 @@ namespace QbSync.QbXml.Messages.Requests
         {
             var doc = parent.OwnerDocument;
             var dataExtMod = doc.CreateElement("DataExtMod");
-            dataExtMod.AppendTag("DataExtValue", DataExtValue);
             parent.AppendChild(dataExtMod);
             base.BuildRequest(dataExtMod);
+
+            // Quickbooks, are you serious? this HAS TO BE at the end.
+            dataExtMod.AppendTag("DataExtValue", DataExtValue);
         }
     }
 }
