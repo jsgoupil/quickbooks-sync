@@ -2,6 +2,8 @@
 
 QuickBooks Sync regroups multiple NuGet packages to sync data from QuickBooks Desktop using QbXml. Make requests to QuickBooks Desktop, analyze the returned values, etc.
 
+**This project is actively maintained and is in its early alpha stage. Many breaks will be introduced until stability is reached.**
+
 ## QbXml ##
 
 QbXml is the language used by QuickBooks desktop to exchange back and forth data between an application and the QuickBooks database.
@@ -10,7 +12,8 @@ Here is a couple of ideas how you can make some requests and parse responses.
 
 *Create a request XML with QbXml*
 ```C#
-public class CustomerRequest {
+public class CustomerRequest
+{
   public CustomerRequest() 
   {
     var customerRequest = new QBSync.QbXml.Messages.CustomerQueryRequest()
@@ -29,7 +32,7 @@ public class CustomerRequest {
 ```C#
 public class CustomerResponse
 {
-  public void LoadResponse() 
+  public void LoadResponse(string xml)
   {
     var customerResponse = new QBSync.QbXml.Messages.CustomerQueryResponse();
 
@@ -49,17 +52,17 @@ Once downloaded, they must get a QWC file that will connect the Web Connector to
 /// TODO
 ```
 
-The Web Connector uses the SOAP protocol to talk with your website, the NuGet package takes care of the heavy lifting to talk with the software. However, you must implement some methods in order to get everything working according to your needs. The Web Connector will come periodically to your website asking if you have any requests to do to its database.
-The Web Connector execute the following tasks:
+The Web Connector uses the SOAP protocol to talk with your website, the NuGet package takes care of the heavy lifting to talk with the QuickBooks Desktop. However, you must implement some methods in order to get everything working according to your needs. The Web Connector will come periodically to your website asking if you have any requests to do to its database.
+The Web Connector executes the following tasks:
 
-1. Authenticate - Sends the login/password that you must verify. You also return a session ticket that will be used for the rest of messages exchanged back and forth.
+1. Authenticate - Sends the login/password that you must verify. You also return a session ticket that will be used for the rest of messages that are exchanged back and forth.
 2. SendRequestXML - The Web Connector expects that you return an XML command that will execute on the database.
 3. ReceiveRequestXML - Response regarding the previous step.
-4. GOTO Step 2 - Until you return an empty string, indicating you are done.
+4. GOTO Step 2 - Until you return an empty string, indicating that you are done.
 5. CloseConnection - Connection is done.
 
 ### Database state ###
-Multiple connections are done between the Web Connector and your website. There is a need to keep some states with a database. The NuGet package doesn't provide such thing because it doesn't know which database provider/schema you are using; this is where you have to start code your own implementation.
+Multiple "synchronous" connections are done between the Web Connector and your website. There is a need to keep some states with a database. The NuGet package doesn't provide such thing because it doesn't know which database provider/schema you are using; this is where you have to start coding your own implementation.
 
 ### Step 1. Create an Authenticator ###
 ```C#
@@ -79,19 +82,19 @@ The AuthenticatedTicket contains 3 properties:
 public class AuthenticatedTicket
 {
   public virtual string Ticket { get; set; }
-  public virtual int CurrentStep { get; set; }
+  public virtual string CurrentStep { get; set; }
   public virtual bool Authenticated { get; set; }
 }
 ```
 
 1. Ticket - Exchanged with the Web Connector. It acts as a session identifier.
-2. CurrentStep - State indicating what to exchange with the Web Connector.
+2. CurrentStep - State indicating at which step the Web Connector is currently at.
 3. Authenticated - Simple boolean indicating if the ticket is authenticated.
 
 If a user is not authenticated, make sure to return a ticket value, but set the Authenticated to `false`.
 
 ### Step 2. Create a SyncManager ###
-Extend the `QbSync.WebConnector.SyncManager` and overrides only the methods that you really need. You will most likely need a database context, make sure you get it from your constructor. From your constructor, register the steps you want to execute:
+Extend the `QbSync.WebConnector.SyncManager` and override only the methods that you really need. You will most likely need a database context, make sure you get it from your constructor. From your constructor, register the steps you want to execute:
 
 ```C#
 public SyncManager(ApplicationDbContext db_context, IOwinContext owinContext, IAuthenticator authenticator)
@@ -106,17 +109,16 @@ public SyncManager(ApplicationDbContext db_context, IOwinContext owinContext, IA
 
 **Important methods to override:**
 
-1. SaveChanges - Called before returning any data to the Web Connector. It's the time to save data to your database.
+1. SaveChanges - Called before returning any data to the Web Connector. It's time to save data to your database.
 2. LogMessage - Data going in or out goes through this method, you can save it to a database in order to better debug.
 3. GetWaitTime - Tells the Web Connector to come back in X seconds.
-4. Invoke - Used to create your steps.
 
-**Other methods you might want to override:**
+**Other methods you might want to override, but they are handled by the package:**
 
 1. Authenticate - Verifies if the login/password is correct. Returns appropriate message to the Web Connector in order to continue further communication.
 2. ServerVersion - Returns the server version.
 3. ClientVersion - Indicates which version is the Web Connector. Returns W:<message> to return a warning; E:<message> to return an error. Empty string if everything is fine.
-4. SendRequestXML - The Web Connector is asking what has to be done to its database. Return an XML command.
+4. SendRequestXML - The Web Connector is asking what has to be done to its database. Return an QbXml command.
 5. ReceiveRequestXML - Response from the Web Connector based on the previous command sent.
 6. GetLastError - Gets the last error that happened. This method is called only if an error is found.
 7. ConnectionError - An error happened with the Web Connector.
@@ -149,6 +151,12 @@ public class CustomerQuery : StepQueryResponseBase<CustomerQueryRequest, Custome
     this.db_context = db_context;
   }
 
+  public string GetName()
+  {
+    // Step name
+    return "CustomerQuery";
+  }
+
   protected override bool ExecuteRequest(AuthenticatedTicketContext authenticatedTicket, CustomerQueryRequest request)
   {
     // Do some operations on the customerRequest to get only specific ones
@@ -170,16 +178,16 @@ public class CustomerQuery : StepQueryResponseBase<CustomerQueryRequest, Custome
 The 3 generic classes are provided by the QbXml NuGet package. You associate the request, response and the object that would be returned with a response.
 
 ### Step 4.1. Creating a step with an iterator ###
-When you make a request to the QuickBooks database, you might receive millions of objects back. Your server or the database won't be able to handle that many; you have to break the query into batches. We have everything handled for you, but we need to save another state to the database. Instead of deriving from `StepQueryResponseBase`, you have to derive from `StepQueryWithIterator` and implement 2 methods.
+When you make a request to the QuickBooks database, you might receive hundreds of objects back. Your server or the database won't be able to handle that many; you have to break the query into batches. We have everything handled for you, but we need to save another state to the database. Instead of deriving from `StepQueryResponseBase`, you have to derive from `StepQueryWithIterator` and implement 2 methods.
 
 ```C#
-protected abstract void SaveMessage(string ticket, int stepNumber, string key, string value);
-protected abstract string RetrieveMessage(string ticket, int stepNumber, string key);
+protected abstract void SaveMessage(string ticket, string step, string key, string value);
+protected abstract string RetrieveMessage(string ticket, string step, string key);
 ```
 
-Save the message to the database based on its ticket, `stepNumber` and key. Then retrieve it from the same keys.
+Save the message to the database based on its ticket, `step` and `key`. Then retrieve it from the same keys.
 
-By default, if you derive from the iterator, the query is batched by 100 objects.
+By default, if you derive from the iterator, the query is batched with 100 objects.
 
 ### Step X ###
 You can register other steps such as `UpdateCustomer`, `InvoiceQuery`, etc. Just make your own!
