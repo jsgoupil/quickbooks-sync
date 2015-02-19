@@ -49,8 +49,8 @@ namespace QbSync.QbXml.Objects
         public StrType Other { get; set; }
         public GuidType ExternalGUID { get; set; }
         public IEnumerable<LinkedTxn> LinkedTxn { get; set; }
-        public InvoiceLineRet InvoiceLineRet  { get; set; }
-        public InvoiceLineGroupRet InvoiceLineGroupRet { get; set; }
-        public IEnumerable<DataExtRet> DataExtRet { get; set; }
+        public InvoiceLine InvoiceLineRet  { get; set; }
+        public InvoiceLineGroup InvoiceLineGroupRet { get; set; }
+        public IEnumerable<DataExt> DataExtRet { get; set; }
     }
 }

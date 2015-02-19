@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace QbSync.QbXml.Objects
 {
-    public class DataExtDefRet
+    public class DataExtDef
     {
         public GuidType OwnerID { get; set; }
         public IntType DataExtID { get; set; }

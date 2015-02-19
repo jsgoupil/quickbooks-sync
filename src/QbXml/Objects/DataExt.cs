@@ -3,11 +3,11 @@ using QbSync.QbXml.Type;
 
 namespace QbSync.QbXml.Objects
 {
-    public class DataExtDefDelRet
+    public class DataExt
     {
         public GuidType OwnerID { get; set; }
         public StrType DataExtName { get; set; }
-
-        public DateTimeType TimeDeleted { get; set; }
+        public DataExtType DataExtType { get; set; }
+        public StrType DataExtValue { get; set; }
     }
 }

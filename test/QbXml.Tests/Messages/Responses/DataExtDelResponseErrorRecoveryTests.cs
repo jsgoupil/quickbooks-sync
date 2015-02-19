@@ -18,7 +18,7 @@ namespace QbSync.QbXml.Tests.QbXml
             var ret = "<ErrorRecovery><ListID>123456</ListID><TxnNumber>67890</TxnNumber></ErrorRecovery>";
 
             var dataExtDelResponse = new DataExtDelResponse();
-            var response = dataExtDelResponse.ParseResponse(QuickBooksTestHelper.CreateQbXmlWithEnvelope(ret, "DataExtDelRs")) as QbXmlMsgResponseWithErrorRecovery<DataExtDelRet>;
+            var response = dataExtDelResponse.ParseResponse(QuickBooksTestHelper.CreateQbXmlWithEnvelope(ret, "DataExtDelRs")) as QbXmlMsgResponseWithErrorRecovery<DataExtDel>;
             var dataExt = response.Object;
 
             Assert.IsNull(dataExt);

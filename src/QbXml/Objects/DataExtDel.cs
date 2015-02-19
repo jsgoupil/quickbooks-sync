@@ -3,7 +3,7 @@ using QbSync.QbXml.Type;
 
 namespace QbSync.QbXml.Objects
 {
-    public class DataExtDelRet
+    public class DataExtDel
     {
         public GuidType OwnerID { get; set; }
         public StrType DataExtName { get; set; }

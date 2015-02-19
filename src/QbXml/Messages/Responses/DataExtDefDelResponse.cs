@@ -4,21 +4,21 @@ using System.Xml;
 
 namespace QbSync.QbXml.Messages.Responses
 {
-    public class DataExtDefDelResponse : QbXmlResponseWithErrorRecovery<DataExtDefDelRet>
+    public class DataExtDefDelResponse : QbXmlResponseWithErrorRecovery<DataExtDefDel>
     {
         public DataExtDefDelResponse()
             : base("DataExtDefDelRs")
         {
         }
 
-        protected override void ProcessResponse(XmlNode responseNode, QbXmlMsgResponse<DataExtDefDelRet> qbXmlResponse)
+        protected override void ProcessResponse(XmlNode responseNode, QbXmlMsgResponse<DataExtDefDel> qbXmlResponse)
         {
             base.ProcessResponse(responseNode, qbXmlResponse);
 
             var dataExtDefRet = responseNode.SelectSingleNode("//DataExtDefDelRet");
             if (dataExtDefRet != null)
             {
-                qbXmlResponse.Object = WalkType(typeof(DataExtDefDelRet), dataExtDefRet) as DataExtDefDelRet;
+                qbXmlResponse.Object = WalkType(typeof(DataExtDefDel), dataExtDefRet) as DataExtDefDel;
             }
         }
     }

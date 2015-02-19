@@ -2,7 +2,7 @@
 
 namespace QbSync.QbXml.Objects
 {
-    public class AdditionalNoteRet
+    public class AdditionalNote
     {
         public IdType NoteID { get; set; }
         public DateTimeType Date { get; set; }

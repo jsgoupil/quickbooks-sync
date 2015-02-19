@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace QbSync.QbXml.Objects
 {
-    public class InvoiceLineRet : BaseInvoiceLine
+    public class InvoiceLine : BaseInvoiceLine
     {
         public Ref ItemRef { get; set; }
         public PriceType Rate { get; set; }
@@ -18,6 +18,6 @@ namespace QbSync.QbXml.Objects
         public Ref SalesTaxCodeRef { get; set; }
         public StrType Other1 { get; set; }
         public StrType Other2 { get; set; }
-        public IEnumerable<DataExtRet> DataExtRet { get; set; }
+        public IEnumerable<DataExt> DataExtRet { get; set; }
     }
 }
