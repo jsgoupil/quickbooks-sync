@@ -4,7 +4,7 @@ using System.Xml;
 
 namespace QbSync.QbXml.Filters
 {
-    public class NameRangeFilter
+    public class NameRangeFilter : IXmlConvertible
     {
         public StrType FromName
         {
@@ -18,7 +18,7 @@ namespace QbSync.QbXml.Filters
             set;
         }
 
-        public void AppendXml(XmlElement parent)
+        public virtual void AppendXml(XmlElement parent)
         {
             if (FromName != null)
             {

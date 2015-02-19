@@ -1,5 +1,4 @@
-﻿using QbSync.QbXml.Struct;
-using QbSync.QbXml.Type;
+﻿using QbSync.QbXml.Type;
 
 namespace QbSync.QbXml.Objects
 {

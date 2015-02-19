@@ -41,6 +41,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="Messages\Responses\InvoiceModResponse.cs" />
+    <Compile Include="Messages\Responses\InvoiceAddResponse.cs" />
+    <Compile Include="Objects\DataExtBase.cs" />
+    <Compile Include="Objects\InvoiceLineGroupAddMod.cs" />
+    <Compile Include="Objects\InvoiceLineGroupMod.cs" />
+    <Compile Include="Objects\InvoiceLineGroupAdd.cs" />
+    <Compile Include="Messages\Requests\InvoiceModRequest.cs" />
+    <Compile Include="Messages\Requests\InvoiceAddRequest.cs" />
     <Compile Include="Messages\Requests\InvoiceQueryRequest.cs" />
     <Compile Include="Messages\Requests\DataExtDefQueryRequest.cs" />
     <Compile Include="Messages\Requests\DataExtDefDelRequest.cs" />
@@ -50,6 +58,8 @@
     <Compile Include="Messages\Requests\DataExtAddRequest.cs" />
     <Compile Include="Messages\Requests\DataExtRequest.cs" />
     <Compile Include="Messages\Requests\DataExtModRequest.cs" />
+    <Compile Include="Messages\Requests\InvoiceRequest.cs" />
+    <Compile Include="Objects\SetCredit.cs" />
     <Compile Include="Messages\Responses\InvoiceQueryResponse.cs" />
     <Compile Include="Messages\Responses\DataExtDefDelResponse.cs" />
     <Compile Include="Messages\Responses\DataExtDefModResponse.cs" />
@@ -61,9 +71,13 @@
     <Compile Include="Filters\BaseFilter.cs" />
     <Compile Include="Filters\RefNumberRangeFilter.cs" />
     <Compile Include="Filters\RefNumberFilter.cs" />
-    <Compile Include="Objects\BaseInvoiceLine.cs" />
-    <Compile Include="Objects\InvoiceLineGroup.cs" />
+    <Compile Include="Objects\InvoiceLineBaseLow.cs" />
     <Compile Include="Objects\InvoiceLine.cs" />
+    <Compile Include="Objects\InvoiceLineAdd.cs" />
+    <Compile Include="Objects\InvoiceLineMod.cs" />
+    <Compile Include="Objects\InvoiceLineAddMod.cs" />
+    <Compile Include="Objects\InvoiceLineGroup.cs" />
+    <Compile Include="Objects\InvoiceLineBase.cs" />
     <Compile Include="Objects\LinkedTxn.cs" />
     <Compile Include="Objects\Invoice.cs" />
     <Compile Include="Objects\DataExtDefDel.cs" />
@@ -74,8 +88,10 @@
     <Compile Include="Filters\BaseFilterWithChildren.cs" />
     <Compile Include="Filters\TxnDateRangeFilter.cs" />
     <Compile Include="Filters\ModifiedDateRangeFilter.cs" />
+    <Compile Include="Objects\LinkToTxn.cs" />
     <Compile Include="QbXmlResponseMsgWithErrorRecovery.cs" />
     <Compile Include="QbXmlResponseWithErrorRecovery.cs" />
+    <Compile Include="Struct\OptionForPriceRuleConflict.cs" />
     <Compile Include="Struct\LinkType.cs" />
     <Compile Include="Struct\TxnType.cs" />
     <Compile Include="Struct\InvoiceQueryRequestFilter.cs" />
@@ -100,8 +116,8 @@
     <Compile Include="Objects\ContactRef.cs" />
     <Compile Include="Objects\CreditCard.cs" />
     <Compile Include="Struct\DataExtType.cs" />
-    <Compile Include="Objects\JobStatus.cs" />
-    <Compile Include="Objects\PreferredDeliveryMethod.cs" />
+    <Compile Include="Struct\JobStatus.cs" />
+    <Compile Include="Struct\PreferredDeliveryMethod.cs" />
     <Compile Include="Objects\Ref.cs" />
     <Compile Include="Objects\Customer.cs" />
     <Compile Include="Objects\ShipAddress.cs" />
@@ -117,6 +133,7 @@
     <Compile Include="QbXmlRequest.cs" />
     <Compile Include="Filters\TotalBalanceFilter.cs" />
     <Compile Include="Struct\Operator.cs" />
+    <Compile Include="Type\IXmlConvertible.cs" />
     <Compile Include="Type\PriceType.cs" />
     <Compile Include="Type\QuanType.cs" />
     <Compile Include="Type\PercentType.cs" />
@@ -128,6 +145,7 @@
     <Compile Include="Type\GuidType.cs" />
     <Compile Include="Type\IntType.cs" />
     <Compile Include="Type\IStringConvertible.cs" />
+    <Compile Include="Type\QuickBooksType.cs" />
     <Compile Include="Type\StrType.cs" />
     <Compile Include="Type\IdType.cs" />
     <Compile Include="Struct\AssignToObject.cs" />

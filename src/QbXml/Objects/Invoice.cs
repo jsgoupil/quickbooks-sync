@@ -49,7 +49,7 @@ namespace QbSync.QbXml.Objects
         public StrType Other { get; set; }
         public GuidType ExternalGUID { get; set; }
         public IEnumerable<LinkedTxn> LinkedTxn { get; set; }
-        public InvoiceLine InvoiceLineRet  { get; set; }
+        public InvoiceLine InvoiceLineRet { get; set; }
         public InvoiceLineGroup InvoiceLineGroupRet { get; set; }
         public IEnumerable<DataExt> DataExtRet { get; set; }
     }

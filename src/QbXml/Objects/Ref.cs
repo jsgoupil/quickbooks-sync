@@ -1,15 +1,15 @@
-﻿using QbSync.QbXml.Type;
+﻿using QbSync.QbXml.Extensions;
+using QbSync.QbXml.Type;
 using System.Xml;
-using QbSync.QbXml.Extensions;
 
 namespace QbSync.QbXml.Objects
 {
-    public class Ref
+    public class Ref : IXmlConvertible
     {
         public IdType ListID { get; set; }
         public StrType FullName { get; set; }
 
-        public void AppendXml(XmlElement parent)
+        public virtual void AppendXml(XmlElement parent)
         {
             if (ListID != null)
             {

@@ -1,7 +1,7 @@
-﻿using QbSync.QbXml.Type;
-using System.Xml;
-using QbSync.QbXml.Extensions;
+﻿using QbSync.QbXml.Extensions;
 using QbSync.QbXml.Struct;
+using QbSync.QbXml.Type;
+using System.Xml;
 
 namespace QbSync.QbXml.Objects
 {

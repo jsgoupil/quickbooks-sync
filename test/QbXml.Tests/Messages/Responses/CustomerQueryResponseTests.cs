@@ -2,6 +2,7 @@
 using QbSync.QbXml.Messages;
 using QbSync.QbXml.Messages.Responses;
 using QbSync.QbXml.Objects;
+using QbSync.QbXml.Struct;
 using QbSync.QbXml.Tests.Helpers;
 using System.Linq;
 

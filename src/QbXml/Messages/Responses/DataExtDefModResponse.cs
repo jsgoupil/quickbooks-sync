@@ -1,5 +1,4 @@
 ﻿using QbSync.QbXml.Objects;
-using System.Linq;
 using System.Xml;
 
 namespace QbSync.QbXml.Messages.Responses

@@ -1,11 +1,11 @@
-﻿using QbSync.QbXml.Struct;
+﻿using QbSync.QbXml.Extensions;
+using QbSync.QbXml.Struct;
 using QbSync.QbXml.Type;
-using QbSync.QbXml.Extensions;
 using System.Xml;
 
 namespace QbSync.QbXml.Filters
 {
-    public class NameFilter
+    public class NameFilter : IXmlConvertible
     {
         public MatchCriterion Criterion
         {
@@ -19,7 +19,7 @@ namespace QbSync.QbXml.Filters
             set;
         }
 
-        public void AppendXml(XmlElement parent)
+        public virtual void AppendXml(XmlElement parent)
         {
             parent.AppendChild(parent.OwnerDocument.CreateElementWithValue("Criterion", Criterion.ToString()));
             parent.AppendTag("Name", Name);

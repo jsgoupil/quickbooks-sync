@@ -1,10 +1,4 @@
-﻿using QbSync.QbXml.Objects;
-using QbSync.QbXml.Struct;
-using QbSync.QbXml.Type;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using QbSync.QbXml.Type;
 
 namespace QbSync.QbXml.Objects
 {

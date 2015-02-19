@@ -1,10 +1,7 @@
-﻿using QbSync.QbXml.Type;
+﻿using QbSync.QbXml.Extensions;
+using QbSync.QbXml.Type;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml;
-using QbSync.QbXml.Extensions;
 
 namespace QbSync.QbXml.Filters
 {
@@ -13,7 +10,7 @@ namespace QbSync.QbXml.Filters
         public IdType ListIDWithChildren { get; set; }
         public StrType FullNameWithChildren { get; set; }
 
-        public void AppendXml(XmlElement parent)
+        public override void AppendXml(XmlElement parent)
         {
             base.AppendXml(parent);
 

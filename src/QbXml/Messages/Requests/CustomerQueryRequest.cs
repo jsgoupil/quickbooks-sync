@@ -77,45 +77,29 @@ namespace QbSync.QbXml.Messages.Requests
                     throw new ArgumentException("You cannot set NameFilter and NameRangeFilter at the same time.");
                 }
 
-                // Name Filter not implemented.
                 if (NameFilter != null)
                 {
-                    var nameFilter = doc.CreateElement("NameFilter");
-                    parent.AppendChild(nameFilter);
-
-                    NameFilter.AppendXml(nameFilter);
+                    parent.AppendTag("NameFilter", NameFilter);
 
                 }
                 else if (NameRangeFilter != null)
                 {
-                    var nameRangeFilter = doc.CreateElement("NameRangeFilter");
-                    parent.AppendChild(nameRangeFilter);
-
-                    NameRangeFilter.AppendXml(nameRangeFilter);
+                    parent.AppendTag("NameRangeFilter", NameRangeFilter);
                 }
 
                 if (TotalBalanceFilter != null)
                 {
-                    var totalBalanceFilter = doc.CreateElement("TotalBalanceFilter");
-                    parent.AppendChild(totalBalanceFilter);
-
-                    TotalBalanceFilter.AppendXml(totalBalanceFilter);
+                    parent.AppendTag("TotalBalanceFilter", TotalBalanceFilter);
                 }
 
                 if (CurrencyFilter != null)
                 {
-                    var currencyFilter = doc.CreateElement("CurrencyFilter");
-                    parent.AppendChild(currencyFilter);
-
-                    CurrencyFilter.AppendXml(currencyFilter);
+                    parent.AppendTag("CurrencyFilter", CurrencyFilter);
                 }
 
                 if (ClassFilter != null)
                 {
-                    var classFilter = doc.CreateElement("ClassFilter");
-                    parent.AppendChild(classFilter);
-
-                    ClassFilter.AppendXml(classFilter);
+                    parent.AppendTag("ClassFilter", ClassFilter);
                 }
             }
 

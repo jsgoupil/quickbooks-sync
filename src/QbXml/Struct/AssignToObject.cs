@@ -1,6 +1,4 @@
-﻿using QbSync.QbXml.Type;
-
-namespace QbSync.QbXml.Struct
+﻿namespace QbSync.QbXml.Struct
 {
     public enum AssignToObject
     {

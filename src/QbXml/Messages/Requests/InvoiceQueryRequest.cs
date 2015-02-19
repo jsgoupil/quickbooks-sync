@@ -1,6 +1,5 @@
 ﻿using QbSync.QbXml.Extensions;
 using QbSync.QbXml.Filters;
-using QbSync.QbXml.Objects;
 using QbSync.QbXml.Struct;
 using QbSync.QbXml.Type;
 using System;

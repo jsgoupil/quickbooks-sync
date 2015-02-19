@@ -2,7 +2,7 @@
 
 namespace QbSync.QbXml.Type
 {
-    public class IdType : IStringConvertible, IComparable<IdType>
+    public class IdType : QuickBooksType, IStringConvertible, IComparable<IdType>
     {
         private string value;
 

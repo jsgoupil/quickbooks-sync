@@ -52,17 +52,35 @@ namespace QbSync.QbXml.Extensions
             return elem;
         }
 
-        public static void AppendTag(this XmlElement xmlElement, string tagName, IStringConvertible innerText)
+        public static void AppendTag(this XmlElement xmlElement, string tagName, IXmlConvertible xmlConvertible)
         {
-            xmlElement.AppendChild(xmlElement.OwnerDocument.CreateElementWithValue(tagName, innerText.ToString()));
+            var childElement = xmlElement.OwnerDocument.CreateElement(tagName);
+            xmlElement.AppendChild(childElement);
+            xmlConvertible.AppendXml(childElement);
         }
 
-        public static void AppendTags(this XmlElement xmlElement, string tagName, IEnumerable<IStringConvertible> objects)
+        public static void AppendTagIfNotNull(this XmlElement xmlElement, string tagName, IXmlConvertible xmlConvertible)
         {
-            objects.ForEach(innerText =>
+            if (xmlConvertible != null)
             {
-                xmlElement.AppendChild(xmlElement.OwnerDocument.CreateElementWithValue(tagName, innerText.ToString()));
+                xmlElement.AppendTag(tagName, xmlConvertible);
+            }
+        }
+
+        public static void AppendTags(this XmlElement xmlElement, string tagName, IEnumerable<IXmlConvertible> objects)
+        {
+            objects.ForEach(obj =>
+            {
+                xmlElement.AppendTag(tagName, obj);
             });
+        }
+
+        public static void AppendTagsIfNotNull(this XmlElement xmlElement, string tagName, IEnumerable<IXmlConvertible> objects)
+        {
+            if (objects != null)
+            {
+                xmlElement.AppendTags(tagName, objects);
+            }
         }
     }
 }

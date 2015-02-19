@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace QbSync.QbXml.Filters
 {
-    public class ClassFilter
+    public class ClassFilter : IXmlConvertible
     {
         public IEnumerable<IdType> ListID
         {
@@ -32,7 +32,7 @@ namespace QbSync.QbXml.Filters
             set;
         }
 
-        public void AppendXml(XmlElement parent)
+        public virtual void AppendXml(XmlElement parent)
         {
             CheckFilters();
 

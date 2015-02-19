@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace QbSync.QbXml.Filters
 {
-    public class TotalBalanceFilter
+    public class TotalBalanceFilter : IXmlConvertible
     {
         public Operator Operator
         {
@@ -19,7 +19,7 @@ namespace QbSync.QbXml.Filters
             set;
         }
 
-        public void AppendXml(XmlElement parent)
+        public virtual void AppendXml(XmlElement parent)
         {
             parent.AppendChild(parent.OwnerDocument.CreateElementWithValue("Operator", Operator.ToString()));
             parent.AppendTag("Amount", Amount);

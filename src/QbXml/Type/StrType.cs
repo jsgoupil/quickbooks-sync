@@ -2,7 +2,7 @@
 
 namespace QbSync.QbXml.Type
 {
-    public class StrType : IStringConvertible, IComparable<StrType>
+    public class StrType : QuickBooksType, IStringConvertible, IComparable<StrType>
     {
         private string value;
 

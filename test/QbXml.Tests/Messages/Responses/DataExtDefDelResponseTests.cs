@@ -12,7 +12,7 @@ namespace QbSync.QbXml.Tests.QbXml
     class DataExtDefDelResponseTests
     {
         [Test]
-        public void BasicDataDefDelExtResponseTest()
+        public void BasicDataExtDefDelResponseTest()
         {
             var ret = "<DataExtDefDelRet><OwnerID>{7d543f23-f3b1-4dea-8ff4-37bd26d15e6c}</OwnerID><DataExtName>name</DataExtName></DataExtDefDelRet>";
 

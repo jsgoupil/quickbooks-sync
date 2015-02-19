@@ -59,6 +59,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Messages\Requests\InvoiceModRequestTests.cs" />
+    <Compile Include="Messages\Requests\InvoiceAddRequestTests.cs" />
     <Compile Include="Messages\Requests\InvoiceQueryRequestTests.cs" />
     <Compile Include="Messages\Requests\DataExtDefDelRequestTests.cs" />
     <Compile Include="Messages\Requests\DataExtDefQueryRequestTests.cs" />
@@ -69,6 +71,8 @@
     <Compile Include="Messages\Requests\DataExtAddRequestTests.cs" />
     <Compile Include="Helpers\QBAssert.cs" />
     <Compile Include="Helpers\QuickbooksTestHelper.cs" />
+    <Compile Include="Messages\Responses\InvoiceModResponseTests.cs" />
+    <Compile Include="Messages\Responses\InvoiceAddResponseTests.cs" />
     <Compile Include="Messages\Responses\InvoiceQueryResponseTests.cs" />
     <Compile Include="Messages\Responses\DataExtDefQueryResponseTests.cs" />
     <Compile Include="Messages\Responses\DataExtDefDelResponseTests.cs" />

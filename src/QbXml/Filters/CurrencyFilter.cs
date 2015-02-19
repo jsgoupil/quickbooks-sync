@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace QbSync.QbXml.Filters
 {
-    public class CurrencyFilter
+    public class CurrencyFilter : IXmlConvertible
     {
         public IEnumerable<IdType> ListId
         {
@@ -20,7 +20,7 @@ namespace QbSync.QbXml.Filters
             set;
         }
 
-        public void AppendXml(XmlElement parent)
+        public virtual void AppendXml(XmlElement parent)
         {
             CheckFilters();
 

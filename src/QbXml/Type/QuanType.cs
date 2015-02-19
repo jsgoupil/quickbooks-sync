@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace QbSync.QbXml.Type
 {
-    public class QuanType : IStringConvertible, IComparable<QuanType>
+    public class QuanType : QuickBooksType, IStringConvertible, IComparable<QuanType>
     {
         private decimal value;
 
