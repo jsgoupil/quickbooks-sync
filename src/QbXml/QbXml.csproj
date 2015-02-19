@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="Messages\Requests\InvoiceQueryRequest.cs" />
     <Compile Include="Messages\Requests\DataExtDefQueryRequest.cs" />
     <Compile Include="Messages\Requests\DataExtDefDelRequest.cs" />
     <Compile Include="Messages\Requests\DataExtDefModRequest.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="Messages\Requests\DataExtAddRequest.cs" />
     <Compile Include="Messages\Requests\DataExtRequest.cs" />
     <Compile Include="Messages\Requests\DataExtModRequest.cs" />
+    <Compile Include="Messages\Responses\InvoiceQueryResponse.cs" />
     <Compile Include="Messages\Responses\DataExtDefDelResponse.cs" />
     <Compile Include="Messages\Responses\DataExtDefModResponse.cs" />
     <Compile Include="Messages\Responses\DataExtDefAddResponse.cs" />
@@ -56,13 +58,29 @@
     <Compile Include="Messages\Responses\DataExtDefQueryResponse.cs" />
     <Compile Include="Messages\Responses\DataExtModResponse.cs" />
     <Compile Include="Messages\Responses\DataExtAddResponse.cs" />
+    <Compile Include="Filters\BaseFilter.cs" />
+    <Compile Include="Filters\RefNumberRangeFilter.cs" />
+    <Compile Include="Filters\RefNumberFilter.cs" />
+    <Compile Include="Objects\BaseInvoiceLine.cs" />
+    <Compile Include="Objects\InvoiceLineGroupRet.cs" />
+    <Compile Include="Objects\InvoiceLineRet.cs" />
+    <Compile Include="Objects\LinkedTxn.cs" />
+    <Compile Include="Objects\Invoice.cs" />
     <Compile Include="Objects\DataExtDefDelRet.cs" />
     <Compile Include="Objects\DataExtDelRet.cs" />
     <Compile Include="Objects\DataExtDefRet.cs" />
     <Compile Include="Objects\ErrorRecovery.cs" />
     <Compile Include="Objects\DataExtRet.cs" />
+    <Compile Include="Filters\BaseFilterWithChildren.cs" />
+    <Compile Include="Filters\TxnDateRangeFilter.cs" />
+    <Compile Include="Filters\ModifiedDateRangeFilter.cs" />
     <Compile Include="QbXmlResponseMsgWithErrorRecovery.cs" />
     <Compile Include="QbXmlResponseWithErrorRecovery.cs" />
+    <Compile Include="Struct\LinkType.cs" />
+    <Compile Include="Struct\TxnType.cs" />
+    <Compile Include="Struct\InvoiceQueryRequestFilter.cs" />
+    <Compile Include="Struct\PaidStatus.cs" />
+    <Compile Include="Struct\DateMacro.cs" />
     <Compile Include="Struct\OtherDataExtType.cs" />
     <Compile Include="Objects\TxnDataExt.cs" />
     <Compile Include="Objects\ListDataExt.cs" />
@@ -99,8 +117,13 @@
     <Compile Include="QbXmlRequest.cs" />
     <Compile Include="Filters\TotalBalanceFilter.cs" />
     <Compile Include="Struct\Operator.cs" />
+    <Compile Include="Type\PriceType.cs" />
+    <Compile Include="Type\QuanType.cs" />
+    <Compile Include="Type\PercentType.cs" />
+    <Compile Include="Type\FloatType.cs" />
     <Compile Include="Type\BoolType.cs" />
     <Compile Include="Type\AmtType.cs" />
+    <Compile Include="Type\DateType.cs" />
     <Compile Include="Type\DateTimeType.cs" />
     <Compile Include="Type\GuidType.cs" />
     <Compile Include="Type\IntType.cs" />

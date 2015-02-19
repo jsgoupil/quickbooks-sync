@@ -27,6 +27,7 @@ namespace QbSync.QbXml.Messages.Requests
         public TotalBalanceFilter TotalBalanceFilter { get; set; }
         public CurrencyFilter CurrencyFilter { get; set; }
         public ClassFilter ClassFilter { get; set; }
+        public IEnumerable<StrType> IncludeRetElement { get; set; }
         public GuidType OwnerID { get; set; }
 
         protected override void BuildRequest(XmlElement parent)
@@ -116,6 +117,11 @@ namespace QbSync.QbXml.Messages.Requests
 
                     ClassFilter.AppendXml(classFilter);
                 }
+            }
+
+            if (IncludeRetElement != null)
+            {
+                parent.AppendTags("IncludeRetElement", IncludeRetElement);
             }
 
             if (OwnerID != null)
