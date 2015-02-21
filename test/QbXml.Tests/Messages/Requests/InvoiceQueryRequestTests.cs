@@ -1,9 +1,7 @@
 ﻿using NUnit.Framework;
 using QbSync.QbXml.Extensions;
-using QbSync.QbXml.Filters;
-using QbSync.QbXml.Messages;
 using QbSync.QbXml.Messages.Requests;
-using QbSync.QbXml.Struct;
+using QbSync.QbXml.Objects;
 using QbSync.QbXml.Tests.Helpers;
 using QbSync.QbXml.Type;
 using System;
@@ -19,78 +17,81 @@ namespace QbSync.QbXml.Tests.QbXml
         [Test]
         public void BasicInvoiceQueryRequestTest()
         {
-            var invoiceQueryRequest = new InvoiceQueryRequest();
-            var request = invoiceQueryRequest.GetRequest();
+            var request = new QbXmlRequest();
+            var innerRequest = new InvoiceQueryRequest();
+            request.AddToSingle(innerRequest);
+            var xml = request.GetRequest();
 
             XmlDocument requestXmlDoc = new XmlDocument();
-            requestXmlDoc.LoadXml(request);
+            requestXmlDoc.LoadXml(xml);
 
             Assert.AreEqual(1, requestXmlDoc.GetElementsByTagName("InvoiceQueryRq").Count);
             Assert.AreEqual(0, requestXmlDoc.GetElementsByTagName("ListID").Count);
             Assert.AreEqual(0, requestXmlDoc.GetElementsByTagName("FullName").Count);
-            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(xml));
         }
 
         [Test]
         public void InvoiceQueryRequest_FilterByTxnId_Test()
         {
-            var list = new List<IdType> {
+            var request = new QbXmlRequest();
+            var innerRequest = new InvoiceQueryRequest();
+            innerRequest.TxnID = new List<string> {
                 "1234", "3456"
             };
-            var invoiceQueryRequest = new InvoiceQueryRequest();
-            invoiceQueryRequest.Filter = InvoiceQueryRequestFilter.TxnID;
-            invoiceQueryRequest.TxnID = list;
-            var request = invoiceQueryRequest.GetRequest();
+            request.AddToSingle(innerRequest);
+            var xml = request.GetRequest();
 
             XmlDocument requestXmlDoc = new XmlDocument();
-            requestXmlDoc.LoadXml(request);
+            requestXmlDoc.LoadXml(xml);
 
-            Assert.AreEqual(invoiceQueryRequest.TxnID.Count(), requestXmlDoc.GetElementsByTagName("TxnID").Count);
-            QBAssert.AreEqual(list[0], requestXmlDoc.GetElementsByTagName("TxnID").Item(0).InnerText);
-            QBAssert.AreEqual(list[1], requestXmlDoc.GetElementsByTagName("TxnID").Item(1).InnerText);
-            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
+            Assert.AreEqual(innerRequest.TxnID.Count(), requestXmlDoc.GetElementsByTagName("TxnID").Count);
+            Assert.AreEqual(innerRequest.TxnID.Last(), requestXmlDoc.GetElementsByTagName("TxnID").Item(1).InnerText);
+            Assert.AreEqual(innerRequest.TxnID.First(), requestXmlDoc.GetElementsByTagName("TxnID").Item(0).InnerText);
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(xml));
         }
 
         [Test]
         public void InvoiceQueryRequest_FilterByRefNumber_Test()
         {
-            var list = new List<StrType> {
+            var request = new QbXmlRequest();
+            var innerRequest = new InvoiceQueryRequest();
+            innerRequest.RefNumber = new List<string> {
                 "abc", "def"
             };
-            var invoiceQueryRequest = new InvoiceQueryRequest();
-            invoiceQueryRequest.Filter = InvoiceQueryRequestFilter.RefNumber;
-            invoiceQueryRequest.RefNumber = list;
-            var request = invoiceQueryRequest.GetRequest();
+            request.AddToSingle(innerRequest);
+            var xml = request.GetRequest();
 
             XmlDocument requestXmlDoc = new XmlDocument();
-            requestXmlDoc.LoadXml(request);
+            requestXmlDoc.LoadXml(xml);
 
-            Assert.AreEqual(invoiceQueryRequest.RefNumber.Count(), requestXmlDoc.GetElementsByTagName("RefNumber").Count);
-            QBAssert.AreEqual(list[0], requestXmlDoc.GetElementsByTagName("RefNumber").Item(0).InnerText);
-            QBAssert.AreEqual(list[1], requestXmlDoc.GetElementsByTagName("RefNumber").Item(1).InnerText);
-            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
+            Assert.AreEqual(innerRequest.RefNumber.Count(), requestXmlDoc.GetElementsByTagName("RefNumber").Count);
+            Assert.AreEqual(innerRequest.RefNumber.First(), requestXmlDoc.GetElementsByTagName("RefNumber").Item(0).InnerText);
+            Assert.AreEqual(innerRequest.RefNumber.Last(), requestXmlDoc.GetElementsByTagName("RefNumber").Item(1).InnerText);
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(xml));
         }
 
         [Test]
         public void InvoiceQueryRequest_ModifiedDateRange_Test()
         {
-            var invoiceQueryRequest = new InvoiceQueryRequest();
-            invoiceQueryRequest.ModifiedDateRangeFilter = new ModifiedDateRangeFilter
+            var request = new QbXmlRequest();
+            var innerRequest = new InvoiceQueryRequest();
+            innerRequest.ModifiedDateRangeFilter = new ModifiedDateRangeFilter
             {
-                FromModifiedDate = new DateTimeType(new DateTime(2014, 1, 1, 1, 2, 3)),
-                ToModifiedDate = new DateTimeType(new DateTime(2014, 1, 1, 1, 2, 3))
+                FromModifiedDate = new DateTimeType(new DateTime(2014, 1, 1, 1, 2, 3)).ToString(),
+                ToModifiedDate = new DateTimeType(new DateTime(2014, 1, 1, 1, 2, 3)).ToString()
             };
-
-            var request = invoiceQueryRequest.GetRequest();
+            request.AddToSingle(innerRequest);
+            var xml = request.GetRequest();
 
             XmlDocument requestXmlDoc = new XmlDocument();
-            requestXmlDoc.LoadXml(request);
+            requestXmlDoc.LoadXml(xml);
 
             var nameRangeFilter = requestXmlDoc.GetElementsByTagName("ModifiedDateRangeFilter");
             Assert.AreEqual(1, nameRangeFilter.Count);
-            Assert.AreEqual(invoiceQueryRequest.ModifiedDateRangeFilter.FromModifiedDate.ToString(), nameRangeFilter.Item(0).ReadNode("./FromModifiedDate"));
-            Assert.AreEqual(invoiceQueryRequest.ModifiedDateRangeFilter.ToModifiedDate.ToString(), nameRangeFilter.Item(0).ReadNode("./ToModifiedDate"));
-            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
+            Assert.AreEqual(innerRequest.ModifiedDateRangeFilter.FromModifiedDate, nameRangeFilter.Item(0).ReadNode("./FromModifiedDate"));
+            Assert.AreEqual(innerRequest.ModifiedDateRangeFilter.ToModifiedDate, nameRangeFilter.Item(0).ReadNode("./ToModifiedDate"));
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(xml));
         }
     }
 }

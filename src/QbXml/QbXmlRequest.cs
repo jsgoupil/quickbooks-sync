@@ -1,45 +1,56 @@
-﻿using System.Xml;
+﻿using QbSync.QbXml.Messages.Requests;
+using QbSync.QbXml.Objects;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Xml.Serialization;
 
 namespace QbSync.QbXml
 {
-    public abstract class QbXmlRequest
+    public class QbXmlRequest
     {
-        protected string rootElementName;
+        private System.Type qbXmlType;
+        private List<QBXMLMsgsRq> qbxmlMsgsRqList;
 
-        public QbXmlRequest(string rootElementName)
+        public QbXmlRequest()
         {
-            this.rootElementName = rootElementName;
+            qbXmlType = typeof(QBXML);
+            qbxmlMsgsRqList = new List<QBXMLMsgsRq>();
+        }
+
+        public void Add(params QBXMLMsgsRq[] messages)
+        {
+            qbxmlMsgsRqList.AddRange(messages);
+        }
+
+        public void AddToSingle(params QbRequestWrapper[] requests) {
+
+            var list = new List<object>(requests.Count());
+            foreach (var request in requests)
+            {
+                list.Add(request.GetQbObject());
+            }
+
+            Add(new QBXMLMsgsRq
+            {
+                Items = list.ToArray()
+            });
         }
 
         public string GetRequest()
         {
-            // Create the XML document to hold our request
-            XmlDocument requestXmlDoc = new XmlDocument();
+            var qbXml = new QBXML
+            {
+                Items = qbxmlMsgsRqList.ToArray(),
+                ItemsElementName = Enumerable.Repeat<ItemsChoiceType99>(ItemsChoiceType99.QBXMLMsgsRq, qbxmlMsgsRqList.Count()).ToArray()
+            };
 
-            // Add the prolog processing instructions
-            requestXmlDoc.AppendChild(requestXmlDoc.CreateXmlDeclaration("1.0", null, null));
-            requestXmlDoc.AppendChild(requestXmlDoc.CreateProcessingInstruction("qbxml", "version=\"13.0\""));
-
-            // Create the outer request envelope tag
-            XmlElement outer = requestXmlDoc.CreateElement("QBXML");
-            requestXmlDoc.AppendChild(outer);
-
-            // Create the inner request envelope & any needed attributes
-            XmlElement inner = requestXmlDoc.CreateElement("QBXMLMsgsRq");
-            outer.AppendChild(inner);
-            inner.SetAttribute("onError", "stopOnError");
-
-            // Create CustomerQueryRq aggregate and fill in field values for it
-            XmlElement req = requestXmlDoc.CreateElement(rootElementName);
-            inner.AppendChild(req);
-
-            BuildRequest(req);
-
-            return requestXmlDoc.OuterXml;
-        }
-
-        protected virtual void BuildRequest(XmlElement parent)
-        {
+            var xmlSerializer = new XmlSerializer(qbXmlType);
+            using (var textWriter = new StringWriter())
+            {
+                xmlSerializer.Serialize(textWriter, qbXml);
+                return textWriter.ToString();
+            }
         }
     }
 }

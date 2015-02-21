@@ -1,25 +1,32 @@
-﻿using QbSync.QbXml.Extensions;
-using QbSync.QbXml.Type;
-using System.Xml;
+﻿using QbSync.QbXml.Objects;
 
 namespace QbSync.QbXml.Messages.Requests
 {
-    public class DataExtModRequest : DataExtRequest
+    public class DataExtModRequest : DataExtRequest<DataExtModRqType>
     {
-        public DataExtModRequest()
-            : base("DataExtModRq")
-        {
-        }
+        public string DataExtValue { get; set; }
+        public string TxnID { get; set; }
 
-        public StrType DataExtValue { get; set; }
-
-        protected override void BuildRequest(XmlElement parent)
+        protected override void ProcessObj(DataExtModRqType obj)
         {
-            var doc = parent.OwnerDocument;
-            var dataExtMod = doc.CreateElement("DataExtMod");
-            parent.AppendChild(dataExtMod);
-            base.BuildRequest(dataExtMod);
-            dataExtMod.AppendTag("DataExtValue", DataExtValue);
+            base.ProcessObj(obj);
+
+            obj.DataExtMod = new DataExtMod
+            {
+                DataExtName = DataExtName,
+                DataExtValue = DataExtValue,
+                OwnerID = OwnerID.ToString(),
+            };
+
+            var items = new ItemWithName<ItemsChoiceType26>();
+            items.AddNotNull(ItemsChoiceType26.ListDataExtType, ListDataExtType);
+            items.AddNotNull(ItemsChoiceType26.ListObjRef, ListObjRef);
+            items.AddNotNull(ItemsChoiceType26.OtherDataExtType, OtherDataExtType);
+            items.AddNotNull(ItemsChoiceType26.TxnDataExtType, TxnDataExtType);
+            items.AddNotNull(ItemsChoiceType26.TxnID, TxnID);
+            items.AddNotNull(ItemsChoiceType26.TxnLineID, TxnLineID);
+            obj.DataExtMod.ItemsElementName = items.GetNames();
+            obj.DataExtMod.Items = items.GetItems();
         }
     }
 }

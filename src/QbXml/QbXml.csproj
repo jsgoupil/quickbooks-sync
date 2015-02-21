@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -41,118 +42,64 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\Extensions.cs" />
-    <Compile Include="Messages\Responses\InvoiceModResponse.cs" />
-    <Compile Include="Messages\Responses\InvoiceAddResponse.cs" />
-    <Compile Include="Objects\DataExtBase.cs" />
-    <Compile Include="Objects\InvoiceLineGroupAddMod.cs" />
-    <Compile Include="Objects\InvoiceLineGroupMod.cs" />
-    <Compile Include="Objects\InvoiceLineGroupAdd.cs" />
-    <Compile Include="Messages\Requests\InvoiceModRequest.cs" />
-    <Compile Include="Messages\Requests\InvoiceAddRequest.cs" />
-    <Compile Include="Messages\Requests\InvoiceQueryRequest.cs" />
-    <Compile Include="Messages\Requests\DataExtDefQueryRequest.cs" />
+    <Compile Include="Messages\Requests\DataExtAddRequest.cs" />
+    <Compile Include="Messages\Requests\DataExtDefAddRequest.cs" />
     <Compile Include="Messages\Requests\DataExtDefDelRequest.cs" />
     <Compile Include="Messages\Requests\DataExtDefModRequest.cs" />
-    <Compile Include="Messages\Requests\DataExtDefAddRequest.cs" />
+    <Compile Include="Messages\Requests\DataExtDefQueryRequest.cs" />
     <Compile Include="Messages\Requests\DataExtDelRequest.cs" />
-    <Compile Include="Messages\Requests\DataExtAddRequest.cs" />
-    <Compile Include="Messages\Requests\DataExtRequest.cs" />
     <Compile Include="Messages\Requests\DataExtModRequest.cs" />
+    <Compile Include="Messages\Requests\DataExtRequest.cs" />
+    <Compile Include="Messages\Requests\InvoiceAddRequest.cs" />
+    <Compile Include="Messages\Requests\InvoiceModRequest.cs" />
+    <Compile Include="Messages\Requests\InvoiceQueryRequest.cs" />
     <Compile Include="Messages\Requests\InvoiceRequest.cs" />
-    <Compile Include="Objects\SetCredit.cs" />
-    <Compile Include="Messages\Responses\InvoiceQueryResponse.cs" />
-    <Compile Include="Messages\Responses\DataExtDefDelResponse.cs" />
-    <Compile Include="Messages\Responses\DataExtDefModResponse.cs" />
-    <Compile Include="Messages\Responses\DataExtDefAddResponse.cs" />
-    <Compile Include="Messages\Responses\DataExtDelResponse.cs" />
-    <Compile Include="Messages\Responses\DataExtDefQueryResponse.cs" />
-    <Compile Include="Messages\Responses\DataExtModResponse.cs" />
-    <Compile Include="Messages\Responses\DataExtAddResponse.cs" />
-    <Compile Include="Filters\BaseFilter.cs" />
-    <Compile Include="Filters\RefNumberRangeFilter.cs" />
-    <Compile Include="Filters\RefNumberFilter.cs" />
-    <Compile Include="Objects\InvoiceLineBaseLow.cs" />
-    <Compile Include="Objects\InvoiceLine.cs" />
-    <Compile Include="Objects\InvoiceLineAdd.cs" />
-    <Compile Include="Objects\InvoiceLineMod.cs" />
-    <Compile Include="Objects\InvoiceLineAddMod.cs" />
-    <Compile Include="Objects\InvoiceLineGroup.cs" />
-    <Compile Include="Objects\InvoiceLineBase.cs" />
-    <Compile Include="Objects\LinkedTxn.cs" />
-    <Compile Include="Objects\Invoice.cs" />
-    <Compile Include="Objects\DataExtDefDel.cs" />
-    <Compile Include="Objects\DataExtDel.cs" />
-    <Compile Include="Objects\DataExtDef.cs" />
-    <Compile Include="Objects\ErrorRecovery.cs" />
-    <Compile Include="Objects\DataExt.cs" />
-    <Compile Include="Filters\BaseFilterWithChildren.cs" />
-    <Compile Include="Filters\TxnDateRangeFilter.cs" />
-    <Compile Include="Filters\ModifiedDateRangeFilter.cs" />
-    <Compile Include="Objects\LinkToTxn.cs" />
-    <Compile Include="QbXmlResponseMsgWithErrorRecovery.cs" />
-    <Compile Include="QbXmlResponseWithErrorRecovery.cs" />
-    <Compile Include="Struct\OptionForPriceRuleConflict.cs" />
-    <Compile Include="Struct\LinkType.cs" />
-    <Compile Include="Struct\TxnType.cs" />
-    <Compile Include="Struct\InvoiceQueryRequestFilter.cs" />
-    <Compile Include="Struct\PaidStatus.cs" />
-    <Compile Include="Struct\DateMacro.cs" />
-    <Compile Include="Struct\OtherDataExtType.cs" />
-    <Compile Include="Objects\TxnDataExt.cs" />
-    <Compile Include="Objects\ListDataExt.cs" />
-    <Compile Include="Struct\DataExtFilter.cs" />
-    <Compile Include="Struct\TxnDataExtType.cs" />
-    <Compile Include="Struct\ListDataExtType.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="IteratorResponse.cs" />
-    <Compile Include="Messages\Responses\CustomerQueryResponse.cs" />
+    <Compile Include="Messages\Requests\IQbIteratorRequest.cs" />
+    <Compile Include="Messages\Requests\IteratorType.cs" />
+    <Compile Include="Messages\Requests\NameItem.cs" />
+    <Compile Include="Messages\Requests\QbRequestWrapper.cs" />
     <Compile Include="Messages\Requests\CustomerQueryRequest.cs" />
-    <Compile Include="Filters\ClassFilter.cs" />
-    <Compile Include="Filters\CurrencyFilter.cs" />
-    <Compile Include="Objects\AdditionalNote.cs" />
-    <Compile Include="Objects\Address.cs" />
-    <Compile Include="Objects\AddressBlock.cs" />
-    <Compile Include="Objects\ContactType.cs" />
-    <Compile Include="Objects\ContactRef.cs" />
-    <Compile Include="Objects\CreditCard.cs" />
-    <Compile Include="Struct\DataExtType.cs" />
-    <Compile Include="Struct\JobStatus.cs" />
-    <Compile Include="Struct\PreferredDeliveryMethod.cs" />
-    <Compile Include="Objects\Ref.cs" />
-    <Compile Include="Objects\Customer.cs" />
-    <Compile Include="Objects\ShipAddress.cs" />
-    <Compile Include="QbXmlResponseMsg.cs" />
-    <Compile Include="QbXmlResponse.cs" />
-    <Compile Include="Struct\StatusSeverity.cs" />
-    <Compile Include="Struct\ActiveStatus.cs" />
-    <Compile Include="Struct\CustomerQueryRequestFilter.cs" />
-    <Compile Include="Struct\MatchCriterion.cs" />
-    <Compile Include="Filters\NameFilter.cs" />
-    <Compile Include="Filters\NameRangeFilter.cs" />
-    <Compile Include="IteratorRequest.cs" />
-    <Compile Include="QbXmlRequest.cs" />
-    <Compile Include="Filters\TotalBalanceFilter.cs" />
-    <Compile Include="Struct\Operator.cs" />
-    <Compile Include="Type\IXmlConvertible.cs" />
-    <Compile Include="Type\PriceType.cs" />
-    <Compile Include="Type\QuanType.cs" />
-    <Compile Include="Type\PercentType.cs" />
-    <Compile Include="Type\FloatType.cs" />
-    <Compile Include="Type\BoolType.cs" />
+    <Compile Include="Messages\Requests\QbXmlIterator.cs" />
+    <Compile Include="Messages\Requests\QbXmlObject.cs" />
     <Compile Include="Type\AmtType.cs" />
-    <Compile Include="Type\DateType.cs" />
+    <Compile Include="Wrappers\CustomerQueryRsTypeWrapper.cs" />
+    <Compile Include="Messages\Responses\QbIteratorResponse.cs" />
+    <Compile Include="Objects.cs" />
+    <Compile Include="Wrappers\DataExtDelRetWrapper.cs" />
+    <Compile Include="Wrappers\ErrorRecoveryWrapper.cs" />
+    <Compile Include="Wrappers\ObjectItems.cs" />
+    <Compile Include="Wrappers\ObjectItem.cs" />
+    <Compile Include="Wrappers\QbXmlWrapper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QbXmlResponse.cs" />
+    <Compile Include="QbXmlRequest.cs" />
+    <Compile Include="Type\BoolType.cs" />
     <Compile Include="Type\DateTimeType.cs" />
+    <Compile Include="Type\DateType.cs" />
+    <Compile Include="Type\FloatType.cs" />
     <Compile Include="Type\GuidType.cs" />
-    <Compile Include="Type\IntType.cs" />
-    <Compile Include="Type\IStringConvertible.cs" />
-    <Compile Include="Type\QuickBooksType.cs" />
-    <Compile Include="Type\StrType.cs" />
-    <Compile Include="Type\IdType.cs" />
-    <Compile Include="Struct\AssignToObject.cs" />
+    <Compile Include="Type\ITypeWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="QbXml.nuspec" />
+    <None Include="Schemas\qbxml130.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Schemas\qbxmlops130.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Schemas\qbxmlso130.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Schemas\qbxmltypes130.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

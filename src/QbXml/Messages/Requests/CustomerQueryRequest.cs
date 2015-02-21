@@ -1,24 +1,14 @@
-﻿using QbSync.QbXml.Extensions;
-using QbSync.QbXml.Filters;
-using QbSync.QbXml.Struct;
+﻿using QbSync.QbXml.Objects;
 using QbSync.QbXml.Type;
-using System;
 using System.Collections.Generic;
-using System.Xml;
+using System.Linq;
 
 namespace QbSync.QbXml.Messages.Requests
 {
-    public class CustomerQueryRequest : IteratorRequest
+    public class CustomerQueryRequest : QbXmlIterator<CustomerQueryRqType>
     {
-        public CustomerQueryRequest()
-            : base("CustomerQueryRq")
-        {
-            Filter = CustomerQueryRequestFilter.None;
-        }
-
-        public CustomerQueryRequestFilter Filter { get; set; }
-        public IEnumerable<IdType> ListID { get; set; }
-        public IEnumerable<StrType> FullName { get; set; }
+        public IEnumerable<string> ListID { get; set; }
+        public IEnumerable<string> FullName { get; set; }
         public ActiveStatus? ActiveStatus { get; set; }
         public DateTimeType FromModifiedDate { get; set; }
         public DateTimeType ToModifiedDate { get; set; }
@@ -27,90 +17,65 @@ namespace QbSync.QbXml.Messages.Requests
         public TotalBalanceFilter TotalBalanceFilter { get; set; }
         public CurrencyFilter CurrencyFilter { get; set; }
         public ClassFilter ClassFilter { get; set; }
-        public IEnumerable<StrType> IncludeRetElement { get; set; }
-        public GuidType OwnerID { get; set; }
 
-        protected override void BuildRequest(XmlElement parent)
+        public IEnumerable<string> IncludeRetElement { get; set; }
+        public IEnumerable<GuidType> OwnerID { get; set; }
+
+        protected override void ProcessObj(CustomerQueryRqType obj)
         {
-            base.BuildRequest(parent);
+            base.ProcessObj(obj);
 
-            var doc = parent.OwnerDocument;
+            var items = new ItemWithName<ItemsChoiceType32>();
 
-            if (Filter == CustomerQueryRequestFilter.ListId)
+            if (ListID != null)
             {
-                if (ListID != null)
+                foreach (var item in ListID)
                 {
-                    parent.AppendTags("ListID", ListID);
+                    items.Add(ItemsChoiceType32.ListID, item);
                 }
             }
-            else if (Filter == CustomerQueryRequestFilter.FullName)
+
+            if (FullName != null)
             {
-                if (FullName != null)
+                foreach (var item in FullName)
                 {
-                    parent.AppendTags("FullName", FullName);
+                    items.Add(ItemsChoiceType32.FullName, item);
                 }
             }
-            else
+
+            items.AddNotNull(ItemsChoiceType32.ActiveStatus, ActiveStatus);
+            items.AddNotNull(ItemsChoiceType32.FromModifiedDate, FromModifiedDate);
+            items.AddNotNull(ItemsChoiceType32.ToModifiedDate, ToModifiedDate);
+            items.AddNotNull(ItemsChoiceType32.NameFilter, NameFilter);
+            items.AddNotNull(ItemsChoiceType32.NameRangeFilter, NameRangeFilter);
+            items.AddNotNull(ItemsChoiceType32.TotalBalanceFilter, TotalBalanceFilter);
+            items.AddNotNull(ItemsChoiceType32.CurrencyFilter, CurrencyFilter);
+            items.AddNotNull(ItemsChoiceType32.ClassFilter, ClassFilter);
+
+            if (MaxReturned.HasValue)
             {
-                if (MaxReturned != null)
-                {
-                    parent.AppendTag("MaxReturned", MaxReturned);
-                }
-
-                if (ActiveStatus.HasValue)
-                {
-                    parent.AppendChild(doc.CreateElementWithValue("ActiveStatus", ActiveStatus.Value.ToString()));
-                }
-
-                if (FromModifiedDate != null)
-                {
-                    parent.AppendTag("FromModifiedDate", FromModifiedDate);
-                }
-
-                if (ToModifiedDate != null)
-                {
-                    parent.AppendTag("ToModifiedDate", ToModifiedDate);
-                }
-
-                if (NameFilter != null && NameRangeFilter != null)
-                {
-                    throw new ArgumentException("You cannot set NameFilter and NameRangeFilter at the same time.");
-                }
-
-                if (NameFilter != null)
-                {
-                    parent.AppendTag("NameFilter", NameFilter);
-
-                }
-                else if (NameRangeFilter != null)
-                {
-                    parent.AppendTag("NameRangeFilter", NameRangeFilter);
-                }
-
-                if (TotalBalanceFilter != null)
-                {
-                    parent.AppendTag("TotalBalanceFilter", TotalBalanceFilter);
-                }
-
-                if (CurrencyFilter != null)
-                {
-                    parent.AppendTag("CurrencyFilter", CurrencyFilter);
-                }
-
-                if (ClassFilter != null)
-                {
-                    parent.AppendTag("ClassFilter", ClassFilter);
-                }
+                items.Add(ItemsChoiceType32.MaxReturned, MaxReturned.Value.ToString());
             }
+
+            if (Iterator.HasValue)
+            {
+                obj.iteratorSpecified = true;
+                obj.iterator = IteratorMapper.Map<CustomerQueryRqTypeIterator>(Iterator.Value);
+                obj.iteratorID = IteratorID;
+            }
+
+            obj.ItemsElementName = items.GetNames();
+            obj.Items = items.GetItems();
 
             if (IncludeRetElement != null)
             {
-                parent.AppendTags("IncludeRetElement", IncludeRetElement);
+                obj.IncludeRetElement = IncludeRetElement.ToArray();
             }
 
             if (OwnerID != null)
             {
-                parent.AppendTag("OwnerID", OwnerID);
+                obj.OwnerID = OwnerID
+                    .Select(m => m.ToString()).ToArray();
             }
         }
     }

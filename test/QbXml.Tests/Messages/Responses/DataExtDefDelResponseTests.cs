@@ -1,10 +1,6 @@
 ﻿using NUnit.Framework;
-using QbSync.QbXml.Messages;
-using QbSync.QbXml.Messages.Responses;
 using QbSync.QbXml.Objects;
-using QbSync.QbXml.Struct;
 using QbSync.QbXml.Tests.Helpers;
-using System.Linq;
 
 namespace QbSync.QbXml.Tests.QbXml
 {
@@ -16,11 +12,11 @@ namespace QbSync.QbXml.Tests.QbXml
         {
             var ret = "<DataExtDefDelRet><OwnerID>{7d543f23-f3b1-4dea-8ff4-37bd26d15e6c}</OwnerID><DataExtName>name</DataExtName></DataExtDefDelRet>";
 
-            var dataExtDefDelResponse = new DataExtDefDelResponse();
-            var response = dataExtDefDelResponse.ParseResponse(QuickBooksTestHelper.CreateQbXmlWithEnvelope(ret, "DataExtDefDelRs"));
-            var dataDefExt = response.Object;
+            var response = new QbXmlResponse();
+            var rs = response.GetSingleItemFromResponse<DataExtDefDelRsType>(QuickBooksTestHelper.CreateQbXmlWithEnvelope(ret, "DataExtDefDelRs"));
+            var dataExtDef = rs.DataExtDefDelRet;
 
-            QBAssert.AreEqual("name", dataDefExt.DataExtName);
+            Assert.AreEqual("name", dataExtDef.DataExtName);
         }
     }
 }

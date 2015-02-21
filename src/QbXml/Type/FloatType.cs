@@ -3,16 +3,16 @@ using System.Globalization;
 
 namespace QbSync.QbXml.Type
 {
-    public class PercentType : QuickBooksType, IStringConvertible, IComparable<PercentType>
+    public class FloatType : ITypeWrapper, IComparable<FloatType>
     {
         private decimal value;
 
-        public PercentType(string value)
+        public FloatType(string value)
         {
             this.value = Decimal.Parse(value);
         }
 
-        public PercentType(decimal value)
+        public FloatType(decimal value)
         {
             this.value = value;
         }
@@ -29,7 +29,7 @@ namespace QbSync.QbXml.Type
 
         public override bool Equals(object obj)
         {
-            var objType = obj as PercentType;
+            var objType = obj as FloatType;
             if (objType != null)
             {
                 return value == objType.value;
@@ -43,7 +43,7 @@ namespace QbSync.QbXml.Type
             return value.GetHashCode();
         }
 
-        public static bool operator ==(PercentType a, PercentType b)
+        public static bool operator ==(FloatType a, FloatType b)
         {
             // If both are null, or both are same instance, return true.
             if (System.Object.ReferenceEquals(a, b))
@@ -60,17 +60,17 @@ namespace QbSync.QbXml.Type
             return a.Equals(b);
         }
 
-        public static bool operator !=(PercentType a, PercentType b)
+        public static bool operator !=(FloatType a, FloatType b)
         {
             return !(a == b);
         }
 
-        public static implicit operator PercentType(decimal value)
+        public static implicit operator FloatType(decimal value)
         {
-            return new PercentType(value);
+            return new FloatType(value);
         }
 
-        public static implicit operator decimal(PercentType type)
+        public static implicit operator decimal(FloatType type)
         {
             if (type != null)
             {
@@ -80,7 +80,7 @@ namespace QbSync.QbXml.Type
             return default(decimal);
         }
 
-        public int CompareTo(PercentType other)
+        public int CompareTo(FloatType other)
         {
             return this.value.CompareTo(other.value);
         }

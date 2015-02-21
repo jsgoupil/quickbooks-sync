@@ -1,7 +1,8 @@
-﻿using QbSync.QbXml.Type;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Xml;
+using System.Xml.Serialization;
+using System.Linq;
 
 namespace QbSync.QbXml.Extensions
 {
@@ -52,34 +53,83 @@ namespace QbSync.QbXml.Extensions
             return elem;
         }
 
-        public static void AppendTag(this XmlElement xmlElement, string tagName, IXmlConvertible xmlConvertible)
+        public static void AddOnly(this XmlAttributeOverrides xmlAttributeOverrides, System.Type type, string member, XmlAttributes attributes)
         {
-            var childElement = xmlElement.OwnerDocument.CreateElement(tagName);
-            xmlElement.AppendChild(childElement);
-            xmlConvertible.AppendXml(childElement);
-        }
+            var customAttributes = type.GetProperty(member).GetCustomAttributes(typeof(XmlElementAttribute), false) as XmlElementAttribute[];
 
-        public static void AppendTagIfNotNull(this XmlElement xmlElement, string tagName, IXmlConvertible xmlConvertible)
-        {
-            if (xmlConvertible != null)
+            var xmlAttributes = new XmlAttributes
             {
-                xmlElement.AppendTag(tagName, xmlConvertible);
+                XmlAnyAttribute = attributes.XmlAnyAttribute,
+                XmlArray = attributes.XmlArray,
+                XmlAttribute = attributes.XmlAttribute,
+                XmlDefaultValue = attributes.XmlDefaultValue,
+                XmlEnum = attributes.XmlEnum,
+                XmlIgnore = attributes.XmlIgnore,
+                Xmlns = attributes.Xmlns,
+                XmlRoot = attributes.XmlRoot,
+                XmlText = attributes.XmlText,
+                XmlType = attributes.XmlType
+            };
+
+            var existingXmlElementAttributes = new List<XmlElementAttribute>(attributes.XmlElements.Count + customAttributes.Count());
+            existingXmlElementAttributes.AddRange(attributes.XmlElements.Cast<XmlElementAttribute>());
+
+            foreach (var customAttribute in customAttributes)
+            {
+                existingXmlElementAttributes.Add(customAttribute);
             }
+
+            foreach (var xmlElementAttribute in existingXmlElementAttributes.Distinct(new XmlOverrider.XmlElementAttributeEqualityComparer()))
+            {
+                xmlAttributes.XmlElements.Add(xmlElementAttribute);
+            }
+
+            xmlAttributeOverrides.Add(type, member, xmlAttributes);
         }
 
-        public static void AppendTags(this XmlElement xmlElement, string tagName, IEnumerable<IXmlConvertible> objects)
+        public static bool IsSubclassOf(this System.Type type, System.Type baseType)
         {
-            objects.ForEach(obj =>
-            {
-                xmlElement.AppendTag(tagName, obj);
-            });
-        }
+            if (type == null || baseType == null || type == baseType)
+                return false;
 
-        public static void AppendTagsIfNotNull(this XmlElement xmlElement, string tagName, IEnumerable<IXmlConvertible> objects)
-        {
-            if (objects != null)
+            if (baseType.IsGenericType == false)
             {
-                xmlElement.AppendTags(tagName, objects);
+                if (type.IsGenericType == false)
+                    return type.IsSubclassOf(baseType);
+            }
+            else
+            {
+                baseType = baseType.GetGenericTypeDefinition();
+            }
+
+            type = type.BaseType;
+            var objectType = typeof(object);
+            while (type != objectType && type != null)
+            {
+                var curentType = type.IsGenericType ?
+                    type.GetGenericTypeDefinition() : type;
+                if (curentType == baseType)
+                    return true;
+
+                type = type.BaseType;
+            }
+
+            return false;
+        }
+    }
+
+    static class XmlOverrider
+    {
+        public class XmlElementAttributeEqualityComparer : IEqualityComparer<XmlElementAttribute>
+        {
+            public bool Equals(XmlElementAttribute x, XmlElementAttribute y)
+            {
+                return x.ElementName == y.ElementName;
+            }
+
+            public int GetHashCode(XmlElementAttribute obj)
+            {
+                return obj.ElementName.GetHashCode();
             }
         }
     }

@@ -1,6 +1,6 @@
 ﻿using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Schema;
+
 namespace QbSync.QbXml.Tests.Helpers
 {
     class QuickBooksTestHelper

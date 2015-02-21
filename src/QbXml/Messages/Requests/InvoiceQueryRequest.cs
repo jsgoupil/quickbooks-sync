@@ -1,168 +1,98 @@
-﻿using QbSync.QbXml.Extensions;
-using QbSync.QbXml.Filters;
-using QbSync.QbXml.Struct;
+﻿using QbSync.QbXml.Objects;
+using System.Linq;
 using QbSync.QbXml.Type;
-using System;
 using System.Collections.Generic;
-using System.Xml;
 
 namespace QbSync.QbXml.Messages.Requests
 {
-    public class InvoiceQueryRequest : IteratorRequest
+    public class InvoiceQueryRequest : QbXmlObject<InvoiceQueryRqType>
     {
-        public InvoiceQueryRequest()
-            : base("InvoiceQueryRq")
-        {
-            Filter = InvoiceQueryRequestFilter.None;
-        }
+        public IEnumerable<string> TxnID { get; set; }
+        public IEnumerable<string> RefNumber { get; set; }
+        public IEnumerable<string> RefNumberCaseSensitive { get; set; }
 
-        public InvoiceQueryRequestFilter Filter { get; set; }
-
-        public IEnumerable<IdType> TxnID { get; set; }
-        public IEnumerable<StrType> RefNumber { get; set; }
-        public IEnumerable<StrType> RefNumberCaseSensitive { get; set; }
+        public int? MaxReturned { get; set; }
 
         public ModifiedDateRangeFilter ModifiedDateRangeFilter { get; set; }
         public TxnDateRangeFilter TxnDateRangeFilter { get; set; }
 
-        public BaseFilterWithChildren EntityFilter { get; set; }
-        public BaseFilterWithChildren AccountFilter { get; set; }
+        public EntityFilter EntityFilter { get; set; }
+        public AccountFilter AccountFilter { get; set; }
 
         public RefNumberFilter RefNumberFilter { get; set; }
         public RefNumberRangeFilter RefNumberRangeFilter { get; set; }
 
-        public BaseFilter CurrencyFilter { get; set; }
+        public CurrencyFilter CurrencyFilter { get; set; }
 
         public PaidStatus? PaidStatus { get; set; }
 
         public BoolType IncludeLineItems { get; set; }
         public BoolType IncludeLinkedTxns { get; set; }
 
-        public IEnumerable<StrType> IncludeRetElement { get; set; }
-        public GuidType OwnerID { get; set; }
+        public IEnumerable<string> IncludeRetElement { get; set; }
+        public IEnumerable<GuidType> OwnerID { get; set; }
 
-        protected override void BuildRequest(XmlElement parent)
+        protected override void ProcessObj(InvoiceQueryRqType obj)
         {
-            base.BuildRequest(parent);
+            base.ProcessObj(obj);
 
-            var doc = parent.OwnerDocument;
-
-            if (Filter == InvoiceQueryRequestFilter.TxnID)
+            var items = new ItemWithName<ItemsChoiceType72>();
+            if (TxnID != null)
             {
-                if (TxnID != null)
+                foreach (var item in TxnID)
                 {
-                    parent.AppendTags("TxnID", TxnID);
+                    items.AddNotNull(ItemsChoiceType72.TxnID, item);
                 }
             }
-            else if (Filter == InvoiceQueryRequestFilter.RefNumber)
+
+            if (RefNumber != null)
             {
-                if (RefNumber != null)
+                foreach (var item in RefNumber)
                 {
-                    parent.AppendTags("RefNumber", RefNumber);
+                    items.AddNotNull(ItemsChoiceType72.RefNumber, item);
                 }
             }
-            else if (Filter == InvoiceQueryRequestFilter.RefNumberCaseSensitive)
+
+            if (RefNumberCaseSensitive != null)
             {
-                if (RefNumberCaseSensitive != null)
+                foreach (var item in RefNumberCaseSensitive)
                 {
-                    parent.AppendTags("RefNumberCaseSensitive", RefNumberCaseSensitive);
+                    items.AddNotNull(ItemsChoiceType72.RefNumberCaseSensitive, item);
                 }
             }
-            else
-            {
-                if (MaxReturned != null)
-                {
-                    parent.AppendTag("MaxReturned", MaxReturned);
-                }
 
-                if (ModifiedDateRangeFilter != null && TxnDateRangeFilter != null)
-                {
-                    throw new ArgumentException("You cannot set ModifiedDateRangeFilter and TxnDateRangeFilter at the same time.");
-                }
+            items.AddNotNull(ItemsChoiceType72.AccountFilter, AccountFilter);
+            items.AddNotNull(ItemsChoiceType72.CurrencyFilter, CurrencyFilter);
+            items.AddNotNull(ItemsChoiceType72.EntityFilter, EntityFilter);
+            items.AddNotNull(ItemsChoiceType72.MaxReturned, MaxReturned);
+            items.AddNotNull(ItemsChoiceType72.ModifiedDateRangeFilter, ModifiedDateRangeFilter);
+            items.AddNotNull(ItemsChoiceType72.PaidStatus, PaidStatus);
+            items.AddNotNull(ItemsChoiceType72.RefNumberFilter, RefNumberFilter);
+            items.AddNotNull(ItemsChoiceType72.RefNumberRangeFilter, RefNumberRangeFilter);
+            items.AddNotNull(ItemsChoiceType72.TxnDateRangeFilter, TxnDateRangeFilter);
 
-                if (ModifiedDateRangeFilter != null)
-                {
-                    var modifiedDateRangeFilter = doc.CreateElement("ModifiedDateRangeFilter");
-                    parent.AppendChild(modifiedDateRangeFilter);
-
-                    ModifiedDateRangeFilter.AppendXml(modifiedDateRangeFilter);
-                }
-                else if (TxnDateRangeFilter != null)
-                {
-                    var txnDateRangeFilter = doc.CreateElement("TxnDateRangeFilter");
-                    parent.AppendChild(txnDateRangeFilter);
-
-                    TxnDateRangeFilter.AppendXml(txnDateRangeFilter);
-                }
-
-                if (EntityFilter != null)
-                {
-                    var entityFilter = doc.CreateElement("EntityFilter");
-                    parent.AppendChild(entityFilter);
-
-                    EntityFilter.AppendXml(entityFilter);
-                }
-
-                if (AccountFilter != null)
-                {
-                    var accountFilter = doc.CreateElement("AccountFilter");
-                    parent.AppendChild(accountFilter);
-
-                    AccountFilter.AppendXml(accountFilter);
-                }
-
-                if (RefNumberFilter != null && RefNumberRangeFilter != null)
-                {
-                    throw new ArgumentException("You cannot set RefNumberFilter and RefNumberRangeFilter at the same time.");
-                }
-
-                if (RefNumberFilter != null)
-                {
-                    var refNumberFilter = doc.CreateElement("RefNumberFilter");
-                    parent.AppendChild(refNumberFilter);
-
-                    RefNumberFilter.AppendXml(refNumberFilter);
-                }
-                else if (RefNumberRangeFilter != null)
-                {
-                    var refNumberRangeFilter = doc.CreateElement("RefNumberRangeFilter");
-                    parent.AppendChild(refNumberRangeFilter);
-
-                    RefNumberRangeFilter.AppendXml(refNumberRangeFilter);
-                }
-
-                if (CurrencyFilter != null)
-                {
-                    var currencyFilter = doc.CreateElement("CurrencyFilter");
-                    parent.AppendChild(currencyFilter);
-
-                    CurrencyFilter.AppendXml(currencyFilter);
-                }
-
-                if (PaidStatus.HasValue)
-                {
-                    parent.AppendChild(parent.OwnerDocument.CreateElementWithValue("PaidStatus", PaidStatus.Value.ToString()));
-                }
-            }
+            obj.ItemsElementName = items.GetNames();
+            obj.Items = items.GetItems();
 
             if (IncludeLineItems != null)
             {
-                parent.AppendTag("IncludeLineItems", IncludeLineItems);
+                obj.IncludeLineItems = IncludeLineItems.ToString();
             }
 
             if (IncludeLinkedTxns != null)
             {
-                parent.AppendTag("IncludeLinkedTxns", IncludeLinkedTxns);
+                obj.IncludeLinkedTxns = IncludeLinkedTxns.ToString();
             }
 
             if (IncludeRetElement != null)
             {
-                parent.AppendTags("IncludeRetElement", IncludeRetElement);
+                obj.IncludeRetElement = IncludeRetElement.ToArray();
             }
 
             if (OwnerID != null)
             {
-                parent.AppendTag("OwnerID", OwnerID);
+                obj.OwnerID = OwnerID
+                    .Select(m => m.ToString()).ToArray();
             }
         }
     }

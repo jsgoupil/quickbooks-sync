@@ -1,9 +1,8 @@
 ﻿using NUnit.Framework;
 using QbSync.QbXml.Extensions;
 using QbSync.QbXml.Messages.Requests;
-using QbSync.QbXml.Struct;
+using QbSync.QbXml.Objects;
 using QbSync.QbXml.Tests.Helpers;
-using QbSync.QbXml.Type;
 using System;
 using System.Collections.Generic;
 using System.Xml;
@@ -16,37 +15,38 @@ namespace QbSync.QbXml.Tests.QbXml
         [Test]
         public void BasicDataExtDefModRequestTest()
         {
-            var dataExtDefModRequest = new DataExtDefModRequest();
-            dataExtDefModRequest.OwnerID = Guid.NewGuid();
-            dataExtDefModRequest.DataExtName = "name";
-            dataExtDefModRequest.DataExtNewName = "newname";
-            dataExtDefModRequest.AssignToObject = new List<AssignToObject>
+            var request = new QbXmlRequest();
+            var innerRequest = new DataExtDefModRequest();
+            innerRequest.OwnerID = Guid.NewGuid();
+            innerRequest.DataExtName = "name";
+            innerRequest.DataExtNewName = "newname";
+            innerRequest.AssignToObject = new List<AssignToObject>
             {
                 AssignToObject.Account,
                 AssignToObject.Charge
             };
-            dataExtDefModRequest.RemoveFromObject = new List<AssignToObject>
+            innerRequest.RemoveFromObject = new List<RemoveFromObject>
             {
-                AssignToObject.Bill,
-                AssignToObject.Check
+                RemoveFromObject.Bill,
+                RemoveFromObject.Check
             };
-            dataExtDefModRequest.IncludeRetElement = new List<StrType>
+            innerRequest.IncludeRetElement = new List<string>
             {
-                new StrType("ABC"),
-                new StrType("DEF")
+                "ABC",
+                "DEF"
             };
-
-            var request = dataExtDefModRequest.GetRequest();
+            request.AddToSingle(innerRequest);
+            var xml = request.GetRequest();
 
             XmlDocument requestXmlDoc = new XmlDocument();
-            requestXmlDoc.LoadXml(request);
+            requestXmlDoc.LoadXml(xml);
 
             Assert.AreEqual(1, requestXmlDoc.GetElementsByTagName("DataExtDefModRq").Count);
 
             var node = requestXmlDoc.SelectSingleNode("//DataExtDefModRq/DataExtDefMod");
-            QBAssert.AreEqual(dataExtDefModRequest.OwnerID, node.ReadNode("OwnerID"));
-            QBAssert.AreEqual(dataExtDefModRequest.DataExtName, node.ReadNode("DataExtName"));
-            QBAssert.AreEqual(dataExtDefModRequest.DataExtNewName, node.ReadNode("DataExtNewName"));
+            Assert.AreEqual(innerRequest.OwnerID.ToString(), node.ReadNode("OwnerID"));
+            Assert.AreEqual(innerRequest.DataExtName, node.ReadNode("DataExtName"));
+            Assert.AreEqual(innerRequest.DataExtNewName, node.ReadNode("DataExtNewName"));
 
             var node2 = node.SelectNodes("AssignToObject");
             Assert.AreEqual(2, node2.Count);
@@ -63,7 +63,7 @@ namespace QbSync.QbXml.Tests.QbXml
             Assert.AreEqual("ABC", node4.Item(0).InnerText);
             Assert.AreEqual("DEF", node4.Item(1).InnerText);
             Assert.AreNotEqual("DataExtDefMod", node4.Item(0).ParentNode.Name);
-            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(xml));
         }
     }
 }

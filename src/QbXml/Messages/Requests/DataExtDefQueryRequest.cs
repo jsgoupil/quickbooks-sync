@@ -1,50 +1,42 @@
-﻿using QbSync.QbXml.Extensions;
-using QbSync.QbXml.Struct;
+﻿using QbSync.QbXml.Objects;
 using QbSync.QbXml.Type;
-using System;
 using System.Collections.Generic;
-using System.Xml;
+using System.Linq;
 
 namespace QbSync.QbXml.Messages.Requests
 {
-    public class DataExtDefQueryRequest : QbXmlRequest
+    public class DataExtDefQueryRequest : QbXmlObject<DataExtDefQueryRqType>
     {
-        public DataExtDefQueryRequest()
-            : base("DataExtDefQueryRq")
-        {
-        }
-
         public IEnumerable<GuidType> OwnerID { get; set; }
         public IEnumerable<AssignToObject> AssignToObject { get; set; }
-        public IEnumerable<StrType> IncludeRetElement { get; set; }
+        public IEnumerable<string> IncludeRetElement { get; set; }
 
-        protected override void BuildRequest(XmlElement parent)
+        protected override void ProcessObj(DataExtDefQueryRqType obj)
         {
-            base.BuildRequest(parent);
+            base.ProcessObj(obj);
 
-            var doc = parent.OwnerDocument;
-
-            if (OwnerID != null && AssignToObject != null)
-            {
-                throw new ArgumentException("You cannot set OwnerID and AssignToObject at the same time.");
-            }
-
+            var items = new ItemWithoutName();
             if (OwnerID != null)
             {
-                parent.AppendTags("OwnerID", OwnerID);
+                foreach (var item in OwnerID)
+                {
+                    items.Add(item);
+                }
             }
 
             if (AssignToObject != null)
             {
-                foreach (var assignment in AssignToObject)
+                foreach (var item in AssignToObject)
                 {
-                    parent.AppendChild(doc.CreateElementWithValue("AssignToObject", assignment.ToString()));
+                    items.Add(item);
                 }
             }
 
+            obj.Items = items.GetItems();
+
             if (IncludeRetElement != null)
             {
-                parent.AppendTags("IncludeRetElement", IncludeRetElement);
+                obj.IncludeRetElement = IncludeRetElement.ToArray();
             }
         }
     }

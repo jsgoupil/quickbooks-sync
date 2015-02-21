@@ -1,25 +1,31 @@
-﻿using QbSync.QbXml.Extensions;
-using QbSync.QbXml.Type;
-using System.Xml;
+﻿using QbSync.QbXml.Objects;
 
 namespace QbSync.QbXml.Messages.Requests
 {
-    public class DataExtAddRequest : DataExtRequest
+    public class DataExtAddRequest : DataExtRequest<DataExtAddRqType>
     {
-        public DataExtAddRequest()
-            : base("DataExtAddRq")
-        {
-        }
+        public string DataExtValue { get; set; }
+        public DataExtAddTxnID TxnID { get; set; }
 
-        public StrType DataExtValue { get; set; }
-
-        protected override void BuildRequest(XmlElement parent)
+        protected override void ProcessObj(DataExtAddRqType obj)
         {
-            var doc = parent.OwnerDocument;
-            var dataExtAdd = doc.CreateElement("DataExtAdd");
-            parent.AppendChild(dataExtAdd);
-            base.BuildRequest(dataExtAdd);
-            dataExtAdd.AppendTag("DataExtValue", DataExtValue);
+            base.ProcessObj(obj);
+
+            obj.DataExtAdd = new DataExtAdd
+            {
+                DataExtName = DataExtName,
+                DataExtValue = DataExtValue,
+                OwnerID = OwnerID.ToString(),
+            };
+
+            var items = new ItemWithoutName();
+            items.AddNotNull(ListDataExtType);
+            items.AddNotNull(ListObjRef);
+            items.AddNotNull(OtherDataExtType);
+            items.AddNotNull(TxnDataExtType);
+            items.AddNotNull(TxnID);
+            items.AddNotNull(TxnLineID);
+            obj.DataExtAdd.Items = items.GetItems();
         }
     }
 }

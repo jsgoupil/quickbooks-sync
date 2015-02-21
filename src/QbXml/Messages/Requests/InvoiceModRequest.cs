@@ -1,35 +1,80 @@
-﻿using QbSync.QbXml.Extensions;
-using QbSync.QbXml.Objects;
+﻿using QbSync.QbXml.Objects;
 using QbSync.QbXml.Type;
-using System.Xml;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace QbSync.QbXml.Messages.Requests
 {
-    public class InvoiceModRequest : InvoiceRequest
+    public class InvoiceModRequest : InvoiceRequest<InvoiceModRqType>
     {
-        public InvoiceModRequest()
-            : base("InvoiceModRq")
+        public BoolType IsFinanceCharge { get; set; }
+
+        public string TxnID { get; set; }
+        public string EditSequence { get; set; }
+        public IEnumerable<InvoiceLineMod> InvoiceLineMod { get; set; }
+        public IEnumerable<InvoiceLineGroupMod> InvoiceLineGroupMod { get; set; }
+
+        protected override void ProcessObj(InvoiceModRqType obj)
         {
-        }
+            base.ProcessObj(obj);
 
-        public IdType TxnID { get; set; }
-        public StrType EditSequence { get; set; }
-        public InvoiceLineMod InvoiceLineMod { get; set; }
-        public InvoiceLineGroupMod InvoiceLineGroupMod { get; set; }
+            obj.InvoiceMod = new InvoiceMod
+            {
+                CustomerRef = CustomerRef,
+                ClassRef = ClassRef,
+                ARAccountRef = ARAccountRef,
+                TemplateRef = TemplateRef,
+                TxnDate = TxnDate == null ? null : TxnDate.ToString(),
+                RefNumber = RefNumber,
+                BillAddress = BillAddress,
+                ShipAddress = ShipAddress,
+                IsPending = IsPending == null ? null : IsPending.ToString(),
+                PONumber = PONumber,
+                TermsRef = TermsRef,
+                DueDate = DueDate == null ? null : DueDate.ToString(),
+                SalesRepRef = SalesRepRef,
+                FOB = FOB,
+                ShipDate = ShipDate == null ? null : ShipDate.ToString(),
+                ShipMethodRef = ShipMethodRef,
+                ItemSalesTaxRef = ItemSalesTaxRef,
+                Memo = Memo,
+                CustomerMsgRef = CustomerMsgRef,
+                IsToBePrinted = IsToBePrinted == null ? null : IsToBePrinted.ToString(),
+                IsToBeEmailed = IsToBeEmailed == null ? null : IsToBeEmailed.ToString(),
+                IsTaxIncluded = IsTaxIncluded == null ? null : IsTaxIncluded.ToString(),
+                CustomerSalesTaxCodeRef = CustomerSalesTaxCodeRef,
+                Other = Other,
+                ExchangeRate = ExchangeRate == null ? null : ExchangeRate.ToString(),
+                SetCredit = SetCredit == null ? null : SetCredit.ToArray(),
 
-        protected override void BuildRequest(XmlElement parent)
-        {
-            var doc = parent.OwnerDocument;
-            var invoiceMod = doc.CreateElement("InvoiceMod");
-            parent.AppendChild(invoiceMod);
+                // Specific
+                TxnID = TxnID,
+                EditSequence = EditSequence
+            };
 
-            invoiceMod.AppendTag("TxnID", TxnID);
-            invoiceMod.AppendTag("EditSequence", EditSequence);
-            base.BuildRequest(invoiceMod);
-            invoiceMod.AppendTagsIfNotNull("SetCredit", SetCredit);
-            invoiceMod.AppendTagIfNotNull("InvoiceLineMod", InvoiceLineMod);
-            invoiceMod.AppendTagIfNotNull("InvoiceLineGroupMod", InvoiceLineGroupMod);
-            invoiceMod.AppendTagsIfNotNull("IncludeRetElement", IncludeRetElement);
+            var items = new ItemWithoutName();
+            if (InvoiceLineMod != null)
+            {
+                foreach (var item in InvoiceLineMod)
+                {
+                    items.Add(item);
+                }
+            }
+
+            if (InvoiceLineGroupMod != null)
+            {
+                foreach (var item in InvoiceLineGroupMod)
+                {
+                    items.Add(item);
+                }
+            }
+
+            obj.InvoiceMod.Items = items.GetItems();
+
+            if (IncludeRetElement != null)
+            {
+                obj.IncludeRetElement = IncludeRetElement.ToArray();
+            }
         }
     }
 }

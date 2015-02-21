@@ -1,0 +1,1 @@
+xsd.exe qbxml130.xsd qbxmlops130.xsd qbxmlso130.xsd qbxmltypes130.xsd /c /l:CS /o:temp /enableLinqDataSet /n:QbSync.QbXml.Objects

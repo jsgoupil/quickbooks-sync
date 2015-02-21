@@ -1,9 +1,11 @@
 ﻿using Moq;
 using Moq.Protected;
 using NUnit.Framework;
+using QbSync.QbXml;
 using QbSync.QbXml.Messages.Requests;
 using QbSync.QbXml.Messages.Responses;
 using QbSync.QbXml.Objects;
+using QbSync.QbXml.Wrappers;
 using QbSync.WebConnector.Messages;
 using System;
 using System.Xml;
@@ -23,7 +25,7 @@ namespace QbSync.WebConnector.Tests
                 CurrentStep = "step4"
             };
 
-            var stepQueryWithIteratorMock = new Mock<StepQueryWithIterator<CustomerQueryRequest, CustomerQueryResponse, Customer[]>>();
+            var stepQueryWithIteratorMock = new Mock<StepQueryWithIterator<CustomerQueryRequest, CustomerQueryRsTypeWrapper>>();
             stepQueryWithIteratorMock.CallBase = true;
 
             var xml = stepQueryWithIteratorMock.Object.SendXML(authenticatedTicket);
@@ -48,8 +50,8 @@ namespace QbSync.WebConnector.Tests
                 CurrentStep = "step4"
             };
             var iteratorID = "123456";
-            var iteratorKey = StepQueryWithIterator<CustomerQueryRequest, CustomerQueryResponse, Customer[]>.IteratorKey;
-            var updateCustomerMock = new Mock<StepQueryWithIterator<CustomerQueryRequest, CustomerQueryResponse, Customer[]>>();
+            var iteratorKey = StepQueryWithIterator<CustomerQueryRequest, CustomerQueryRsTypeWrapper>.IteratorKey;
+            var updateCustomerMock = new Mock<StepQueryWithIterator<CustomerQueryRequest, CustomerQueryRsTypeWrapper>>();
             updateCustomerMock
                 .Protected()
                 .Setup<string>("RetrieveMessage", ItExpr.Is<string>(s => s == authenticatedTicket.Ticket), ItExpr.Is<string>(s => s == authenticatedTicket.CurrentStep), ItExpr.Is<string>(s => s == iteratorKey))
@@ -76,7 +78,7 @@ namespace QbSync.WebConnector.Tests
                 Ticket = Guid.NewGuid().ToString(),
                 CurrentStep = "step4"
             };
-            var updateCustomerMock = new Mock<StepQueryWithIterator<CustomerQueryRequest, CustomerQueryResponse, Customer[]>>();
+            var updateCustomerMock = new Mock<StepQueryWithIterator<CustomerQueryRequest, CustomerQueryRsTypeWrapper>>();
             updateCustomerMock
                 .Protected()
                 .Setup<bool>("ExecuteRequest", ItExpr.IsAny<AuthenticatedTicket>(), ItExpr.IsAny<CustomerQueryRequest>())
@@ -112,7 +114,7 @@ namespace QbSync.WebConnector.Tests
                 "</CustomerRet>" +
                 "</CustomerQueryRs></QBXMLMsgsRs></QBXML>";
 
-            var stepQueryWithIteratorMock = new Mock<StepQueryWithIterator<CustomerQueryRequest, CustomerQueryResponse, Customer[]>>();
+            var stepQueryWithIteratorMock = new Mock<StepQueryWithIterator<CustomerQueryRequest, CustomerQueryRsTypeWrapper>>();
             stepQueryWithIteratorMock.CallBase = true;
 
             var ret = stepQueryWithIteratorMock.Object.ReceiveXML(authenticatedTicket, xml, string.Empty, string.Empty);
@@ -144,7 +146,7 @@ namespace QbSync.WebConnector.Tests
                 "</CustomerRet>" +
                 "</CustomerQueryRs></QBXMLMsgsRs></QBXML>";
 
-            var stepQueryWithIteratorMock = new Mock<StepQueryWithIterator<CustomerQueryRequest, CustomerQueryResponse, Customer[]>>();
+            var stepQueryWithIteratorMock = new Mock<StepQueryWithIterator<CustomerQueryRequest, CustomerQueryRsTypeWrapper>>();
             stepQueryWithIteratorMock.CallBase = true;
 
             var ret = stepQueryWithIteratorMock.Object.ReceiveXML(authenticatedTicket, xml, string.Empty, string.Empty);

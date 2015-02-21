@@ -1,117 +1,129 @@
-﻿using QbSync.QbXml.Extensions;
-using QbSync.QbXml.Struct;
-using QbSync.QbXml.Type;
-using System;
-using System.Collections;
+﻿using QbSync.QbXml.Objects;
 using System.Collections.Generic;
+using System.IO;
+using System.Xml.Serialization;
 using System.Linq;
-using System.Reflection;
-using System.Xml;
+using QbSync.QbXml.Messages.Responses;
+using QbSync.QbXml.Wrappers;
+using QbSync.QbXml.Extensions;
 
 namespace QbSync.QbXml
 {
-    public class QbXmlResponse<T>
+    public class QbXmlResponse
     {
-        protected string rootElementName;
+        static XmlSerializer serializer;
+        static object locker = new object();
 
-        public QbXmlResponse(string rootElementName)
+        public QbXmlResponse()
         {
-            this.rootElementName = rootElementName;
+            InitializeOverrideList();
         }
 
-        public QbXmlMsgResponse<T> ParseResponse(string response)
+        public QBXML ParseResponseRaw(string response)
         {
-            // Parse the response XML string into an XmlDocument
-            XmlDocument responseXmlDoc = new XmlDocument();
-            responseXmlDoc.LoadXml(response);
+            var reader = new StringReader(response);
+            return serializer.Deserialize(reader) as QBXML;
+        }
 
-            // Get the response for our request
-            XmlNodeList rs = responseXmlDoc.GetElementsByTagName(rootElementName);
+        public T GetSingleItemFromResponse<T>(string response)
+            where T : class
+        {
+            return GetSingleItemFromResponse(response, typeof(T)) as T;
+        }
 
-            if (rs.Count == 1) // Should always be true since we only did one request in this sample
+        public IEnumerable<T> GetItemsFromResponse<T>(string response)
+            where T : class
+        {
+            return GetItemsFromResponse(response, typeof(T)).Cast<T>();
+        }
+
+        public object GetSingleItemFromResponse(string response, System.Type type)
+        {
+            return GetItemsFromResponse(response, type).FirstOrDefault();
+        }
+
+        public IEnumerable<object> GetItemsFromResponse(string response, System.Type type)
+        {
+            var qbXml = ParseResponseRaw(response);
+            return SearchFor(qbXml, type);
+        }
+
+        private IEnumerable<object> SearchFor(QBXML qbXml, System.Type type)
+        {
+            foreach (var item in qbXml.Items)
             {
-                XmlNode responseNode = rs.Item(0);
-
-                // Check the status code, info, and severity
-                var qbXmlResponse = CreateQbXmlMsgResponse();
-                qbXmlResponse.RequestId = responseNode.ReadAttribute("requestID") == null ? null : (int?)Convert.ToInt32(responseNode.ReadAttribute("requestID"));
-                qbXmlResponse.StatusCode = responseNode.ReadAttribute("statusCode") == null ? null : (int?)Convert.ToInt32(responseNode.ReadAttribute("statusCode"));
-                qbXmlResponse.StatusSeverity = responseNode.ReadAttribute("statusSeverity") == null ? null : (StatusSeverity?)Enum.Parse(typeof(StatusSeverity), responseNode.ReadAttribute("statusSeverity"));
-                qbXmlResponse.StatusMessage = responseNode.ReadAttribute("statusMessage");
-
-                ProcessResponse(responseNode, qbXmlResponse);
-
-                return qbXmlResponse;
-            }
-
-            return null;
-        }
-
-        protected virtual void ProcessResponse(XmlNode responseNode, QbXmlMsgResponse<T> qbXmlResponse)
-        {
-        }
-
-        protected virtual QbXmlMsgResponse<T> CreateQbXmlMsgResponse()
-        {
-            return new QbXmlMsgResponse<T>();
-        }
-
-        protected static IEnumerable WalkTypes(System.Type type, XmlNodeList xmlNodeList)
-        {
-            var listType = typeof(List<>);
-            var concreteType = listType.MakeGenericType(type);
-            var instance = Activator.CreateInstance(concreteType, xmlNodeList.Count);
-            for (int i = 0; i < xmlNodeList.Count; i++)
-            {
-                var value = WalkType(type, xmlNodeList.Item(i));
-                concreteType.GetMethod("Add").Invoke(instance, new object[] { value });
-            }
-
-            return (IEnumerable)instance;
-        }
-
-        protected static object WalkType(System.Type type, XmlNode xmlNode)
-        {
-            if (type.IsEnum)
-            {
-                return Enum.Parse(type, xmlNode.InnerText);
-            }
-            else
-            {
-                var propertyInfos = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-                var instance = Activator.CreateInstance(type);
-
-                foreach (var propertyInfo in propertyInfos)
+                var typedItem = item as QBXMLMsgsRs;
+                if (typedItem != null)
                 {
-                    var node = xmlNode.SelectSingleNode(propertyInfo.Name);
-                    if (node != null)
+                    foreach (var innerItem in typedItem.Items)
                     {
-                        if (propertyInfo.PropertyType.IsEnum)
+                        if (innerItem.GetType() == type || innerItem.GetType().IsSubclassOf(type))
                         {
-                            var enumValue = Enum.Parse(propertyInfo.PropertyType, xmlNode.ReadNode(propertyInfo.Name));
-                            propertyInfo.SetValue(instance, enumValue, null);
-                        }
-                        else if (propertyInfo.PropertyType.GetInterfaces().Contains(typeof(IStringConvertible)))
-                        {
-                            var str = xmlNode.ReadNode(propertyInfo.Name);
-                            var baseInstance = Activator.CreateInstance(propertyInfo.PropertyType, str);
-                            propertyInfo.SetValue(instance, baseInstance, null);
-                        }
-                        else if (propertyInfo.PropertyType.IsGenericType && propertyInfo.PropertyType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
-                        {
-                            var list = WalkTypes(propertyInfo.PropertyType.GetGenericArguments()[0], xmlNode.SelectNodes(propertyInfo.Name));
-                            propertyInfo.SetValue(instance, list, null);
-                        }
-                        else
-                        {
-                            var obj = WalkType(propertyInfo.PropertyType, node);
-                            propertyInfo.SetValue(instance, obj, null);
+                            yield return innerItem;
                         }
                     }
                 }
-
-                return instance;
             }
         }
+
+        private void InitializeOverrideList()
+        {
+            lock (locker)
+            {
+                if (serializer == null)
+                {
+                    var typeOverrides = new List<TypeOverride>
+                    {
+                        new TypeOverride
+                        {
+                             OverrideType = typeof(QBXMLMsgsRs),
+                             OverrideMember = "Items",
+                             Attributes = new XmlAttributes
+                             {
+                                 XmlElements =
+                                 {
+                                     new XmlElementAttribute
+                                     {
+                                         ElementName = "CustomerQueryRs",
+                                         Type = typeof(CustomerQueryRsTypeWrapper)
+                                     }
+                                 }
+                             }
+                         },
+                         new TypeOverride
+                         {
+                             OverrideType = typeof(DataExtDelRsType),
+                             OverrideMember = "DataExtDelRet",
+                             Attributes = new XmlAttributes
+                             {
+                                 XmlElements =
+                                 {
+                                     new XmlElementAttribute
+                                     {
+                                         ElementName = "DataExtDelRet",
+                                         Type = typeof(DataExtDelRetWrapper)
+                                     }
+                                 }
+                             }
+                         }
+                    };
+
+                    var xmlAttributeOverride = new XmlAttributeOverrides();
+                    foreach (var typeOverride in typeOverrides)
+                    {
+                        xmlAttributeOverride.AddOnly(typeOverride.OverrideType, typeOverride.OverrideMember, typeOverride.Attributes);
+                    }
+
+                    serializer = new XmlSerializer(typeof(QBXML), xmlAttributeOverride);
+                }
+            }
+        }
+    }
+
+    class TypeOverride
+    {
+        internal System.Type OverrideType { get; set; }
+        internal string OverrideMember { get; set; }
+        internal XmlAttributes Attributes { get; set; }
     }
 }

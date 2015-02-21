@@ -1,11 +1,8 @@
 ﻿using NUnit.Framework;
 using QbSync.QbXml.Extensions;
 using QbSync.QbXml.Messages.Requests;
-using QbSync.QbXml.Struct;
 using QbSync.QbXml.Tests.Helpers;
-using QbSync.QbXml.Type;
 using System;
-using System.Collections.Generic;
 using System.Xml;
 
 namespace QbSync.QbXml.Tests.QbXml
@@ -16,21 +13,22 @@ namespace QbSync.QbXml.Tests.QbXml
         [Test]
         public void BasicDataExtDefDelRequestTest()
         {
-            var dataExtDefDelRequest = new DataExtDefDelRequest();
-            dataExtDefDelRequest.OwnerID = Guid.NewGuid();
-            dataExtDefDelRequest.DataExtName = "name";
-
-            var request = dataExtDefDelRequest.GetRequest();
+            var request = new QbXmlRequest();
+            var innerRequest = new DataExtDefDelRequest();
+            innerRequest.OwnerID = Guid.NewGuid();
+            innerRequest.DataExtName = "name";
+            request.AddToSingle(innerRequest);
+            var xml = request.GetRequest();
 
             XmlDocument requestXmlDoc = new XmlDocument();
-            requestXmlDoc.LoadXml(request);
+            requestXmlDoc.LoadXml(xml);
 
             Assert.AreEqual(1, requestXmlDoc.GetElementsByTagName("DataExtDefDelRq").Count);
 
             var node = requestXmlDoc.SelectSingleNode("//DataExtDefDelRq");
-            QBAssert.AreEqual(dataExtDefDelRequest.OwnerID, node.ReadNode("OwnerID"));
-            QBAssert.AreEqual(dataExtDefDelRequest.DataExtName, node.ReadNode("DataExtName"));
-            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
+            Assert.AreEqual(innerRequest.OwnerID.ToString(), node.ReadNode("OwnerID"));
+            Assert.AreEqual(innerRequest.DataExtName, node.ReadNode("DataExtName"));
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(xml));
         }
     }
 }

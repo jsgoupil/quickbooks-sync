@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
-using QbSync.QbXml.Extensions;
 using QbSync.QbXml.Messages.Requests;
-using QbSync.QbXml.Struct;
+using QbSync.QbXml.Objects;
 using QbSync.QbXml.Tests.Helpers;
 using QbSync.QbXml.Type;
 using System;
@@ -16,22 +15,23 @@ namespace QbSync.QbXml.Tests.QbXml
         [Test]
         public void OwnerIDDataExtDefQueryRequestTest()
         {
-            var dataExtDefQueryRequest = new DataExtDefQueryRequest();
-            dataExtDefQueryRequest.OwnerID = new List<GuidType>
+            var request = new QbXmlRequest();
+            var innerRequest = new DataExtDefQueryRequest();
+            innerRequest.OwnerID = new List<GuidType>
             {
                 Guid.NewGuid(),
                 Guid.NewGuid()
             };
-            dataExtDefQueryRequest.IncludeRetElement = new List<StrType>
+            innerRequest.IncludeRetElement = new List<string>
             {
-                new StrType("ABC"),
-                new StrType("DEF")
+                "ABC",
+                "DEF"
             };
-
-            var request = dataExtDefQueryRequest.GetRequest();
+            request.AddToSingle(innerRequest);
+            var xml = request.GetRequest();
 
             XmlDocument requestXmlDoc = new XmlDocument();
-            requestXmlDoc.LoadXml(request);
+            requestXmlDoc.LoadXml(xml);
 
             Assert.AreEqual(1, requestXmlDoc.GetElementsByTagName("DataExtDefQueryRq").Count);
 
@@ -42,28 +42,29 @@ namespace QbSync.QbXml.Tests.QbXml
             Assert.AreEqual(2, node3.Count);
             Assert.AreEqual("ABC", node3.Item(0).InnerText);
             Assert.AreEqual("DEF", node3.Item(1).InnerText);
-            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(xml));
         }
 
         [Test]
         public void AssignToObjectDataExtDefQueryRequestTest()
         {
-            var dataExtDefQueryRequest = new DataExtDefQueryRequest();
-            dataExtDefQueryRequest.AssignToObject = new List<AssignToObject>
+            var request = new QbXmlRequest();
+            var innerRequest = new DataExtDefQueryRequest();
+            innerRequest.AssignToObject = new List<AssignToObject>
             {
                 AssignToObject.Account,
                 AssignToObject.Charge
             };
-            dataExtDefQueryRequest.IncludeRetElement = new List<StrType>
+            innerRequest.IncludeRetElement = new List<string>
             {
-                new StrType("ABC"),
-                new StrType("DEF")
+                "ABC",
+                "DEF"
             };
-
-            var request = dataExtDefQueryRequest.GetRequest();
+            request.AddToSingle(innerRequest);
+            var xml = request.GetRequest();
 
             XmlDocument requestXmlDoc = new XmlDocument();
-            requestXmlDoc.LoadXml(request);
+            requestXmlDoc.LoadXml(xml);
 
             Assert.AreEqual(1, requestXmlDoc.GetElementsByTagName("DataExtDefQueryRq").Count);
 
@@ -77,26 +78,7 @@ namespace QbSync.QbXml.Tests.QbXml
             Assert.AreEqual(2, node3.Count);
             Assert.AreEqual("ABC", node3.Item(0).InnerText);
             Assert.AreEqual("DEF", node3.Item(1).InnerText);
-            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
-        }
-
-        [Test]
-        [ExpectedException(ExpectedException = typeof(ArgumentException))]
-        public void ExceptionDataExtDefQueryRequestTest()
-        {
-            var dataExtDefQueryRequest = new DataExtDefQueryRequest();
-            dataExtDefQueryRequest.OwnerID = new List<GuidType>
-            {
-                Guid.NewGuid(),
-                Guid.NewGuid()
-            };
-            dataExtDefQueryRequest.AssignToObject = new List<AssignToObject>
-            {
-                AssignToObject.Account,
-                AssignToObject.Charge
-            };
-
-            dataExtDefQueryRequest.GetRequest();
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(xml));
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace QbSync.QbXml.Type
 {
-    public class DateTimeType : QuickBooksType, IStringConvertible, IComparable<DateTimeType>
+    public class DateTimeType : ITypeWrapper, IComparable<DateTimeType>
     {
         private DateTime value;
 

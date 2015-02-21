@@ -1,66 +1,56 @@
-﻿using QbSync.QbXml.Extensions;
-using QbSync.QbXml.Struct;
+﻿using QbSync.QbXml.Objects;
 using QbSync.QbXml.Type;
 using System.Collections.Generic;
-using System.Xml;
+using System.Linq;
 
 namespace QbSync.QbXml.Messages.Requests
 {
-    public class DataExtDefAddRequest : QbXmlRequest
+    public class DataExtDefAddRequest : QbXmlObject<DataExtDefAddRqType>
     {
-        public DataExtDefAddRequest()
-            : base("DataExtDefAddRq")
-        {
-        }
-
         public GuidType OwnerID { get; set; }
-        public StrType DataExtName { get; set; }
+        public string DataExtName { get; set; }
         public DataExtType DataExtType { get; set; }
         public IEnumerable<AssignToObject> AssignToObject { get; set; }
         public BoolType DataExtListRequire { get; set; }
         public BoolType DataExtTxnRequire { get; set; }
-        public StrType DataExtFormatString { get; set; }
-        public IEnumerable<StrType> IncludeRetElement { get; set; }
+        public string DataExtFormatString { get; set; }
+        public IEnumerable<string> IncludeRetElement { get; set; }
 
-        protected override void BuildRequest(XmlElement parent)
+        protected override void ProcessObj(DataExtDefAddRqType obj)
         {
-            var doc = parent.OwnerDocument;
-            var dataExtDefAdd = doc.CreateElement("DataExtDefAdd");
-            dataExtDefAdd.AppendTag("OwnerID", OwnerID);
-            dataExtDefAdd.AppendTag("DataExtName", DataExtName);
+            base.ProcessObj(obj);
 
-            dataExtDefAdd.AppendChild(doc.CreateElementWithValue("DataExtType", DataExtType.ToString()));
+            obj.DataExtDefAdd = new DataExtDefAdd
+            {
+                OwnerID = OwnerID.ToString(),
+                DataExtName = DataExtName,
+                DataExtType = DataExtType
+            };
 
             if (AssignToObject != null)
             {
-                foreach (var assignment in AssignToObject)
-                {
-                    dataExtDefAdd.AppendChild(doc.CreateElementWithValue("AssignToObject", assignment.ToString()));
-                }
+                obj.DataExtDefAdd.AssignToObject = AssignToObject.ToArray();
             }
 
             if (DataExtListRequire != null)
             {
-                dataExtDefAdd.AppendTag("DataExtListRequire", DataExtListRequire);
+                obj.DataExtDefAdd.DataExtListRequire = DataExtListRequire.ToString();
             }
 
             if (DataExtTxnRequire != null)
             {
-                dataExtDefAdd.AppendTag("DataExtTxnRequire", DataExtTxnRequire);
+                obj.DataExtDefAdd.DataExtTxnRequire = DataExtTxnRequire.ToString();
             }
 
             if (DataExtFormatString != null)
             {
-                dataExtDefAdd.AppendTag("DataExtFormatString", DataExtFormatString);
+                obj.DataExtDefAdd.DataExtFormatString = DataExtFormatString;
             }
 
-            parent.AppendChild(dataExtDefAdd);
             if (IncludeRetElement != null)
             {
-                parent.AppendTags("IncludeRetElement", IncludeRetElement);
+                obj.IncludeRetElement = IncludeRetElement.ToArray();
             }
-
-            base.BuildRequest(dataExtDefAdd);
         }
     }
 }

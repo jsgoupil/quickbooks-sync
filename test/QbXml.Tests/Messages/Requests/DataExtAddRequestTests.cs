@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using QbSync.QbXml.Extensions;
 using QbSync.QbXml.Messages.Requests;
-using QbSync.QbXml.Struct;
+using QbSync.QbXml.Objects;
 using QbSync.QbXml.Tests.Helpers;
 using System;
 using System.Xml;
@@ -14,94 +14,92 @@ namespace QbSync.QbXml.Tests.QbXml
         [Test]
         public void BasicDataExtAddRequestTest()
         {
-            var dataExtAddRequest = new DataExtAddRequest();
-            dataExtAddRequest.OwnerID = Guid.NewGuid();
-            dataExtAddRequest.DataExtName = "name";
-            dataExtAddRequest.DataExtValue = "value";
-            dataExtAddRequest.OtherDataExtType = OtherDataExtType.Company;
-
-            var request = dataExtAddRequest.GetRequest();
+            var request = new QbXmlRequest();
+            var innerRequest = new DataExtAddRequest();
+            innerRequest.OwnerID = Guid.NewGuid();
+            innerRequest.DataExtName = "name";
+            innerRequest.DataExtValue = "value";
+            innerRequest.OtherDataExtType = OtherDataExtType.Company;
+            request.AddToSingle(innerRequest);
+            var xml = request.GetRequest();
 
             XmlDocument requestXmlDoc = new XmlDocument();
-            requestXmlDoc.LoadXml(request);
+            requestXmlDoc.LoadXml(xml);
 
             Assert.AreEqual(1, requestXmlDoc.GetElementsByTagName("DataExtAddRq").Count);
 
             var node = requestXmlDoc.SelectSingleNode("//DataExtAddRq/DataExtAdd");
-            QBAssert.AreEqual(dataExtAddRequest.OwnerID, node.ReadNode("OwnerID"));
-            QBAssert.AreEqual(dataExtAddRequest.DataExtName, node.ReadNode("DataExtName"));
-            QBAssert.AreEqual(dataExtAddRequest.DataExtValue, node.ReadNode("DataExtValue"));
+            Assert.AreEqual(innerRequest.OwnerID.ToString(), node.ReadNode("OwnerID"));
+            Assert.AreEqual(innerRequest.DataExtName, node.ReadNode("DataExtName"));
+            Assert.AreEqual(innerRequest.DataExtValue, node.ReadNode("DataExtValue"));
             Assert.AreEqual("Company", node.ReadNode("OtherDataExtType"));
-            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(xml));
         }
 
         [Test]
         public void ListDataExtAddRequestTest()
         {
-            var dataExtAddRequest = new DataExtAddRequest();
-            dataExtAddRequest.Filter = DataExtFilter.List;
-            dataExtAddRequest.OwnerID = Guid.NewGuid();
-            dataExtAddRequest.DataExtName = "name";
-            dataExtAddRequest.DataExtValue = "value";
-            dataExtAddRequest.ListDataExt = new Objects.ListDataExt
+            var request = new QbXmlRequest();
+            var innerRequest = new DataExtAddRequest();
+            innerRequest.OwnerID = Guid.NewGuid();
+            innerRequest.DataExtName = "name";
+            innerRequest.DataExtValue = "value";
+            innerRequest.ListDataExtType = ListDataExtType.Customer;
+            innerRequest.ListObjRef = new ListObjRef
             {
-                ListDataExtType = ListDataExtType.Customer,
-                ListObjRef = new Objects.Ref
-                {
-                    FullName = "test",
-                    ListID = "12345"
-                }
+                FullName = "test",
+                ListID = "12345"
             };
-
-            var request = dataExtAddRequest.GetRequest();
+            request.AddToSingle(innerRequest);
+            var xml = request.GetRequest();
 
             XmlDocument requestXmlDoc = new XmlDocument();
-            requestXmlDoc.LoadXml(request);
+            requestXmlDoc.LoadXml(xml);
 
             Assert.AreEqual(1, requestXmlDoc.GetElementsByTagName("DataExtAddRq").Count);
 
             var node = requestXmlDoc.SelectSingleNode("//DataExtAddRq/DataExtAdd");
-            QBAssert.AreEqual(dataExtAddRequest.OwnerID, node.ReadNode("OwnerID"));
-            QBAssert.AreEqual(dataExtAddRequest.DataExtName, node.ReadNode("DataExtName"));
-            QBAssert.AreEqual(dataExtAddRequest.DataExtValue, node.ReadNode("DataExtValue"));
+            Assert.AreEqual(innerRequest.OwnerID.ToString(), node.ReadNode("OwnerID"));
+            Assert.AreEqual(innerRequest.DataExtName, node.ReadNode("DataExtName"));
+            Assert.AreEqual(innerRequest.DataExtValue, node.ReadNode("DataExtValue"));
             Assert.AreEqual("Customer", node.ReadNode("ListDataExtType"));
 
             var node2 = node.SelectSingleNode("ListObjRef");
-            QBAssert.AreEqual(dataExtAddRequest.ListDataExt.ListObjRef.FullName, node2.ReadNode("FullName"));
-            QBAssert.AreEqual(dataExtAddRequest.ListDataExt.ListObjRef.ListID, node2.ReadNode("ListID"));
-            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
+            Assert.AreEqual(innerRequest.ListObjRef.FullName, node2.ReadNode("FullName"));
+            Assert.AreEqual(innerRequest.ListObjRef.ListID, node2.ReadNode("ListID"));
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(xml));
         }
 
         [Test]
         public void TxnDataExtAddRequestTest()
         {
-            var dataExtAddRequest = new DataExtAddRequest();
-            dataExtAddRequest.Filter = DataExtFilter.Txn;
-            dataExtAddRequest.OwnerID = Guid.NewGuid();
-            dataExtAddRequest.DataExtName = "name";
-            dataExtAddRequest.DataExtValue = "value";
-            dataExtAddRequest.TxnDataExt = new Objects.TxnDataExt
+            var request = new QbXmlRequest();
+            var innerRequest = new DataExtAddRequest();
+            innerRequest.OwnerID = Guid.NewGuid();
+            innerRequest.DataExtName = "name";
+            innerRequest.DataExtValue = "value";
+            innerRequest.TxnDataExtType = TxnDataExtType.Charge;
+            innerRequest.TxnID = new DataExtAddTxnID
             {
-                TxnDataExtType = Struct.TxnDataExtType.Charge,
-                TxnID = "123",
-                TxnLineID = "345"
+                Value = "123"
             };
-
-            var request = dataExtAddRequest.GetRequest();
+            innerRequest.TxnLineID = "345";
+            request.AddToSingle(innerRequest);
+            var xml = request.GetRequest();
 
             XmlDocument requestXmlDoc = new XmlDocument();
-            requestXmlDoc.LoadXml(request);
+            requestXmlDoc.LoadXml(xml);
 
             Assert.AreEqual(1, requestXmlDoc.GetElementsByTagName("DataExtAddRq").Count);
 
             var node = requestXmlDoc.SelectSingleNode("//DataExtAddRq/DataExtAdd");
-            QBAssert.AreEqual(dataExtAddRequest.OwnerID, node.ReadNode("OwnerID"));
-            QBAssert.AreEqual(dataExtAddRequest.DataExtName, node.ReadNode("DataExtName"));
-            QBAssert.AreEqual(dataExtAddRequest.DataExtValue, node.ReadNode("DataExtValue"));
+            Assert.AreEqual(innerRequest.OwnerID.ToString(), node.ReadNode("OwnerID"));
+            Assert.AreEqual(innerRequest.DataExtName, node.ReadNode("DataExtName"));
+            Assert.AreEqual(innerRequest.DataExtValue, node.ReadNode("DataExtValue"));
             Assert.AreEqual("Charge", node.ReadNode("TxnDataExtType"));
-            QBAssert.AreEqual(dataExtAddRequest.TxnDataExt.TxnID, node.ReadNode("TxnID"));
-            QBAssert.AreEqual(dataExtAddRequest.TxnDataExt.TxnLineID, node.ReadNode("TxnLineID"));
-            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(request));
+            Assert.AreEqual(innerRequest.TxnID.Value, node.ReadNode("TxnID"));
+            Assert.AreEqual(innerRequest.TxnLineID, node.ReadNode("TxnLineID"));
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(xml));
         }
     }
 }

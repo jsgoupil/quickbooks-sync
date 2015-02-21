@@ -3,9 +3,14 @@ using System.Globalization;
 
 namespace QbSync.QbXml.Type
 {
-    public class GuidType : QuickBooksType, IStringConvertible, IComparable<GuidType>
+    public class GuidType : ITypeWrapper, IComparable<GuidType>
     {
         private Guid value;
+
+        public GuidType()
+        {
+            this.value = Guid.Empty;
+        }
 
         public GuidType(string value)
         {
@@ -70,14 +75,34 @@ namespace QbSync.QbXml.Type
             return new GuidType(value);
         }
 
-        public static implicit operator Guid(GuidType type)
+        public static implicit operator Guid(GuidType value)
         {
-            if (type != null)
+            if (value != null)
             {
-                return type.ToGuid();
+                return value.ToGuid();
             }
 
             return default(Guid);
+        }
+
+        public static implicit operator GuidType(string value)
+        {
+            if (value != null)
+            {
+                return new GuidType(value);
+            }
+
+            return default(GuidType);
+        }
+
+        public static implicit operator string(GuidType value)
+        {
+            if (value != null)
+            {
+                return value.ToString();
+            }
+
+            return default(string);
         }
 
         public int CompareTo(GuidType other)

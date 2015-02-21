@@ -1,25 +1,19 @@
-﻿using QbSync.QbXml.Extensions;
+﻿using QbSync.QbXml.Objects;
 using QbSync.QbXml.Type;
-using System.Collections.Generic;
-using System.Xml;
 
 namespace QbSync.QbXml.Messages.Requests
 {
-    public class DataExtDefDelRequest : QbXmlRequest
+    public class DataExtDefDelRequest : QbXmlObject<DataExtDefDelRqType>
     {
-        public DataExtDefDelRequest()
-            : base("DataExtDefDelRq")
-        {
-        }
-
         public GuidType OwnerID { get; set; }
-        public StrType DataExtName { get; set; }
+        public string DataExtName { get; set; }
 
-        protected override void BuildRequest(XmlElement parent)
+        protected override void ProcessObj(DataExtDefDelRqType obj)
         {
-            base.BuildRequest(parent);
-            parent.AppendTag("OwnerID", OwnerID);
-            parent.AppendTag("DataExtName", DataExtName);
+            base.ProcessObj(obj);
+
+            obj.OwnerID = OwnerID.ToString();
+            obj.DataExtName = DataExtName;
         }
     }
 }

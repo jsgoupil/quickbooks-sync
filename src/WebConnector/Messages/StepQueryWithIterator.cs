@@ -1,10 +1,12 @@
 ﻿using QbSync.QbXml;
+using QbSync.QbXml.Messages.Requests;
+using QbSync.QbXml.Messages.Responses;
 
 namespace QbSync.WebConnector.Messages
 {
-    public abstract class StepQueryWithIterator<T, Y, YResult> : StepQueryResponseBase<T, Y, YResult>
-        where T : IteratorRequest, new()
-        where Y : QbXmlResponse<YResult>, new()
+    public abstract class StepQueryWithIterator<T, Y> : StepQueryResponseBase<T, Y>
+        where T : IQbIteratorRequest, new()
+        where Y : class, QbIteratorResponse, new()
     {
         internal const string IteratorKey = "Iterator";
         private bool gotoNextStep = true;
@@ -27,7 +29,7 @@ namespace QbSync.WebConnector.Messages
             return base.ExecuteRequest(authenticatedTicket, request);
         }
 
-        protected override void ExecuteResponse(AuthenticatedTicket authenticatedTicket, QbXmlMsgResponse<YResult> response)
+        protected override void ExecuteResponse(AuthenticatedTicket authenticatedTicket, Y response)
         {
             // We have more that can come our way.
             if (response.IteratorRemainingCount.HasValue && response.IteratorRemainingCount.Value > 0)

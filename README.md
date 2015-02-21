@@ -16,14 +16,17 @@ public class CustomerRequest
 {
   public CustomerRequest() 
   {
-    var customerRequest = new QBSync.QbXml.Messages.CustomerQueryRequest()
+    var request = new QbXmlRequest();
+    var innerRequest = new CustomerQueryRequest();
 
     // Add some filters here
-    customerRequest.MaxReturned = 100;
-    customerRequest.FromModifiedDate = new DateTimeType(DateTime.Now);
+    innerRequest.MaxReturned = 100;
+    innerRequest.FromModifiedDate = new DateTimeType(DateTime.Now);
+
+    request.AddToSingle(innerRequest);
 
     // Get the XML
-    var xml = customerRequest.GetRequest();
+    var xml = request.GetRequest();
   }
 }
 ```
@@ -34,10 +37,11 @@ public class CustomerResponse
 {
   public void LoadResponse(string xml)
   {
-    var customerResponse = new QBSync.QbXml.Messages.CustomerQueryResponse();
+    var response = new QbXmlResponse();
+    var rs = response.GetSingleItemFromResponse<CustomerQueryRsTypeWrapper>(xml);
 
     // Receive customer objects, corresponding to the xml
-    var customers = customerResponse.ParseResponse(xml);
+    var customers = rs.CustomerRet;
   }
 }
 ```
@@ -141,7 +145,7 @@ Since all steps will require a database manipulation on your side, you have to i
 
 Here is an example:
 ```C#
-public class CustomerQuery : StepQueryResponseBase<CustomerQueryRequest, CustomerQueryResponse, QbSync.QbXml.Objects.Customer[]>
+public class CustomerQuery : StepQueryResponseBase<CustomerQueryRequest, CustomerQueryRsTypeWrapper>
 {
   private ApplicationDbContext db_context;
 
@@ -166,7 +170,7 @@ public class CustomerQuery : StepQueryResponseBase<CustomerQueryRequest, Custome
     return base.ExecuteRequest(authenticatedTicket, request);
   }
 
-  protected override void ExecuteResponse(AuthenticatedTicketContext authenticatedTicket, QbSync.QbXml.QbXmlMsgResponse<QbSync.QbXml.Objects.Customer[]> response)
+  protected override void ExecuteResponse(AuthenticatedTicketContext authenticatedTicket, CustomerQueryRsTypeWrapper response)
   {
     base.ExecuteResponse(authenticatedTicket, response);
 

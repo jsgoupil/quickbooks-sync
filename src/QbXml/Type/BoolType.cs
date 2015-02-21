@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace QbSync.QbXml.Type
 {
-    public class BoolType : QuickBooksType, IStringConvertible, IComparable<BoolType>
+    public class BoolType : ITypeWrapper, IComparable<BoolType>
     {
         private bool value;
 
