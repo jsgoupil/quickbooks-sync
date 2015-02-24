@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using QbSync.QbXml.Objects;
 using QbSync.QbXml.Tests.Helpers;
-using QbSync.QbXml.Wrappers;
 
 namespace QbSync.QbXml.Tests.QbXml
 {
@@ -17,10 +16,9 @@ namespace QbSync.QbXml.Tests.QbXml
             var rs = response.GetSingleItemFromResponse<DataExtDelRsType>(QuickBooksTestHelper.CreateQbXmlWithEnvelope(ret, "DataExtDelRs"));
             var dataExt = rs.DataExtDelRet;
 
-            var wrapper = new ErrorRecoveryWrapper(rs.ErrorRecovery);
             Assert.IsNull(dataExt);
-            Assert.AreEqual("123456", wrapper.ListID);
-            Assert.AreEqual("67890", wrapper.TxnNumber);
+            Assert.AreEqual("123456", rs.ErrorRecovery.ListID);
+            Assert.AreEqual("67890", rs.ErrorRecovery.TxnNumber);
         }
     }
 }

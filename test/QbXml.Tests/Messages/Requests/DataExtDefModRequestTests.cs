@@ -1,10 +1,8 @@
 ﻿using NUnit.Framework;
 using QbSync.QbXml.Extensions;
-using QbSync.QbXml.Messages.Requests;
 using QbSync.QbXml.Objects;
 using QbSync.QbXml.Tests.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Xml;
 
 namespace QbSync.QbXml.Tests.QbXml
@@ -16,21 +14,25 @@ namespace QbSync.QbXml.Tests.QbXml
         public void BasicDataExtDefModRequestTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new DataExtDefModRequest();
-            innerRequest.OwnerID = Guid.NewGuid();
-            innerRequest.DataExtName = "name";
-            innerRequest.DataExtNewName = "newname";
-            innerRequest.AssignToObject = new List<AssignToObject>
+            var innerRequest = new DataExtDefModRqType();
+            innerRequest.DataExtDefMod = new DataExtDefMod
             {
-                AssignToObject.Account,
-                AssignToObject.Charge
+                OwnerID = Guid.NewGuid(),
+                DataExtName = "name",
+                DataExtNewName = "newname",
+                AssignToObject = new AssignToObject[]
+                {
+                    AssignToObject.Account,
+                    AssignToObject.Charge
+                },
+                RemoveFromObject = new RemoveFromObject[] 
+                {
+                    RemoveFromObject.Bill,
+                    RemoveFromObject.Check
+                }
             };
-            innerRequest.RemoveFromObject = new List<RemoveFromObject>
-            {
-                RemoveFromObject.Bill,
-                RemoveFromObject.Check
-            };
-            innerRequest.IncludeRetElement = new List<string>
+
+            innerRequest.IncludeRetElement = new string[]
             {
                 "ABC",
                 "DEF"
@@ -44,9 +46,9 @@ namespace QbSync.QbXml.Tests.QbXml
             Assert.AreEqual(1, requestXmlDoc.GetElementsByTagName("DataExtDefModRq").Count);
 
             var node = requestXmlDoc.SelectSingleNode("//DataExtDefModRq/DataExtDefMod");
-            Assert.AreEqual(innerRequest.OwnerID.ToString(), node.ReadNode("OwnerID"));
-            Assert.AreEqual(innerRequest.DataExtName, node.ReadNode("DataExtName"));
-            Assert.AreEqual(innerRequest.DataExtNewName, node.ReadNode("DataExtNewName"));
+            Assert.AreEqual(innerRequest.DataExtDefMod.OwnerID.ToString(), node.ReadNode("OwnerID"));
+            Assert.AreEqual(innerRequest.DataExtDefMod.DataExtName, node.ReadNode("DataExtName"));
+            Assert.AreEqual(innerRequest.DataExtDefMod.DataExtNewName, node.ReadNode("DataExtNewName"));
 
             var node2 = node.SelectNodes("AssignToObject");
             Assert.AreEqual(2, node2.Count);

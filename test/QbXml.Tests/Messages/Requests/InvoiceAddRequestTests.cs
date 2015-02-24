@@ -1,9 +1,7 @@
 ﻿using NUnit.Framework;
 using QbSync.QbXml.Extensions;
-using QbSync.QbXml.Messages.Requests;
 using QbSync.QbXml.Objects;
 using QbSync.QbXml.Tests.Helpers;
-using QbSync.QbXml.Type;
 using System.Xml;
 
 namespace QbSync.QbXml.Tests.QbXml
@@ -15,12 +13,15 @@ namespace QbSync.QbXml.Tests.QbXml
         public void BasicInvoiceAddRequestTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new InvoiceAddRequest();
-            innerRequest.CustomerRef = new CustomerRef
+            var innerRequest = new InvoiceAddRqType();
+            innerRequest.InvoiceAdd = new InvoiceAdd
             {
-                ListID = "12345"
+                CustomerRef = new CustomerRef
+                {
+                    ListID = "12345"
+                },
+                IsPending = true
             };
-            innerRequest.IsPending = new BoolType(true);
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
 
@@ -30,8 +31,8 @@ namespace QbSync.QbXml.Tests.QbXml
             Assert.AreEqual(1, requestXmlDoc.GetElementsByTagName("InvoiceAddRq").Count);
 
             var node = requestXmlDoc.SelectSingleNode("//InvoiceAddRq/InvoiceAdd");
-            Assert.AreEqual(innerRequest.CustomerRef.ListID, node.ReadNode("CustomerRef/ListID"));
-            Assert.AreEqual(innerRequest.IsPending.ToString(), node.ReadNode("IsPending"));
+            Assert.AreEqual(innerRequest.InvoiceAdd.CustomerRef.ListID, node.ReadNode("CustomerRef/ListID"));
+            Assert.AreEqual(innerRequest.InvoiceAdd.IsPending.ToString(), node.ReadNode("IsPending"));
             Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(xml));
         }
     }

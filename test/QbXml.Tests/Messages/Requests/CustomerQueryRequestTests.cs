@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using QbSync.QbXml.Messages.Requests;
 using QbSync.QbXml.Objects;
 using QbSync.QbXml.Tests.Helpers;
 using System.Collections.Generic;
@@ -16,7 +15,7 @@ namespace QbSync.QbXml.Tests.QbXml
         public void BasicCustomerQueryRequestTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new CustomerQueryRequest();
+            var innerRequest = new CustomerQueryRqType();
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
 
@@ -36,7 +35,7 @@ namespace QbSync.QbXml.Tests.QbXml
                 "1234", "3456"
             };
             var request = new QbXmlRequest();
-            var innerRequest = new CustomerQueryRequest();
+            var innerRequest = new CustomerQueryRqType();
             innerRequest.ListID = list;
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
@@ -57,7 +56,7 @@ namespace QbSync.QbXml.Tests.QbXml
                 "abc", "def"
             };
             var request = new QbXmlRequest();
-            var innerRequest = new CustomerQueryRequest();
+            var innerRequest = new CustomerQueryRqType();
             innerRequest.FullName = list;
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
@@ -75,7 +74,7 @@ namespace QbSync.QbXml.Tests.QbXml
         public void CustomerQueryRequest_FilterByNameRange_Test()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new CustomerQueryRequest();
+            var innerRequest = new CustomerQueryRqType();
             innerRequest.NameRangeFilter = new NameRangeFilter
             {
                 FromName = "ab",

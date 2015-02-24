@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using QbSync.QbXml.Objects;
 using QbSync.QbXml.Tests.Helpers;
-using QbSync.QbXml.Wrappers;
 using System;
 
 namespace QbSync.QbXml.Tests.QbXml
@@ -16,12 +15,12 @@ namespace QbSync.QbXml.Tests.QbXml
 
             var response = new QbXmlResponse();
             var rs = response.GetSingleItemFromResponse<DataExtDelRsType>(QuickBooksTestHelper.CreateQbXmlWithEnvelope(ret, "DataExtDelRs"));
-            var dataExt = rs.DataExtDelRet as DataExtDelRetWrapper;
+            var dataExt = rs.DataExtDelRet;
 
             Assert.AreEqual("name", dataExt.DataExtName);
             Assert.AreEqual(TxnDataExtType.CreditCardCredit, dataExt.TxnDataExtType.Value);
             Assert.AreEqual("1234", dataExt.TxnID);
-            Assert.AreEqual(DateTime.Parse("2015-02-10").ToString("s"), dataExt.TimeDeleted);
+            Assert.AreEqual(new DATETIMETYPE(DateTime.Parse("2015-02-10")), dataExt.TimeDeleted);
         }
     }
 }

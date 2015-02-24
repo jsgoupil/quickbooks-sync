@@ -1,8 +1,6 @@
 ﻿using NUnit.Framework;
-using QbSync.QbXml.Messages.Requests;
 using QbSync.QbXml.Objects;
 using QbSync.QbXml.Tests.Helpers;
-using QbSync.QbXml.Type;
 using System;
 using System.Collections.Generic;
 using System.Xml;
@@ -16,13 +14,13 @@ namespace QbSync.QbXml.Tests.QbXml
         public void OwnerIDDataExtDefQueryRequestTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new DataExtDefQueryRequest();
-            innerRequest.OwnerID = new List<GuidType>
+            var innerRequest = new DataExtDefQueryRqType();
+            innerRequest.OwnerID = new List<GUIDTYPE>
             {
                 Guid.NewGuid(),
                 Guid.NewGuid()
             };
-            innerRequest.IncludeRetElement = new List<string>
+            innerRequest.IncludeRetElement = new string[]
             {
                 "ABC",
                 "DEF"
@@ -49,13 +47,13 @@ namespace QbSync.QbXml.Tests.QbXml
         public void AssignToObjectDataExtDefQueryRequestTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new DataExtDefQueryRequest();
+            var innerRequest = new DataExtDefQueryRqType();
             innerRequest.AssignToObject = new List<AssignToObject>
             {
                 AssignToObject.Account,
                 AssignToObject.Charge
             };
-            innerRequest.IncludeRetElement = new List<string>
+            innerRequest.IncludeRetElement = new string[]
             {
                 "ABC",
                 "DEF"

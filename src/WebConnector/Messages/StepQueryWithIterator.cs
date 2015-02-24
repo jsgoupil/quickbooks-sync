@@ -1,12 +1,10 @@
-﻿using QbSync.QbXml;
-using QbSync.QbXml.Messages.Requests;
-using QbSync.QbXml.Messages.Responses;
+﻿using QbSync.QbXml.Objects;
 
 namespace QbSync.WebConnector.Messages
 {
     public abstract class StepQueryWithIterator<T, Y> : StepQueryResponseBase<T, Y>
-        where T : IQbIteratorRequest, new()
-        where Y : class, QbIteratorResponse, new()
+        where T : class, QbIteratorRequest, QbRequest, new()
+        where Y : class, QbIteratorResponse, QbResponse, new()
     {
         internal const string IteratorKey = "Iterator";
         private bool gotoNextStep = true;
@@ -19,12 +17,15 @@ namespace QbSync.WebConnector.Messages
         protected override bool ExecuteRequest(AuthenticatedTicket authenticatedTicket, T request)
         {
             var savedMessage = RetrieveMessage(authenticatedTicket.Ticket, authenticatedTicket.CurrentStep, IteratorKey);
+
+            request.iterator = IteratorType.Start;
             if (!string.IsNullOrEmpty(savedMessage))
             {
-                request.IteratorID = savedMessage;
+                request.iterator = IteratorType.Continue;
+                request.iteratorID = savedMessage;
             }
 
-            request.MaxReturned = 100;
+            request.MaxReturned = "100";
 
             return base.ExecuteRequest(authenticatedTicket, request);
         }
@@ -32,10 +33,10 @@ namespace QbSync.WebConnector.Messages
         protected override void ExecuteResponse(AuthenticatedTicket authenticatedTicket, Y response)
         {
             // We have more that can come our way.
-            if (response.IteratorRemainingCount.HasValue && response.IteratorRemainingCount.Value > 0)
+            if (response.iteratorRemainingCount.HasValue && response.iteratorRemainingCount.Value > 0)
             {
                 gotoNextStep = false;
-                SaveMessage(authenticatedTicket.Ticket, authenticatedTicket.CurrentStep, IteratorKey, response.IteratorID);
+                SaveMessage(authenticatedTicket.Ticket, authenticatedTicket.CurrentStep, IteratorKey, response.iteratorID);
             }
 
             base.ExecuteResponse(authenticatedTicket, response);

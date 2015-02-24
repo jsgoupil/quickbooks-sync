@@ -1,12 +1,11 @@
 ﻿using QbSync.QbXml;
-using QbSync.QbXml.Messages.Requests;
-using QbSync.QbXml.Messages.Responses;
+using QbSync.QbXml.Objects;
 
 namespace QbSync.WebConnector.Messages
 {
     public abstract class StepQueryResponseBase<T, Y> : StepQueryResponse
-        where T : QbRequestWrapper, new()
-        where Y : class, new()
+        where T : class, QbRequest, new()
+        where Y : class, QbResponse, new()
     {
         public StepQueryResponseBase()
         {

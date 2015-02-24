@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using QbSync.QbXml.Objects;
 using QbSync.QbXml.Tests.Helpers;
-using QbSync.QbXml.Wrappers;
 using System.Linq;
 
 namespace QbSync.QbXml.Tests.QbXml
@@ -15,7 +14,7 @@ namespace QbSync.QbXml.Tests.QbXml
             var ret = "<CustomerRet><ListID>80000001-1422671082</ListID><IsActive>true</IsActive><TimeCreated>2015-01-30T18:24:42-08:00</TimeCreated><TimeModified>2015-01-30T18:24:42-08:00</TimeModified><EditSequence>1422671082</EditSequence><Name>Jean-S&#233;bastien Goupil</Name><FullName>Jean-S&#233;bastien Goupil</FullName></CustomerRet>";
 
             var response = new QbXmlResponse();
-            var rs = response.GetSingleItemFromResponse<CustomerQueryRsTypeWrapper>(QuickBooksTestHelper.CreateQbXmlWithEnvelope(ret, "CustomerQueryRs"));
+            var rs = response.GetSingleItemFromResponse<CustomerQueryRsType>(QuickBooksTestHelper.CreateQbXmlWithEnvelope(ret, "CustomerQueryRs"));
             var customers = rs.CustomerRet;
             var customer = customers[0];
 
@@ -30,7 +29,7 @@ namespace QbSync.QbXml.Tests.QbXml
             var ret = "<CustomerRet><ShipAddress><City>Seattle</City><State>WA</State></ShipAddress></CustomerRet>";
 
             var response = new QbXmlResponse();
-            var rs = response.GetSingleItemFromResponse<CustomerQueryRsTypeWrapper>(QuickBooksTestHelper.CreateQbXmlWithEnvelope(ret, "CustomerQueryRs"));
+            var rs = response.GetSingleItemFromResponse<CustomerQueryRsType>(QuickBooksTestHelper.CreateQbXmlWithEnvelope(ret, "CustomerQueryRs"));
             var customers = rs.CustomerRet;
             var customer = customers[0];
 
@@ -46,7 +45,7 @@ namespace QbSync.QbXml.Tests.QbXml
             var ret = "<CustomerRet><AdditionalContactRef><ContactName>Name1</ContactName><ContactValue>Value1</ContactValue></AdditionalContactRef><AdditionalContactRef><ContactName>Name2</ContactName><ContactValue>Value2</ContactValue></AdditionalContactRef></CustomerRet>";
 
             var response = new QbXmlResponse();
-            var rs = response.GetSingleItemFromResponse<CustomerQueryRsTypeWrapper>(QuickBooksTestHelper.CreateQbXmlWithEnvelope(ret, "CustomerQueryRs"));
+            var rs = response.GetSingleItemFromResponse<CustomerQueryRsType>(QuickBooksTestHelper.CreateQbXmlWithEnvelope(ret, "CustomerQueryRs"));
             var customers = rs.CustomerRet;
             var customer = customers[0];
 
@@ -64,7 +63,7 @@ namespace QbSync.QbXml.Tests.QbXml
             var ret = "<CustomerRet><JobStatus>InProgress</JobStatus></CustomerRet>";
 
             var response = new QbXmlResponse();
-            var rs = response.GetSingleItemFromResponse<CustomerQueryRsTypeWrapper>(QuickBooksTestHelper.CreateQbXmlWithEnvelope(ret, "CustomerQueryRs"));
+            var rs = response.GetSingleItemFromResponse<CustomerQueryRsType>(QuickBooksTestHelper.CreateQbXmlWithEnvelope(ret, "CustomerQueryRs"));
             var customers = rs.CustomerRet;
             var customer = customers[0];
 

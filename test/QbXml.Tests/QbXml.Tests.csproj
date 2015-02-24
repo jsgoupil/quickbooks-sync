@@ -84,8 +84,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Messages\Responses\CustomerQueryResponseTests.cs" />
     <Compile Include="Messages\Requests\CustomerQueryRequestTests.cs" />
-    <Compile Include="Wrappers\DataExtDelRetWrapperTests.cs" />
-    <Compile Include="Wrappers\ErrorRecoveryWrapperTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

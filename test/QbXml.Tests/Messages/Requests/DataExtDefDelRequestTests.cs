@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using QbSync.QbXml.Extensions;
-using QbSync.QbXml.Messages.Requests;
+using QbSync.QbXml.Objects;
 using QbSync.QbXml.Tests.Helpers;
 using System;
 using System.Xml;
@@ -14,7 +14,7 @@ namespace QbSync.QbXml.Tests.QbXml
         public void BasicDataExtDefDelRequestTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new DataExtDefDelRequest();
+            var innerRequest = new DataExtDefDelRqType();
             innerRequest.OwnerID = Guid.NewGuid();
             innerRequest.DataExtName = "name";
             request.AddToSingle(innerRequest);

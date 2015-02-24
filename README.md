@@ -17,11 +17,11 @@ public class CustomerRequest
   public CustomerRequest() 
   {
     var request = new QbXmlRequest();
-    var innerRequest = new CustomerQueryRequest();
+    var innerRequest = new CustomerQueryRqType();
 
     // Add some filters here
-    innerRequest.MaxReturned = 100;
-    innerRequest.FromModifiedDate = new DateTimeType(DateTime.Now);
+    innerRequest.MaxReturned = "100";
+    innerRequest.FromModifiedDate = new DATETIMETYPE(DateTime.Now);
 
     request.AddToSingle(innerRequest);
 
@@ -38,7 +38,7 @@ public class CustomerResponse
   public void LoadResponse(string xml)
   {
     var response = new QbXmlResponse();
-    var rs = response.GetSingleItemFromResponse<CustomerQueryRsTypeWrapper>(xml);
+    var rs = response.GetSingleItemFromResponse<CustomerQueryRsType>(xml);
 
     // Receive customer objects, corresponding to the xml
     var customers = rs.CustomerRet;
@@ -145,7 +145,7 @@ Since all steps will require a database manipulation on your side, you have to i
 
 Here is an example:
 ```C#
-public class CustomerQuery : StepQueryResponseBase<CustomerQueryRequest, CustomerQueryRsTypeWrapper>
+public class CustomerQuery : StepQueryResponseBase<CustomerQueryRqType, CustomerQueryRsType>
 {
   private ApplicationDbContext db_context;
 
@@ -161,7 +161,7 @@ public class CustomerQuery : StepQueryResponseBase<CustomerQueryRequest, Custome
     return "CustomerQuery";
   }
 
-  protected override bool ExecuteRequest(AuthenticatedTicketContext authenticatedTicket, CustomerQueryRequest request)
+  protected override bool ExecuteRequest(AuthenticatedTicketContext authenticatedTicket, CustomerQueryRqType request)
   {
     // Do some operations on the customerRequest to get only specific ones
     customerRequest.FromModifiedDate = new DateTimeType(DateTime.Now);
@@ -170,7 +170,7 @@ public class CustomerQuery : StepQueryResponseBase<CustomerQueryRequest, Custome
     return base.ExecuteRequest(authenticatedTicket, request);
   }
 
-  protected override void ExecuteResponse(AuthenticatedTicketContext authenticatedTicket, CustomerQueryRsTypeWrapper response)
+  protected override void ExecuteResponse(AuthenticatedTicketContext authenticatedTicket, CustomerQueryRsType response)
   {
     base.ExecuteResponse(authenticatedTicket, response);
 
@@ -179,7 +179,7 @@ public class CustomerQuery : StepQueryResponseBase<CustomerQueryRequest, Custome
 }
 ```
 
-The 3 generic classes are provided by the QbXml NuGet package. You associate the request, response and the object that would be returned with a response.
+The 2 generic classes are provided by the QbXml NuGet package. You associate the request and the response. They implement `QbRequest` and `QbResponse`.
 
 ### Step 4.1. Creating a step with an iterator ###
 When you make a request to the QuickBooks database, you might receive hundreds of objects back. Your server or the database won't be able to handle that many; you have to break the query into batches. We have everything handled for you, but we need to save another state to the database. Instead of deriving from `StepQueryResponseBase`, you have to derive from `StepQueryWithIterator` and implement 2 methods.
@@ -192,6 +192,8 @@ protected abstract string RetrieveMessage(string ticket, string step, string key
 Save the message to the database based on its ticket, `step` and `key`. Then retrieve it from the same keys.
 
 By default, if you derive from the iterator, the query is batched with 100 objects.
+
+The requests and responses that support an iterator implements `QbIteratorRequest` and `QbIteratorResponse`.
 
 ### Step X ###
 You can register other steps such as `UpdateCustomer`, `InvoiceQuery`, etc. Just make your own!

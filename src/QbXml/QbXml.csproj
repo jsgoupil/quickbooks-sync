@@ -42,43 +42,30 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\Extensions.cs" />
-    <Compile Include="Messages\Requests\DataExtAddRequest.cs" />
-    <Compile Include="Messages\Requests\DataExtDefAddRequest.cs" />
-    <Compile Include="Messages\Requests\DataExtDefDelRequest.cs" />
-    <Compile Include="Messages\Requests\DataExtDefModRequest.cs" />
-    <Compile Include="Messages\Requests\DataExtDefQueryRequest.cs" />
-    <Compile Include="Messages\Requests\DataExtDelRequest.cs" />
-    <Compile Include="Messages\Requests\DataExtModRequest.cs" />
-    <Compile Include="Messages\Requests\DataExtRequest.cs" />
-    <Compile Include="Messages\Requests\InvoiceAddRequest.cs" />
-    <Compile Include="Messages\Requests\InvoiceModRequest.cs" />
-    <Compile Include="Messages\Requests\InvoiceQueryRequest.cs" />
-    <Compile Include="Messages\Requests\InvoiceRequest.cs" />
-    <Compile Include="Messages\Requests\IQbIteratorRequest.cs" />
-    <Compile Include="Messages\Requests\IteratorType.cs" />
-    <Compile Include="Messages\Requests\NameItem.cs" />
-    <Compile Include="Messages\Requests\QbRequestWrapper.cs" />
-    <Compile Include="Messages\Requests\CustomerQueryRequest.cs" />
-    <Compile Include="Messages\Requests\QbXmlIterator.cs" />
-    <Compile Include="Messages\Requests\QbXmlObject.cs" />
-    <Compile Include="Type\AmtType.cs" />
-    <Compile Include="Wrappers\CustomerQueryRsTypeWrapper.cs" />
-    <Compile Include="Messages\Responses\QbIteratorResponse.cs" />
-    <Compile Include="Objects.cs" />
-    <Compile Include="Wrappers\DataExtDelRetWrapper.cs" />
-    <Compile Include="Wrappers\ErrorRecoveryWrapper.cs" />
-    <Compile Include="Wrappers\ObjectItems.cs" />
-    <Compile Include="Wrappers\ObjectItem.cs" />
-    <Compile Include="Wrappers\QbXmlWrapper.cs" />
+    <Compile Include="Objects\ObjectItem.cs" />
+    <Compile Include="Objects\ObjectItem`1.cs" />
+    <Compile Include="Objects\QbResponse.cs" />
+    <Compile Include="Objects\QbRequest.cs" />
+    <Compile Include="Objects\Types\PERCENTTYPE.cs" />
+    <Compile Include="Objects\Types\QUANTYPE.cs" />
+    <Compile Include="Objects\Types\PRICETYPE.cs" />
+    <Compile Include="QbXmlSerializer.cs" />
+    <Compile Include="Objects\ObjectItems.cs" />
+    <Compile Include="Objects\QbIteratorRequest.cs" />
+    <Compile Include="Objects\IteratorType.cs" />
+    <Compile Include="Objects\Types\FLOATTYPE.cs" />
+    <Compile Include="Objects\QbIteratorResponse.cs" />
+    <Compile Include="Objects\Objects.cs" />
+    <Compile Include="Objects\ObjectItems`1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QbXmlResponse.cs" />
     <Compile Include="QbXmlRequest.cs" />
-    <Compile Include="Type\BoolType.cs" />
-    <Compile Include="Type\DateTimeType.cs" />
-    <Compile Include="Type\DateType.cs" />
-    <Compile Include="Type\FloatType.cs" />
-    <Compile Include="Type\GuidType.cs" />
-    <Compile Include="Type\ITypeWrapper.cs" />
+    <Compile Include="Objects\Types\BOOLTYPE.cs" />
+    <Compile Include="Objects\Types\DATETIMETYPE.cs" />
+    <Compile Include="Objects\Types\DATETYPE.cs" />
+    <Compile Include="Objects\Types\AMTTYPE.cs" />
+    <Compile Include="Objects\Types\GUIDTYPE.cs" />
+    <Compile Include="Objects\Types\ITypeWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="QbXml.nuspec" />
@@ -97,6 +84,9 @@
     <None Include="Schemas\qbxmltypes130.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Schemas\qbxmltypes130_generate.xsd">
+      <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup />

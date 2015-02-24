@@ -1,0 +1,91 @@
+
+<!-- ============================================================================= -->
+<!--                                                                               -->
+<!-- qbxmltypes130.xsd                                                             -->
+<!--                                                                               -->
+<!-- qbXML version 13.0                                                            -->
+<!--                                                                               -->
+<!-- (c) 2013 Intuit Inc. All rights reserved.                                     -->
+<!--                                                                               -->
+<!-- Use is subject to a qbXML Developer Agreement available at:                   -->
+<!--          http://developer.intuit.com/legal/                                   -->
+<!--                                                                               -->
+<!-- ============================================================================= -->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+<xsd:simpleType name="IDTYPE">
+  <xsd:restriction base="xsd:string">
+    <xsd:maxLength value="36"/>
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:simpleType name="STRTYPE">
+  <xsd:restriction base="xsd:string">
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:complexType name="BOOLTYPE">
+</xsd:complexType>
+
+<xsd:complexType name="DATETYPE">
+</xsd:complexType>
+
+<xsd:complexType name="DATETIMETYPE">
+</xsd:complexType>
+
+<xsd:simpleType name="TIMEINTERVALTYPE">
+  <xsd:union>
+    <xsd:simpleType>
+      <xsd:restriction base="xsd:duration">
+        <xsd:pattern value="[+\-]?PT([0-9]+H)?([0-9]+M)?([0-9]+S)?" />
+      </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType>
+      <xsd:restriction base="xsd:token">
+        <xsd:enumeration value=""/>
+      </xsd:restriction>
+    </xsd:simpleType>
+  </xsd:union>
+</xsd:simpleType>
+
+<xsd:complexType name="AMTTYPE">
+</xsd:complexType>
+
+<xsd:complexType name="PRICETYPE">
+</xsd:complexType>
+
+<xsd:complexType name="QUANTYPE">
+</xsd:complexType>
+
+<xsd:complexType name="PERCENTTYPE">
+</xsd:complexType>
+
+<xsd:simpleType name="ENUMTYPE">
+  <xsd:restriction base="xsd:string">
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:simpleType name="INTTYPE">
+  <xsd:restriction base="xsd:integer">
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:complexType name="GUIDTYPE">
+</xsd:complexType>
+
+<xsd:simpleType name="UUIDTYPE">
+  <xsd:restriction base="xsd:string">
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:simpleType name="MACROTYPE">
+  <xsd:restriction base="xsd:string">
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:complexType name="FLOATTYPE">
+</xsd:complexType>
+
+
+</xsd:schema>
