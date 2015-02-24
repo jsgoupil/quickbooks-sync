@@ -11,10 +11,10 @@ namespace QbSync.QbXml.Objects
         private PropertyInfo itemsProperty;
         private object[] itemsValue;
 
-        public ObjectItems(object instance)
+        public ObjectItems(object instance, string name)
         {
             this.instance = instance;
-            itemsProperty = instance.GetType().GetProperty("Items");
+            itemsProperty = instance.GetType().GetProperty(name);
             itemsValue = itemsProperty.GetValue(instance, null) as object[];
         }
 

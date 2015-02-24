@@ -8,10 +8,10 @@ namespace QbSync.QbXml.Objects
         private PropertyInfo itemProperty;
         private object itemValue;
 
-        public ObjectItem(object instance)
+        public ObjectItem(object instance, string name)
         {
             this.instance = instance;
-            itemProperty = instance.GetType().GetProperty("Item");
+            itemProperty = instance.GetType().GetProperty(name);
             itemValue = itemProperty.GetValue(instance, null) as object;
         }
 

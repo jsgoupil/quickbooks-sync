@@ -16,5 +16,10 @@
             : base (value)
         {
         }
+
+        public static implicit operator AMTTYPE(decimal value)
+        {
+            return new AMTTYPE(value);
+        }
     }
 }

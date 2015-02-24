@@ -16,5 +16,10 @@
             : base (value)
         {
         }
+
+        public static implicit operator PERCENTTYPE(decimal value)
+        {
+            return new PERCENTTYPE(value);
+        }
     }
 }

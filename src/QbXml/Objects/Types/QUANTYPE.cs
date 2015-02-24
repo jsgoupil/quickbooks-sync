@@ -16,5 +16,10 @@
             : base (value)
         {
         }
+
+        public static implicit operator QUANTYPE(decimal value)
+        {
+            return new QUANTYPE(value);
+        }
     }
 }

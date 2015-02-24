@@ -17,6 +17,7 @@ namespace QbSync.XsdGenerator
         private IEnumerable<CodeMemberField> codeMemberFields;
         private IEnumerable<CodeMemberProperty> codeMemberProperties;
         private CodeAttributeDeclaration ignoreAttribute = new CodeAttributeDeclaration("System.Xml.Serialization.XmlIgnoreAttribute");
+        private CodeAttributeDeclaration editorBrowsableStateNever = new CodeAttributeDeclaration("System.ComponentModel.EditorBrowsable", new CodeAttributeArgument(new CodeSnippetExpression("System.ComponentModel.EditorBrowsableState.Never")));
 
         public MemberEnhancer(CodeTypeDeclaration codeType, CodeNamespace codeNamespace, XmlSchemas xsds)
         {
@@ -179,14 +180,12 @@ namespace QbSync.XsdGenerator
                     new CodeVariableReferenceExpression("value")
                 );
 
-            var neverShow = new CodeAttributeDeclaration("System.ComponentModel.EditorBrowsable", new CodeAttributeArgument(new CodeSnippetExpression("System.ComponentModel.EditorBrowsableState.Never")));
-
             var propertySpecified = new CodeMemberProperty();
             propertySpecified.Attributes = MemberAttributes.Public | MemberAttributes.Final;
             propertySpecified.Name = p + "ValueSpecified";
             propertySpecified.Type = new CodeTypeReference(typeof(bool));
             propertySpecified.CustomAttributes.Add(new CodeAttributeDeclaration("System.Xml.Serialization.XmlIgnore"));
-            propertySpecified.CustomAttributes.Add(neverShow);
+            propertySpecified.CustomAttributes.Add(editorBrowsableStateNever);
             propertySpecified.GetStatements.Add(
                 hasValueExpression
             );
@@ -198,7 +197,7 @@ namespace QbSync.XsdGenerator
             propertyValue.Name = p + "Value";
             propertyValue.Type = new CodeTypeReference(typeName);
             propertyValue.CustomAttributes.Add(new CodeAttributeDeclaration(codeAttributeDeclarationName, new CodeAttributeArgument(propertyName, new CodePrimitiveExpression(p))));
-            propertyValue.CustomAttributes.Add(neverShow);
+            propertyValue.CustomAttributes.Add(editorBrowsableStateNever);
             propertyValue.GetStatements.Add(getValueExpression);
             propertyValue.SetStatements.Add(setValueExpression);
 
@@ -225,8 +224,8 @@ namespace QbSync.XsdGenerator
 
         private void AddItemsProperties()
         {
-            var codeMember = codeMemberProperties.FirstOrDefault(m => m.Name == "Items" || m.Name == "Item");
-            if (codeMember != null)
+            var codeMembers = codeMemberProperties.Where(m => m.Name == "Items" || m.Name == "Item" || m.Name == "Item1").ToList();
+            foreach (var codeMember in codeMembers)
             {
                 AddAppropriateProperties(codeMember);
             }
@@ -235,7 +234,7 @@ namespace QbSync.XsdGenerator
         private void AddAppropriateProperties(CodeMemberProperty codeMemberProperty)
         {
             var newMembers = new List<EnhancedProperty>();
-            string withEnumChoice = null;
+            string withEnumChoiceName = null;
             foreach (CodeAttributeDeclaration attribute in codeMemberProperty.CustomAttributes)
             {
                 if (attribute.Name == "System.Xml.Serialization.XmlElementAttribute")
@@ -246,43 +245,55 @@ namespace QbSync.XsdGenerator
                 else if (attribute.Name == "System.Xml.Serialization.XmlChoiceIdentifierAttribute")
                 {
                     var propertyName = ((CodePrimitiveExpression)attribute.Arguments[0].Value).Value as string;
-                    withEnumChoice = GetTypeForMember(codeType, propertyName);
+                    withEnumChoiceName = propertyName;
                 }
+            }
+
+            string withEnumChoiceType = null;
+
+            // Hide the properties
+            codeMemberProperty.CustomAttributes.Add(editorBrowsableStateNever);
+            if (withEnumChoiceName != null)
+            {
+                withEnumChoiceType = GetTypeForMember(codeType, withEnumChoiceName);
+                codeType.Members.OfType<CodeMemberProperty>()
+                    .First(m => m.Name == withEnumChoiceName)
+                    .CustomAttributes.Add(editorBrowsableStateNever);
             }
 
             foreach (var enhancedProperty in newMembers)
             {
                 var isArray = CheckIfPropertyIsArray(codeType.Name, enhancedProperty.Name);
-                CodeMemberProperty property = CreateAppropriateProperty(withEnumChoice, enhancedProperty, isArray);
+                CodeMemberProperty property = CreateAppropriateProperty(withEnumChoiceType, enhancedProperty, isArray, codeMemberProperty.Name);
                 codeType.Members.Add(property);
             }
 
-            AddObjectItems(codeType, withEnumChoice, codeMemberProperty.Name == "Item");
+            AddObjectItems(codeType, withEnumChoiceType, !codeMemberProperty.Name.StartsWith("Items"), codeMemberProperty.Name);
         }
 
-        private CodeMemberProperty CreateAppropriateProperty(string withEnumChoice, EnhancedProperty enhancedProperty, bool isArray)
+        private CodeMemberProperty CreateAppropriateProperty(string withEnumChoice, EnhancedProperty enhancedProperty, bool isArray, string codeTypeMemberName)
         {
             CodeMemberProperty property = null;
             if (string.IsNullOrEmpty(withEnumChoice))
             {
                 if (isArray)
                 {
-                    property = CreateArrayPropertyWithoutChoice(enhancedProperty);
+                    property = CreateArrayPropertyWithoutChoice(enhancedProperty, codeTypeMemberName);
                 }
                 else
                 {
-                    property = CreateSinglePropertyWithoutChoice(enhancedProperty);
+                    property = CreateSinglePropertyWithoutChoice(enhancedProperty, codeTypeMemberName);
                 }
             }
             else
             {
                 if (isArray)
                 {
-                    property = CreateArrayPropertyWithChoice(enhancedProperty, withEnumChoice);
+                    property = CreateArrayPropertyWithChoice(enhancedProperty, withEnumChoice, codeTypeMemberName);
                 }
                 else
                 {
-                    property = CreateSinglePropertyWithChoice(enhancedProperty, withEnumChoice);
+                    property = CreateSinglePropertyWithChoice(enhancedProperty, withEnumChoice, codeTypeMemberName);
                 }
             }
 
@@ -490,15 +501,16 @@ namespace QbSync.XsdGenerator
             return property;
         }
 
-        private CodeMemberProperty CreateArrayPropertyWithChoice(EnhancedProperty enhancedProperty, string choice)
+        private CodeMemberProperty CreateArrayPropertyWithChoice(EnhancedProperty enhancedProperty, string choice, string codeTypeMemberName)
         {
+            var propertyName = "Object" + codeTypeMemberName;
             var property = CreateProperty(enhancedProperty, true);
 
             //return ObjectItems.GetItems<type>(choice.name);
             property.GetStatements.Add(
                 new CodeMethodReturnStatement(
                     new CodeMethodInvokeExpression(
-                        new CodeMethodReferenceExpression(new CodeVariableReferenceExpression("ObjectItems"), "GetItems", new CodeTypeReference(enhancedProperty.Type)),
+                        new CodeMethodReferenceExpression(new CodeVariableReferenceExpression(propertyName), "GetItems", new CodeTypeReference(enhancedProperty.Type)),
                         new CodePropertyReferenceExpression(new CodeVariableReferenceExpression(choice), enhancedProperty.Name)
                     )
                 )
@@ -507,7 +519,7 @@ namespace QbSync.XsdGenerator
             //ObjectItems.SetItems(ItemsChoiceType32.ListID, value.ToArray());
             property.SetStatements.Add(
                 new CodeMethodInvokeExpression(
-                    new CodeMethodReferenceExpression(new CodeVariableReferenceExpression("ObjectItems"), "SetItems"),
+                    new CodeMethodReferenceExpression(new CodeVariableReferenceExpression(propertyName), "SetItems"),
                     new CodePropertyReferenceExpression(new CodeVariableReferenceExpression(choice), enhancedProperty.Name),
                     new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("value"), "ToArray")
                 )
@@ -516,15 +528,16 @@ namespace QbSync.XsdGenerator
             return property;
         }
 
-        private CodeMemberProperty CreateArrayPropertyWithoutChoice(EnhancedProperty enhancedProperty)
+        private CodeMemberProperty CreateArrayPropertyWithoutChoice(EnhancedProperty enhancedProperty, string codeTypeMemberName)
         {
+            var propertyName = "Object" + codeTypeMemberName;
             var property = CreateProperty(enhancedProperty, true);
 
             //return ObjectItems.GetItems<type>();
             property.GetStatements.Add(
                 new CodeMethodReturnStatement(
                     new CodeMethodInvokeExpression(
-                        new CodeMethodReferenceExpression(new CodeVariableReferenceExpression("ObjectItems"), "GetItems", new CodeTypeReference(enhancedProperty.Type))
+                        new CodeMethodReferenceExpression(new CodeVariableReferenceExpression(propertyName), "GetItems", new CodeTypeReference(enhancedProperty.Type))
                     )
                 )
             );
@@ -532,7 +545,7 @@ namespace QbSync.XsdGenerator
             //ObjectItems.SetItem(value);
             property.SetStatements.Add(
                 new CodeMethodInvokeExpression(
-                    new CodeMethodReferenceExpression(new CodeVariableReferenceExpression("ObjectItems"), "SetItems"),
+                    new CodeMethodReferenceExpression(new CodeVariableReferenceExpression(propertyName), "SetItems"),
                     new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("value"), "ToArray")
                 )
             );
@@ -540,15 +553,16 @@ namespace QbSync.XsdGenerator
             return property;
         }
 
-        private CodeMemberProperty CreateSinglePropertyWithChoice(EnhancedProperty enhancedProperty, string choice)
+        private CodeMemberProperty CreateSinglePropertyWithChoice(EnhancedProperty enhancedProperty, string choice, string codeTypeMemberName)
         {
+            var propertyName = "Object" + codeTypeMemberName;
             var property = CreateProperty(enhancedProperty, false);
 
             //return ObjectItems.GetItem<type>(choice.name);
             property.GetStatements.Add(
                 new CodeMethodReturnStatement(
                     new CodeMethodInvokeExpression(
-                        new CodeMethodReferenceExpression(new CodeVariableReferenceExpression("ObjectItems"), "GetItem", new CodeTypeReference(enhancedProperty.Type)),
+                        new CodeMethodReferenceExpression(new CodeVariableReferenceExpression(propertyName), "GetItem", new CodeTypeReference(enhancedProperty.Type)),
                         new CodePropertyReferenceExpression(new CodeVariableReferenceExpression(choice), enhancedProperty.Name)
                     )
                 )
@@ -557,7 +571,7 @@ namespace QbSync.XsdGenerator
             //ObjectItems.SetItem(ItemsChoiceType32.ListID, value);
             property.SetStatements.Add(
                 new CodeMethodInvokeExpression(
-                    new CodeMethodReferenceExpression(new CodeVariableReferenceExpression("ObjectItems"), "SetItem"),
+                    new CodeMethodReferenceExpression(new CodeVariableReferenceExpression(propertyName), "SetItem"),
                     new CodePropertyReferenceExpression(new CodeVariableReferenceExpression(choice), enhancedProperty.Name),
                     new CodeVariableReferenceExpression("value")
                 )
@@ -566,15 +580,16 @@ namespace QbSync.XsdGenerator
             return property;
         }
 
-        private CodeMemberProperty CreateSinglePropertyWithoutChoice(EnhancedProperty enhancedProperty)
+        private CodeMemberProperty CreateSinglePropertyWithoutChoice(EnhancedProperty enhancedProperty, string codeTypeMemberName)
         {
+            var propertyName = "Object" + codeTypeMemberName;
             var property = CreateProperty(enhancedProperty, false);
 
             //return ObjectItems.GetItem<type>();
             property.GetStatements.Add(
                 new CodeMethodReturnStatement(
                     new CodeMethodInvokeExpression(
-                        new CodeMethodReferenceExpression(new CodeVariableReferenceExpression("ObjectItems"), "GetItem", new CodeTypeReference(enhancedProperty.Type))
+                        new CodeMethodReferenceExpression(new CodeVariableReferenceExpression(propertyName), "GetItem", new CodeTypeReference(enhancedProperty.Type))
                     )
                 )
             );
@@ -582,7 +597,7 @@ namespace QbSync.XsdGenerator
             //ObjectItems.SetItem(value);
             property.SetStatements.Add(
                 new CodeMethodInvokeExpression(
-                    new CodeMethodReferenceExpression(new CodeVariableReferenceExpression("ObjectItems"), "SetItem"),
+                    new CodeMethodReferenceExpression(new CodeVariableReferenceExpression(propertyName), "SetItem"),
                     new CodeVariableReferenceExpression("value")
                 )
             );
@@ -591,8 +606,10 @@ namespace QbSync.XsdGenerator
         }
         #endregion
 
-        private void AddObjectItems(CodeTypeDeclaration codeType, string withEnumChoice, bool useSingular)
+        private void AddObjectItems(CodeTypeDeclaration codeType, string withEnumChoice, bool useSingular, string codeTypeMemberName)
         {
+            var propertyName = "Object" + codeTypeMemberName;
+            var fieldName = "object" + codeTypeMemberName;
             var returnName = "ObjectItem";
             if (!useSingular)
             {
@@ -611,31 +628,31 @@ namespace QbSync.XsdGenerator
 
             var property = new CodeMemberProperty
             {
-                Name = "ObjectItems",
+                Name = propertyName,
                 Type = returnType
             };
             var assignment1 =
                 new CodeConditionStatement(
                     new CodeBinaryOperatorExpression(
-                        new CodeVariableReferenceExpression("objectItems"),
+                        new CodeVariableReferenceExpression(fieldName),
                         CodeBinaryOperatorType.ValueEquality,
                         new CodePrimitiveExpression()
                     )
                 );
             assignment1.TrueStatements.Add(
                 new CodeAssignStatement(
-                    new CodeVariableReferenceExpression("objectItems"),
+                    new CodeVariableReferenceExpression(fieldName),
                     new CodeObjectCreateExpression(
                         returnType,
-                        new CodeExpression[] { new CodeThisReferenceExpression() }
+                        new CodeExpression[] { new CodeThisReferenceExpression(), new CodePrimitiveExpression(codeTypeMemberName) }
                     )
                 ));
 
             property.GetStatements.Add(assignment1);
-            property.GetStatements.Add(new CodeMethodReturnStatement(new CodeVariableReferenceExpression("objectItems")));
+            property.GetStatements.Add(new CodeMethodReturnStatement(new CodeVariableReferenceExpression(fieldName)));
 
             codeType.Members.Add(property);
-            codeType.Members.Add(new CodeMemberField(returnType, "objectItems"));
+            codeType.Members.Add(new CodeMemberField(returnType, fieldName));
         }
     }
 }

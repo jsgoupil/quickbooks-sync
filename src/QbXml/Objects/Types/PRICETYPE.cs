@@ -16,5 +16,10 @@
             : base (value)
         {
         }
+
+        public static implicit operator PRICETYPE(decimal value)
+        {
+            return new PRICETYPE(value);
+        }
     }
 }

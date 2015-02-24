@@ -14,11 +14,11 @@ namespace QbSync.QbXml.Objects
         private object[] itemsValue;
         private U[] itemsElementNameValue;
 
-        public ObjectItems(object instance)
+        public ObjectItems(object instance, string name)
         {
             this.instance = instance;
-            itemsProperty = instance.GetType().GetProperty("Items");
-            itemsElementNameProperty = instance.GetType().GetProperty("ItemsElementName");
+            itemsProperty = instance.GetType().GetProperty(name);
+            itemsElementNameProperty = instance.GetType().GetProperty(name + "ElementName");
             itemsValue = itemsProperty.GetValue(instance, null) as object[];
             itemsElementNameValue = itemsElementNameProperty.GetValue(instance, null) as U[];
         }

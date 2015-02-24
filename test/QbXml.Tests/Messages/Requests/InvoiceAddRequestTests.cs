@@ -30,9 +30,10 @@ namespace QbSync.QbXml.Tests.QbXml
                     },
                     new InvoiceLineAdd
                     {
-                         Desc = "Desc2"
+                         Desc = "Desc2",
+                         SerialNumber = "123"
                     }
-                }
+                },
             };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
@@ -50,6 +51,7 @@ namespace QbSync.QbXml.Tests.QbXml
             Assert.AreEqual(innerRequest.InvoiceAdd.InvoiceLineAdd.Count(), nodes2.Count);
             Assert.AreEqual(innerRequest.InvoiceAdd.InvoiceLineAdd.First().Desc, nodes2[0].ReadNode("Desc"));
             Assert.AreEqual(innerRequest.InvoiceAdd.InvoiceLineAdd.Last().Desc, nodes2[1].ReadNode("Desc"));
+            Assert.AreEqual(innerRequest.InvoiceAdd.InvoiceLineAdd.Last().SerialNumber, nodes2[1].ReadNode("SerialNumber"));
             Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(xml));
         }
     }
