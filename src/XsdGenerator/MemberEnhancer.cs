@@ -340,9 +340,15 @@ namespace QbSync.XsdGenerator
 
             if (xmlSchemaElement != null)
             {
+                // Special case if our parent is a choice, we might have a MaxOccurs on it
+
                 if (xmlSchemaElement.MaxOccurs > 1)
                 {
                     isArray = true;
+                }
+                else if (xmlSchemaElement.Parent as XmlSchemaChoice != null)
+                {
+                    isArray = (xmlSchemaElement.Parent as XmlSchemaChoice).MaxOccurs > 1;
                 }
             }
 
