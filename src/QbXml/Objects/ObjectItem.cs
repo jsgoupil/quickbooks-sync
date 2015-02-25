@@ -24,17 +24,20 @@ namespace QbSync.QbXml.Objects
 
         private void Initialize()
         {
-            var valueType = itemValue.GetType();
-            foreach (var kvp in typeMapping)
+            if (itemValue != null)
             {
-                if (valueType.Equals(kvp.Key) || valueType.IsSubclassOf(kvp.Key))
+                var valueType = itemValue.GetType();
+                foreach (var kvp in typeMapping)
                 {
-                    property.Name = kvp.Value;
-                    break;
+                    if (valueType.Equals(kvp.Key) || valueType.IsSubclassOf(kvp.Key))
+                    {
+                        property.Name = kvp.Value;
+                        break;
+                    }
                 }
-            }
 
-            property.Value = itemValue;
+                property.Value = itemValue;
+            }
         }
 
         public void SetItem<T>(string name, T value)

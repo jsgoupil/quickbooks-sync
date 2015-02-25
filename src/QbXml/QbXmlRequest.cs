@@ -46,7 +46,7 @@ namespace QbSync.QbXml
 
             XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
             {
-                Indent = true,
+                Indent = false,
                 OmitXmlDeclaration = false,
                 Encoding = Encoding.UTF8
             };
