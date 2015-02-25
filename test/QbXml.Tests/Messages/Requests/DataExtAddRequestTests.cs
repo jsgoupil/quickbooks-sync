@@ -109,5 +109,31 @@ namespace QbSync.QbXml.Tests.QbXml
             Assert.AreEqual(innerRequest.DataExtAdd.TxnLineID, node.ReadNode("TxnLineID"));
             Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(xml));
         }
+
+        [Test]
+        public void ListDataExtAddRequestValidAfterReorder()
+        {
+            var request = new QbXmlRequest();
+            var innerRequest = new DataExtAddRqType();
+            innerRequest.DataExtAdd = new DataExtAdd
+            {
+                OwnerID = Guid.NewGuid().ToString(),
+                DataExtName = "name",
+                DataExtValue = "value",
+                ListObjRef = new ListObjRef
+                {
+                    FullName = "test",
+                    ListID = "12345"
+                },
+                ListDataExtType = ListDataExtType.Customer
+            };
+            request.AddToSingle(innerRequest);
+            var xml = request.GetRequest();
+
+            XmlDocument requestXmlDoc = new XmlDocument();
+            requestXmlDoc.LoadXml(xml);
+
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(xml));
+        }
     }
 }

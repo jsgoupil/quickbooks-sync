@@ -11,7 +11,7 @@ namespace QbSync.QbXml.Tests.QbXml
         [Test]
         public void BasicCustomerResponseTest()
         {
-            var ret = "<CustomerRet><ListID>80000001-1422671082</ListID><IsActive>true</IsActive><TimeCreated>2015-01-30T18:24:42-08:00</TimeCreated><TimeModified>2015-01-30T18:24:42-08:00</TimeModified><EditSequence>1422671082</EditSequence><Name>Jean-S&#233;bastien Goupil</Name><FullName>Jean-S&#233;bastien Goupil</FullName></CustomerRet>";
+            var ret = "<CustomerRet><ListID>80000001-1422671082</ListID><TimeCreated>2015-01-30T18:24:42-08:00</TimeCreated><TimeModified>2015-01-30T18:24:42-08:00</TimeModified><EditSequence>1422671082</EditSequence><Name>Jean-S&#233;bastien Goupil</Name><FullName>Jean-S&#233;bastien Goupil</FullName><IsActive>true</IsActive></CustomerRet>";
 
             var response = new QbXmlResponse();
             var rs = response.GetSingleItemFromResponse<CustomerQueryRsType>(QuickBooksTestHelper.CreateQbXmlWithEnvelope(ret, "CustomerQueryRs"));

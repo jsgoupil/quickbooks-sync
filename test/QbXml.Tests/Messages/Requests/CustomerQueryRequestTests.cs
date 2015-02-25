@@ -1,10 +1,11 @@
 ﻿using NUnit.Framework;
+using QbSync.QbXml.Extensions;
 using QbSync.QbXml.Objects;
 using QbSync.QbXml.Tests.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using QbSync.QbXml.Extensions;
 
 namespace QbSync.QbXml.Tests.QbXml
 {
@@ -16,6 +17,26 @@ namespace QbSync.QbXml.Tests.QbXml
         {
             var request = new QbXmlRequest();
             var innerRequest = new CustomerQueryRqType();
+            request.AddToSingle(innerRequest);
+            var xml = request.GetRequest();
+
+            XmlDocument requestXmlDoc = new XmlDocument();
+            requestXmlDoc.LoadXml(xml);
+
+            Assert.AreEqual(1, requestXmlDoc.GetElementsByTagName("CustomerQueryRq").Count);
+            Assert.AreEqual(0, requestXmlDoc.GetElementsByTagName("ListID").Count);
+            Assert.AreEqual(0, requestXmlDoc.GetElementsByTagName("FullName").Count);
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(xml));
+        }
+
+        [Test]
+        public void BasicCustomerQueryWithSomeFilters()
+        {
+            var request = new QbXmlRequest();
+            var innerRequest = new CustomerQueryRqType();
+            innerRequest.ActiveStatus = ActiveStatus.ActiveOnly;
+            innerRequest.OwnerID = new GUIDTYPE[] { new GUIDTYPE(Guid.NewGuid()) };
+            innerRequest.MaxReturned = "100";
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
 

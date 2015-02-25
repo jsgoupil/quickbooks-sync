@@ -10,7 +10,7 @@ namespace QbSync.QbXml.Tests.QbXml
         [Test]
         public void BasicDataExtAddResponseTest()
         {
-            var ret = "<DataExtRet><OwnerID>{7d543f23-f3b1-4dea-8ff4-37bd26d15e6c}</OwnerID><DataExtName>name</DataExtName><DataExtValue>value</DataExtValue><DataExtType>STR255TYPE</DataExtType></DataExtRet>";
+            var ret = "<DataExtRet><OwnerID>{7d543f23-f3b1-4dea-8ff4-37bd26d15e6c}</OwnerID><DataExtName>name</DataExtName><DataExtType>STR255TYPE</DataExtType><DataExtValue>value</DataExtValue></DataExtRet>";
 
             var response = new QbXmlResponse();
             var rs = response.GetSingleItemFromResponse<DataExtAddRsType>(QuickBooksTestHelper.CreateQbXmlWithEnvelope(ret, "DataExtAddRs"));

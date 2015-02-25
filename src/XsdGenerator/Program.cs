@@ -39,7 +39,7 @@ namespace QbSync.XsdGenerator
             }
 
             xsds.Compile(null, true);
-            XmlSchemaImporter schemaImporter = new XmlSchemaImporter(xsds);
+            XmlSchemaImporter schemaImporter = new XmlSchemaImporter(xsds, CodeGenerationOptions.GenerateOrder, null);
 
             // create the codedom
             var codeNamespace = new CodeNamespace("QbSync.QbXml.Objects");
@@ -48,7 +48,7 @@ namespace QbSync.XsdGenerator
             codeNamespace.Imports.Add(new CodeNamespaceImport("System.Linq"));
             CodeCompileUnit compileUnit = new CodeCompileUnit();
             compileUnit.Namespaces.Add(codeNamespace);
-            var codeExporter = new XmlCodeExporter(codeNamespace, compileUnit, CodeGenerationOptions.GenerateProperties);
+            var codeExporter = new XmlCodeExporter(codeNamespace, compileUnit, CodeGenerationOptions.GenerateProperties | CodeGenerationOptions.GenerateOrder);
 
             foreach (XmlSchema xsd in xsds)
             {

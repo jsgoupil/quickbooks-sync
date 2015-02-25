@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Objects\ObjectItem.cs" />
+    <Compile Include="Objects\ObjectItemValue.cs" />
     <Compile Include="Objects\ObjectItem`1.cs" />
     <Compile Include="Objects\QbResponse.cs" />
     <Compile Include="Objects\QbRequest.cs" />

@@ -8,96 +8,119 @@ namespace QbSync.QbXml.Objects
     internal class ObjectItems
     {
         private object instance;
+        private string[] nameOrder;
         private PropertyInfo itemsProperty;
         private object[] itemsValue;
+        private List<ObjectItemValue> propertyList;
+        private Dictionary<System.Type, string> typeMapping;
 
-        public ObjectItems(object instance, string name)
+        public ObjectItems(object instance, string name, string[] nameOrder, Dictionary<System.Type, string> typeMapping)
         {
             this.instance = instance;
+            this.nameOrder = nameOrder;
+            this.typeMapping = typeMapping;
+            propertyList = new List<ObjectItemValue>();
+
             itemsProperty = instance.GetType().GetProperty(name);
             itemsValue = itemsProperty.GetValue(instance, null) as object[];
+
+            Initialize();
         }
 
-        public void SetItem<T>(T value)
+        private void Initialize()
         {
-            RemoveItems<T>();
-            EnsureArray();
-
-            var newSize = itemsValue.Length + 1;
-            Array.Resize(ref itemsValue, newSize);
-            itemsValue[newSize - 1] = value;
-
-            SetItemsOnInstance();
-        }
-
-        public void SetItems<T>(T[] values)
-        {
-            RemoveItems<T>();
-            EnsureArray();
-
-            var newSize = itemsValue.Length + values.Length;
-            Array.Resize(ref itemsValue, newSize);
-
-            var j = 0;
-            var i = newSize - values.Length;
-            for (; j < values.Length; i++, j++)
+            if (itemsValue != null)
             {
-                itemsValue[i] = values[j];
-            }
-
-            SetItemsOnInstance();
-        }
-
-        public T GetItem<T>()
-        {
-            return GetItems<T>().FirstOrDefault();
-        }
-
-        public IEnumerable<T> GetItems<T>()
-        {
-            EnsureArray();
-            for (var i = 0; i < itemsValue.Length; i++)
-            {
-                if (itemsValue[i].GetType() == typeof(T))
+                for (var i = 0; i < itemsValue.Length; i++)
                 {
-                    yield return (T)itemsValue[i];
+                    propertyList.Add(new ObjectItemValue
+                    {
+                        Name = GetMappingName(itemsValue[i].GetType()),
+                        Value = itemsValue[i]
+                    });
                 }
             }
         }
 
-        private void RemoveItems<T>()
-        {
-            EnsureArray();
-            var newItemsValue = new List<object>();
-            for (var i = 0; i < itemsValue.Length; i++)
+        private string GetMappingName(System.Type type) {
+            foreach (var kvp in typeMapping)
             {
-                if (itemsValue[i].GetType() != typeof(T))
+                if (type.Equals(kvp.Key) || type.IsSubclassOf(kvp.Key))
                 {
-                    newItemsValue.Add(itemsValue[i]);
+                    return kvp.Value;
                 }
             }
 
-            itemsValue = newItemsValue.ToArray();
+            return null;
+        }
+
+        public void SetItem<T>(string name, T value)
+        {
+            propertyList.Add(new ObjectItemValue
+            {
+                Name = name,
+                Value = value
+            });
 
             SetItemsOnInstance();
+        }
+
+        public void SetItems<T>(string name, T[] values)
+        {
+            for (var i = 0; i < values.Length; i++)
+            {
+                propertyList.Add(new ObjectItemValue
+                {
+                    Name = name,
+                    Value = values[i]
+                });
+            }
+
+            SetItemsOnInstance();
+        }
+
+        public T GetItem<T>(string name)
+        {
+            return GetItems<T>(name).FirstOrDefault();
+        }
+
+        public IEnumerable<T> GetItems<T>(string name)
+        {
+            return propertyList.Where(m => m.Name == name).Select(m => m.Value).Cast<T>();
         }
 
         private void SetItemsOnInstance()
         {
-            if (itemsValue.Length == 0)
+            if (nameOrder != null)
+            {
+                propertyList
+                    .Sort((a, b) =>
+                    {
+                        var indexA = Array.FindIndex(nameOrder, n => n == a.Name);
+                        var indexB = Array.FindIndex(nameOrder, n => n == b.Name);
+
+                        if (indexA == indexB)
+                        {
+                            return 0;
+                        }
+                        else if (indexA < indexB)
+                        {
+                            return -1;
+                        }
+
+                        return 1;
+                    });
+            }
+
+            var itemsValue = propertyList
+                .Select(m => m.Value);
+
+            if (itemsValue.Count() == 0)
             {
                 itemsValue = null;
             }
 
-            itemsProperty.SetValue(instance, itemsValue, null);
-        }
-
-        private void EnsureArray()
-        {
-            if (itemsValue == null)
-            {
-                itemsValue = new object[0];
-            }
+            itemsProperty.SetValue(instance, itemsValue.ToArray(), null);
         }
     }
 }

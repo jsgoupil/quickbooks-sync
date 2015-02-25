@@ -46,6 +46,79 @@ namespace QbSync.XsdGenerator
             InsertInterface();
         }
 
+        private static IEnumerable<XmlSchemaElement> GetXmlSchemaElementFromTypeQuery(XmlSchemas xsds, string elementName)
+        {
+            var elementValuesQuery = from xsd in xsds
+                                     let values = xsd.Elements.Values.Cast<XmlSchemaElement>()
+                                     from el in values
+                                     where el.QualifiedName.Name == elementName
+                                     select el;
+
+            return elementValuesQuery;
+        }
+
+        private static IEnumerable<XmlSchemaComplexType> GetXmlSchemaComplexTypeQuery(XmlSchemas xsds, string elementName)
+        {
+            var schemaTypeQuery = (from xsd in xsds
+                                   let el = xsd.SchemaTypes[new XmlQualifiedName(elementName)]
+                                   where el != null
+                                   select el).OfType<XmlSchemaComplexType>();
+
+            return schemaTypeQuery;
+        }
+
+        private static List<XmlSchemaChoice> FindTopLevelSchemaChoices(XmlSchemaObject element)
+        {
+            var list = new List<XmlSchemaChoice>();
+
+            if (element is XmlSchemaSequence)
+            {
+                list.AddRange(WalkElements((element as XmlSchemaSequence).Items, FindTopLevelSchemaChoices));
+            }
+            else if (element is XmlSchemaChoice)
+            {
+                list.Add(element as XmlSchemaChoice);
+            }
+
+            return list;
+        }
+
+        private static List<XmlSchemaElement> WalkElement(XmlSchemaObject element)
+        {
+            var list = new List<XmlSchemaElement>();
+
+            if (element is XmlSchemaSequence)
+            {
+                list.AddRange(WalkElements((element as XmlSchemaSequence).Items, WalkElement));
+            }
+            else if (element is XmlSchemaChoice)
+            {
+                list.AddRange(WalkElements((element as XmlSchemaChoice).Items, WalkElement));
+            }
+            else if (element is XmlSchemaElement)
+            {
+                list.Add(element as XmlSchemaElement);
+            }
+
+            return list;
+        }
+
+        private static List<T> WalkElements<T>(XmlSchemaObjectCollection element, Func<XmlSchemaObject, List<T>> action)
+        {
+            var list = new List<T>();
+            foreach (var el in element as XmlSchemaObjectCollection)
+            {
+                list.AddRange(action(el));
+            }
+
+            return list;
+        }
+
+        private static IEnumerable<string> GetXmlSchemaElementNames(IEnumerable<XmlSchemaElement> xmlSchemaElements)
+        {
+            return xmlSchemaElements.Select(m => m.QualifiedName.Name);
+        }
+
         private void InsertInterface()
         {
             var iteratorID = codeMemberProperties.FirstOrDefault(m => m.Name == "iteratorID");
@@ -224,14 +297,50 @@ namespace QbSync.XsdGenerator
 
         private void AddItemsProperties()
         {
+            var i = 0;
+            var xmlSchemaComplexType = GetXmlSchemaComplexTypeQuery(xsds, codeType.Name).FirstOrDefault();
+            List<XmlSchemaObject> choices = null;
+            if (xmlSchemaComplexType == null)
+            {
+                var xmlSchemaElement = GetXmlSchemaElementFromTypeQuery(xsds, codeType.Name).FirstOrDefault();
+                if (xmlSchemaElement != null)
+                {
+                    xmlSchemaComplexType = xmlSchemaElement.SchemaType as XmlSchemaComplexType; // Let's check if we have a complex type within the element
+                }
+            }
+            if (xmlSchemaComplexType != null)
+            {
+                choices = FindTopLevelSchemaChoices(xmlSchemaComplexType.ContentTypeParticle).Cast<XmlSchemaObject>().ToList();
+            }
+
             var codeMembers = codeMemberProperties.Where(m => m.Name == "Items" || m.Name == "Item" || m.Name == "Item1").ToList();
             foreach (var codeMember in codeMembers)
             {
-                AddAppropriateProperties(codeMember);
+                IEnumerable<string> nameOrder = null;
+                if (choices != null && i < choices.Count) // ValueAdjustment has minOccurs=0 & maxOccurs=0 which will trigger a bogus choice count.
+                {
+                    nameOrder = GetXmlSchemaElementNames(WalkElement(choices[i]));
+                }
+
+                // Let's change the base type to work with our ObjectItems
+                if (codeMember.Type.BaseType != "System.Object")
+                {
+                    var objectType = new CodeTypeReference
+                    {
+                        ArrayRank = codeMember.Type.ArrayRank,
+                        BaseType = "System.Object"
+                    };
+                    codeMember.Type = objectType;
+
+                    codeMemberFields.First(m => m.Name == codeMember.Name.ToLower() + "Field").Type = objectType;
+                }
+
+                AddAppropriateProperties(codeMember, nameOrder);
+                i++;
             }
         }
 
-        private void AddAppropriateProperties(CodeMemberProperty codeMemberProperty)
+        private void AddAppropriateProperties(CodeMemberProperty codeMemberProperty, IEnumerable<string> nameOrder)
         {
             var newMembers = new List<EnhancedProperty>();
             string withEnumChoiceName = null;
@@ -268,7 +377,7 @@ namespace QbSync.XsdGenerator
                 codeType.Members.Add(property);
             }
 
-            AddObjectItems(codeType, withEnumChoiceType, !codeMemberProperty.Name.StartsWith("Items"), codeMemberProperty.Name);
+            AddObjectItems(codeType, withEnumChoiceType, !codeMemberProperty.Name.StartsWith("Items"), codeMemberProperty, nameOrder);
         }
 
         private CodeMemberProperty CreateAppropriateProperty(string withEnumChoice, EnhancedProperty enhancedProperty, bool isArray, string codeTypeMemberName)
@@ -300,25 +409,9 @@ namespace QbSync.XsdGenerator
             return property;
         }
 
-        private XmlSchemaElement GetXmlSchemaElementFromType(string elementName)
-        {
-            var elementValuesQuery = from xsd in xsds
-                                     let values = xsd.Elements.Values.Cast<XmlSchemaElement>()
-                                     from el in values
-                                     where el.QualifiedName.Name == elementName
-                                     select el;
-
-            return elementValuesQuery.FirstOrDefault();
-        }
-
         private XmlSchemaElement GetXmlSchemaElementFromPropertyType(string elementName, string propertyName)
         {
-            var schemaTypeQuery = from xsd in xsds
-                                  let el = xsd.SchemaTypes[new XmlQualifiedName(elementName)]
-                                  where el != null
-                                  select el;
-
-            var element = GetXmlSchemaElementFromType(elementName);
+            var element = GetXmlSchemaElementFromTypeQuery(xsds, elementName).FirstOrDefault();
             XmlSchemaComplexType schemaType = null;
             if (element != null)
             {
@@ -326,6 +419,7 @@ namespace QbSync.XsdGenerator
             }
             else
             {
+                var schemaTypeQuery = GetXmlSchemaComplexTypeQuery(xsds, elementName);
                 var elementInComplexTypes = schemaTypeQuery.FirstOrDefault();
                 if (elementInComplexTypes != null)
                 {
@@ -516,7 +610,7 @@ namespace QbSync.XsdGenerator
                 )
             );
 
-            //ObjectItems.SetItems(ItemsChoiceType32.ListID, value.ToArray());
+            //ObjectItems.SetItems(choice.name, value.ToArray());
             property.SetStatements.Add(
                 new CodeMethodInvokeExpression(
                     new CodeMethodReferenceExpression(new CodeVariableReferenceExpression(propertyName), "SetItems"),
@@ -533,19 +627,21 @@ namespace QbSync.XsdGenerator
             var propertyName = "Object" + codeTypeMemberName;
             var property = CreateProperty(enhancedProperty, true);
 
-            //return ObjectItems.GetItems<type>();
+            //return ObjectItems.GetItems<type>(name);
             property.GetStatements.Add(
                 new CodeMethodReturnStatement(
                     new CodeMethodInvokeExpression(
-                        new CodeMethodReferenceExpression(new CodeVariableReferenceExpression(propertyName), "GetItems", new CodeTypeReference(enhancedProperty.Type))
+                        new CodeMethodReferenceExpression(new CodeVariableReferenceExpression(propertyName), "GetItems", new CodeTypeReference(enhancedProperty.Type)),
+                        new CodePrimitiveExpression(enhancedProperty.Name)
                     )
                 )
             );
 
-            //ObjectItems.SetItem(value);
+            //ObjectItems.SetItems(name, value.ToArray());
             property.SetStatements.Add(
                 new CodeMethodInvokeExpression(
                     new CodeMethodReferenceExpression(new CodeVariableReferenceExpression(propertyName), "SetItems"),
+                    new CodePrimitiveExpression(enhancedProperty.Name),
                     new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("value"), "ToArray")
                 )
             );
@@ -568,7 +664,7 @@ namespace QbSync.XsdGenerator
                 )
             );
 
-            //ObjectItems.SetItem(ItemsChoiceType32.ListID, value);
+            //ObjectItems.SetItem(choice.name, value);
             property.SetStatements.Add(
                 new CodeMethodInvokeExpression(
                     new CodeMethodReferenceExpression(new CodeVariableReferenceExpression(propertyName), "SetItem"),
@@ -585,19 +681,21 @@ namespace QbSync.XsdGenerator
             var propertyName = "Object" + codeTypeMemberName;
             var property = CreateProperty(enhancedProperty, false);
 
-            //return ObjectItems.GetItem<type>();
+            //return ObjectItems.GetItem<type>(name);
             property.GetStatements.Add(
                 new CodeMethodReturnStatement(
                     new CodeMethodInvokeExpression(
-                        new CodeMethodReferenceExpression(new CodeVariableReferenceExpression(propertyName), "GetItem", new CodeTypeReference(enhancedProperty.Type))
+                        new CodeMethodReferenceExpression(new CodeVariableReferenceExpression(propertyName), "GetItem", new CodeTypeReference(enhancedProperty.Type)),
+                        new CodePrimitiveExpression(enhancedProperty.Name)
                     )
                 )
             );
 
-            //ObjectItems.SetItem(value);
+            //ObjectItems.SetItem(name, value);
             property.SetStatements.Add(
                 new CodeMethodInvokeExpression(
                     new CodeMethodReferenceExpression(new CodeVariableReferenceExpression(propertyName), "SetItem"),
+                    new CodePrimitiveExpression(enhancedProperty.Name),
                     new CodeVariableReferenceExpression("value")
                 )
             );
@@ -606,20 +704,61 @@ namespace QbSync.XsdGenerator
         }
         #endregion
 
-        private void AddObjectItems(CodeTypeDeclaration codeType, string withEnumChoice, bool useSingular, string codeTypeMemberName)
+        private void AddObjectItems(CodeTypeDeclaration codeType, string withEnumChoice, bool useSingular, CodeMemberProperty codeTypeMember, IEnumerable<string> nameOrder)
         {
-            var propertyName = "Object" + codeTypeMemberName;
-            var fieldName = "object" + codeTypeMemberName;
+            var propertyName = "Object" + codeTypeMember.Name;
+            var fieldName = "object" + codeTypeMember.Name;
             var returnName = "ObjectItem";
+            var constructorParameters = new List<CodeExpression> { new CodeThisReferenceExpression(), new CodePrimitiveExpression(codeTypeMember.Name) };
             if (!useSingular)
             {
                 returnName += "s";
+
+                if (nameOrder != null)
+                {
+                    var stringArray = new List<CodeExpression>();
+                    stringArray.AddRange(nameOrder.Select(m => new CodePrimitiveExpression(m)));
+                    var newOrderArray = new CodeArrayCreateExpression(typeof(string), stringArray.ToArray());
+                    constructorParameters.Add(newOrderArray);
+                }
             }
 
             var codeMethodReferenceExpression = new CodeMethodReferenceExpression(null, "ObjectItems");
             var returnType = new CodeTypeReference(returnName);
 
-            if (!string.IsNullOrEmpty(withEnumChoice))
+            List<CodeStatement> trueStatements = null;
+            if (string.IsNullOrEmpty(withEnumChoice))
+            {
+                var dictionary = new List<CodeExpression>();
+
+                trueStatements = new List<CodeStatement>();
+                trueStatements.Add(
+                    new CodeVariableDeclarationStatement(typeof(Dictionary<System.Type, string>), "typeMapping",
+                    new CodeObjectCreateExpression(typeof(Dictionary<System.Type, string>))));
+
+                // We need to add a type mapping since we have not access to a choice name.
+                foreach (var customAttribute in codeTypeMember.CustomAttributes.OfType<CodeAttributeDeclaration>())
+                {
+                    if (customAttribute.Name == "System.Xml.Serialization.XmlElementAttribute")
+                    {
+                        var name = ((CodePrimitiveExpression)customAttribute.Arguments[0].Value).Value;
+                        var type = ((CodeTypeOfExpression)customAttribute.Arguments[1].Value).Type.BaseType;
+                        trueStatements.Add(
+                            new CodeExpressionStatement(
+                                new CodeMethodInvokeExpression(
+                                    new CodeVariableReferenceExpression("typeMapping"),
+                                    "Add",
+                                    new CodeSnippetExpression("typeof(" + type + ")"),
+                                    new CodePrimitiveExpression(name)
+                                )
+                            )
+                        );
+                    }
+                }
+
+                constructorParameters.Add(new CodeVariableReferenceExpression("typeMapping"));
+            }
+            else
             {
                 var typeArgument = new CodeTypeReference(new CodeTypeParameter(withEnumChoice));
                 codeMethodReferenceExpression.TypeArguments.Add(typeArgument);
@@ -639,12 +778,18 @@ namespace QbSync.XsdGenerator
                         new CodePrimitiveExpression()
                     )
                 );
+
+            if (trueStatements != null)
+            {
+                assignment1.TrueStatements.AddRange(trueStatements.ToArray());
+            }
+
             assignment1.TrueStatements.Add(
                 new CodeAssignStatement(
                     new CodeVariableReferenceExpression(fieldName),
                     new CodeObjectCreateExpression(
                         returnType,
-                        new CodeExpression[] { new CodeThisReferenceExpression(), new CodePrimitiveExpression(codeTypeMemberName) }
+                        constructorParameters.ToArray()
                     )
                 ));
 

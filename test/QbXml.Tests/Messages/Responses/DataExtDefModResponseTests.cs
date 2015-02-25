@@ -11,7 +11,7 @@ namespace QbSync.QbXml.Tests.QbXml
         [Test]
         public void BasicDataExtDefModResponseTest()
         {
-            var ret = "<DataExtDefRet><OwnerID>{7d543f23-f3b1-4dea-8ff4-37bd26d15e6c}</OwnerID><DataExtName>name</DataExtName><DataExtID>123</DataExtID><DataExtType>STR255TYPE</DataExtType><AssignToObject>Account</AssignToObject><AssignToObject>Charge</AssignToObject></DataExtDefRet>";
+            var ret = "<DataExtDefRet><OwnerID>{7d543f23-f3b1-4dea-8ff4-37bd26d15e6c}</OwnerID><DataExtID>123</DataExtID><DataExtName>name</DataExtName><DataExtType>STR255TYPE</DataExtType><AssignToObject>Account</AssignToObject><AssignToObject>Charge</AssignToObject></DataExtDefRet>";
 
             var response = new QbXmlResponse();
             var rs = response.GetSingleItemFromResponse<DataExtDefModRsType>(QuickBooksTestHelper.CreateQbXmlWithEnvelope(ret, "DataExtDefModRs"));

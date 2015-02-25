@@ -9,49 +9,62 @@ namespace QbSync.QbXml.Objects
         where U : struct, IConvertible
     {
         private object instance;
+        private string[] nameOrder;
         private PropertyInfo itemsProperty;
         private PropertyInfo itemsElementNameProperty;
         private object[] itemsValue;
         private U[] itemsElementNameValue;
+        private List<ObjectItemValue> propertyList;
 
-        public ObjectItems(object instance, string name)
+        public ObjectItems(object instance, string name, string[] nameOrder)
         {
             this.instance = instance;
+            this.nameOrder = nameOrder;
+            propertyList = new List<ObjectItemValue>();
+
             itemsProperty = instance.GetType().GetProperty(name);
             itemsElementNameProperty = instance.GetType().GetProperty(name + "ElementName");
             itemsValue = itemsProperty.GetValue(instance, null) as object[];
             itemsElementNameValue = itemsElementNameProperty.GetValue(instance, null) as U[];
+
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            if (itemsValue != null)
+            {
+                for (var i = 0; i < itemsValue.Length; i++)
+                {
+                    propertyList.Add(new ObjectItemValue
+                    {
+                        Name = itemsElementNameValue[i].ToString(),
+                        Value = itemsValue[i]
+                    });
+                }
+            }
         }
 
         public void SetItem<T>(U name, T value)
         {
-            RemoveItems(name);
-            EnsureArray();
-
-            var newSize = itemsValue.Length + 1;
-            Array.Resize(ref itemsValue, newSize);
-            Array.Resize(ref itemsElementNameValue, newSize);
-            itemsValue[newSize - 1] = value;
-            itemsElementNameValue[newSize - 1] = name;
+            propertyList.Add(new ObjectItemValue
+            {
+                Name = name.ToString(),
+                Value = value
+            });
 
             SetItemsOnInstance();
         }
 
         public void SetItems<T>(U name, T[] values)
         {
-            RemoveItems(name);
-            EnsureArray();
-
-            var newSize = itemsValue.Length + values.Length;
-            Array.Resize(ref itemsValue, newSize);
-            Array.Resize(ref itemsElementNameValue, newSize);
-
-            var j = 0;
-            var i = newSize - values.Length;
-            for (; j < values.Length; i++, j++)
+            for (var i = 0; i < values.Length; i++)
             {
-                itemsValue[i] = values[j];
-                itemsElementNameValue[i] = name;
+                propertyList.Add(new ObjectItemValue
+                {
+                    Name = name.ToString(),
+                    Value = values[i]
+                });
             }
 
             SetItemsOnInstance();
@@ -64,64 +77,51 @@ namespace QbSync.QbXml.Objects
 
         public IEnumerable<T> GetItems<T>(U name)
         {
-            EnsureArray();
-            for (var i = 0; i < itemsElementNameValue.Length; i++)
-            {
-                if (itemsElementNameValue[i].Equals(name))
-                {
-                    yield return (T)itemsValue[i];
-                }
-            }
-        }
-
-        private void RemoveItems(U name)
-        {
-            EnsureArray();
-            var newItemsValue = new List<object>();
-            var newItemsElementNameValue = new List<U>();
-            for (var i = 0; i < itemsElementNameValue.Length; i++)
-            {
-                if (!itemsElementNameValue[i].Equals(name))
-                {
-                    newItemsValue.Add(itemsValue[i]);
-                    newItemsElementNameValue.Add(itemsElementNameValue[i]);
-                }
-            }
-
-            itemsValue = newItemsValue.ToArray();
-            itemsElementNameValue = newItemsElementNameValue.ToArray();
-
-            SetItemsOnInstance();
+            return propertyList.Where(m => m.Name == name.ToString()).Select(m => m.Value).Cast<T>();
         }
 
         private void SetItemsOnInstance()
         {
-            if (itemsValue.Length == 0)
+            if (nameOrder != null)
+            {
+                propertyList
+                    .Sort((a, b) =>
+                    {
+                        var indexA = Array.FindIndex(nameOrder, n => n == a.Name);
+                        var indexB = Array.FindIndex(nameOrder, n => n == b.Name);
+
+                        if (indexA == indexB)
+                        {
+                            return 0;
+                        }
+                        else if (indexA < indexB)
+                        {
+                            return -1;
+                        }
+
+                        return 1;
+                    });
+            }
+
+            var itemsValue = propertyList
+                .Select(m => m.Value);
+
+            if (itemsValue.Count() == 0)
             {
                 itemsValue = null;
             }
 
-            itemsProperty.SetValue(instance, itemsValue, null);
+            itemsProperty.SetValue(instance, itemsValue.ToArray(), null);
 
-            if (itemsElementNameValue.Length == 0)
+            var itemsElementNameValue = propertyList
+                .Select(m => (U)Enum.Parse(typeof(U), m.Name));
+
+            if (itemsElementNameValue.Count() == 0)
             {
                 itemsElementNameValue = null;
             }
 
-            itemsElementNameProperty.SetValue(instance, itemsElementNameValue, null);
-        }
-
-        private void EnsureArray()
-        {
-            if (itemsValue == null)
-            {
-                itemsValue = new object[0];
-            }
-
-            if (itemsElementNameValue == null)
-            {
-                itemsElementNameValue = new U[0];
-            }
+            itemsElementNameProperty.SetValue(instance, itemsElementNameValue.ToArray(), null);
         }
     }
 }
