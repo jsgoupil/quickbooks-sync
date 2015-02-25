@@ -30,6 +30,7 @@ namespace QbSync.QbXml.Tests.QbXml
 
             // Make sure we have no xmlns attribute
             Assert.IsTrue(!xml.Contains("xmlns"), "The XML contains XMLNS. The Web Connector will reject the request.");
+            Assert.IsTrue(xml.Contains("<?qbxml version=\"13.0\"?>"), "Version is not not included in the XML. The Web Connector will reject the request.");
         }
 
         [Test]

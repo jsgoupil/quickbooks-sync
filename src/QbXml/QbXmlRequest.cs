@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace QbSync.QbXml
@@ -42,12 +44,20 @@ namespace QbSync.QbXml
                 ItemsElementName = Enumerable.Repeat<ItemsChoiceType99>(ItemsChoiceType99.QBXMLMsgsRq, qbxmlMsgsRqList.Count()).ToArray()
             };
 
-            using (var textWriter = new StringWriter())
+            XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
             {
+                Indent = true,
+                OmitXmlDeclaration = false,
+                Encoding = Encoding.UTF8
+            };
+            using (StringWriter stringWriter = new StringWriter())
+            using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter, xmlWriterSettings))
+            {
+                xmlWriter.WriteProcessingInstruction("qbxml", "version=\"13.0\"");
                 var ns = new XmlSerializerNamespaces();
                 ns.Add("", "");
-                QbXmlSerializer.Instance.XmlSerializer.Serialize(textWriter, qbXml, ns);
-                return textWriter.ToString();
+                QbXmlSerializer.Instance.XmlSerializer.Serialize(xmlWriter, qbXml, ns);
+                return stringWriter.ToString();
             }
         }
     }
