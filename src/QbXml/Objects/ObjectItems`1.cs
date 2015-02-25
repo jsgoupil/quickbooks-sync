@@ -47,6 +47,8 @@ namespace QbSync.QbXml.Objects
 
         public void SetItem<T>(U name, T value)
         {
+            RemoveItems(name);
+
             propertyList.Add(new ObjectItemValue
             {
                 Name = name.ToString(),
@@ -58,6 +60,8 @@ namespace QbSync.QbXml.Objects
 
         public void SetItems<T>(U name, T[] values)
         {
+            RemoveItems(name);
+
             for (var i = 0; i < values.Length; i++)
             {
                 propertyList.Add(new ObjectItemValue
@@ -78,6 +82,11 @@ namespace QbSync.QbXml.Objects
         public IEnumerable<T> GetItems<T>(U name)
         {
             return propertyList.Where(m => m.Name == name.ToString()).Select(m => m.Value).Cast<T>();
+        }
+
+        private void RemoveItems(U name)
+        {
+            propertyList = propertyList.Where(m => m.Name != name.ToString()).ToList();
         }
 
         private void SetItemsOnInstance()

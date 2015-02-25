@@ -34,6 +34,24 @@ namespace QbSync.QbXml.Tests.QbXml
         }
 
         [Test]
+        public void BasicCustomerWhenCallingMaxReturnedMultipleTimes()
+        {
+            var request = new QbXmlRequest();
+            var innerRequest = new CustomerQueryRqType();
+            innerRequest.MaxReturned = "100";
+            innerRequest.MaxReturned = "200";
+            request.AddToSingle(innerRequest);
+            var xml = request.GetRequest();
+
+            XmlDocument requestXmlDoc = new XmlDocument();
+            requestXmlDoc.LoadXml(xml);
+
+            Assert.AreEqual(1, requestXmlDoc.GetElementsByTagName("MaxReturned").Count);
+            Assert.AreEqual("200", requestXmlDoc.GetElementsByTagName("MaxReturned").Item(0).InnerText);
+            Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(xml));
+        }
+
+        [Test]
         public void BasicCustomerQueryWithSomeFilters()
         {
             var request = new QbXmlRequest();

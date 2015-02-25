@@ -42,7 +42,8 @@ namespace QbSync.QbXml.Objects
             }
         }
 
-        private string GetMappingName(System.Type type) {
+        private string GetMappingName(System.Type type)
+        {
             foreach (var kvp in typeMapping)
             {
                 if (type.Equals(kvp.Key) || type.IsSubclassOf(kvp.Key))
@@ -56,6 +57,8 @@ namespace QbSync.QbXml.Objects
 
         public void SetItem<T>(string name, T value)
         {
+            RemoveItems(name);
+
             propertyList.Add(new ObjectItemValue
             {
                 Name = name,
@@ -67,6 +70,8 @@ namespace QbSync.QbXml.Objects
 
         public void SetItems<T>(string name, T[] values)
         {
+            RemoveItems(name);
+
             for (var i = 0; i < values.Length; i++)
             {
                 propertyList.Add(new ObjectItemValue
@@ -87,6 +92,11 @@ namespace QbSync.QbXml.Objects
         public IEnumerable<T> GetItems<T>(string name)
         {
             return propertyList.Where(m => m.Name == name).Select(m => m.Value).Cast<T>();
+        }
+
+        private void RemoveItems(string name)
+        {
+            propertyList = propertyList.Where(m => m.Name != name).ToList();
         }
 
         private void SetItemsOnInstance()
