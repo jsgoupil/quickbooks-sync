@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 namespace QbSync.QbXml
 {
@@ -43,7 +44,9 @@ namespace QbSync.QbXml
 
             using (var textWriter = new StringWriter())
             {
-                QbXmlSerializer.Instance.XmlSerializer.Serialize(textWriter, qbXml);
+                var ns = new XmlSerializerNamespaces();
+                ns.Add("", "");
+                QbXmlSerializer.Instance.XmlSerializer.Serialize(textWriter, qbXml, ns);
                 return textWriter.ToString();
             }
         }

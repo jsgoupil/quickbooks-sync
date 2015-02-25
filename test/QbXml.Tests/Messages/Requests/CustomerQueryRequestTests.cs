@@ -27,6 +27,9 @@ namespace QbSync.QbXml.Tests.QbXml
             Assert.AreEqual(0, requestXmlDoc.GetElementsByTagName("ListID").Count);
             Assert.AreEqual(0, requestXmlDoc.GetElementsByTagName("FullName").Count);
             Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(xml));
+
+            // Make sure we have no xmlns attribute
+            Assert.IsTrue(!xml.Contains("xmlns"), "The XML contains XMLNS. The Web Connector will reject the request.");
         }
 
         [Test]
