@@ -127,7 +127,7 @@ public SyncManager(ApplicationDbContext db_context, IOwinContext owinContext, IA
 6. GetLastError - Gets the last error that happened. This method is called only if an error is found.
 7. ConnectionError - An error happened with the Web Connector.
 8. CloseConnection - Closing the connection. Return a string to show to the user in the Web Connector.
-
+9. OnException - Called if any of your steps throw an exception. It would be a great time to log this exception for future debugging.
 
 ### Step 3. Register your Step Manager with the ASMX ###
 The registration allows you to create a StepManager with any dependencies that you would like. Here is an example:

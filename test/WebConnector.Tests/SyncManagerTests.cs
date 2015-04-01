@@ -568,5 +568,34 @@ namespace QbSync.WebConnector.Tests
                 .Protected()
                 .Verify("SaveChanges", Times.Once());
         }
+
+        [Test]
+        [SetupValidTicket]
+        public void Function_With_Exception()
+        {
+            var guid = Guid.NewGuid().ToString();
+            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            syncManagerMock
+                .Protected()
+                .Setup("OnException", ItExpr.IsAny<Exception>());
+
+            syncManagerMock.CallBase = true;
+
+            var ex = new Exception();
+            var expectedResult = -1;
+            var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
+            stepQueryResponseMock1
+                .Setup(m => m.ReceiveXML(AuthenticatedTicket, null, null, null))
+                .Throws(ex);
+
+            syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
+
+            var result = syncManagerMock.Object.ReceiveRequestXML(guid, null, null, null);
+
+            Assert.AreEqual(expectedResult, result);
+            syncManagerMock
+                .Protected()
+                .Verify("OnException", Times.Once(), ex);
+        }
     }
 }
