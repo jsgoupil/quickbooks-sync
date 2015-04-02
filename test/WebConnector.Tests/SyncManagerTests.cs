@@ -21,12 +21,19 @@ namespace QbSync.WebConnector.Tests
 
         [Test]
         [SetupInvalidTicket]
-        [ExpectedException(ExpectedException = typeof(Exception), ExpectedMessage = "GetAuthenticationFromLogin must return a ticket.")]
         public void AuthenticateWithInvalidImplementation()
         {
             var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            syncManagerMock
+                .Protected()
+                .Setup("OnException", ItExpr.IsAny<Exception>());
+
             syncManagerMock.CallBase = true;
-            var result = syncManagerMock.Object.Authenticate("user", "password");
+            syncManagerMock.Object.Authenticate("user", "password");
+
+            syncManagerMock
+                .Protected()
+                .Verify("OnException", Times.Once(), ItExpr.Is<Exception>(m => m.Message == "GetAuthenticationFromLogin must return a ticket."));
         }
 
         [Test]

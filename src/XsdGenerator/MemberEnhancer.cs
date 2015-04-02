@@ -11,7 +11,6 @@ namespace QbSync.XsdGenerator
     class MemberEnhancer
     {
         private CodeTypeDeclaration codeType;
-        private CodeNamespace codeNamespace;
         private XmlSchemas xsds;
         private IEnumerable<CodeTypeDeclaration> codeNamespaceTypes;
         private IEnumerable<CodeMemberField> codeMemberFields;
@@ -22,7 +21,6 @@ namespace QbSync.XsdGenerator
         public MemberEnhancer(CodeTypeDeclaration codeType, CodeNamespace codeNamespace, XmlSchemas xsds)
         {
             this.codeType = codeType;
-            this.codeNamespace = codeNamespace;
             this.xsds = xsds;
             this.codeNamespaceTypes = codeNamespace.Types.Cast<CodeTypeDeclaration>();
 
@@ -729,8 +727,6 @@ namespace QbSync.XsdGenerator
             List<CodeStatement> trueStatements = null;
             if (string.IsNullOrEmpty(withEnumChoice))
             {
-                var dictionary = new List<CodeExpression>();
-
                 trueStatements = new List<CodeStatement>();
                 trueStatements.Add(
                     new CodeVariableDeclarationStatement(typeof(Dictionary<System.Type, string>), "typeMapping",

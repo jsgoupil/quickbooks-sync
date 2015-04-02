@@ -9,13 +9,11 @@ namespace QbSync.XsdGenerator
     {
         private CodeNamespace codeNamespace;
         private XmlSchemas xsds;
-        private IEnumerable<CodeTypeDeclaration> codeNamespaceTypes;
 
         public TypeEnhancer(CodeNamespace codeNamespace, XmlSchemas xsds)
         {
             this.codeNamespace = codeNamespace;
             this.xsds = xsds;
-            this.codeNamespaceTypes = codeNamespace.Types.Cast<CodeTypeDeclaration>();
         }
 
         public void Enhance()
