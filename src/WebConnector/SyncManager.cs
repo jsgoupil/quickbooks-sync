@@ -64,13 +64,16 @@ namespace QbSync.WebConnector
                 }
 
                 LogMessage(authenticatedTicket, LogMessageType.Authenticate, LogDirection.Out, authenticatedTicket.Ticket, ret);
-                SaveChanges();
 
                 return ret;
             }
             catch (Exception ex)
             {
                 OnException(ex);
+            }
+            finally
+            {
+                SaveChanges();
             }
 
             return null;
@@ -147,13 +150,16 @@ namespace QbSync.WebConnector
                 }
 
                 LogMessage(authenticatedTicket, LogMessageType.Send, LogDirection.Out, ticket, result);
-                SaveChanges();
 
                 return result;
             }
             catch (Exception ex)
             {
                 OnException(ex);
+            }
+            finally
+            {
+                SaveChanges();
             }
 
             return null;
@@ -195,13 +201,16 @@ namespace QbSync.WebConnector
                 }
 
                 LogMessage(authenticatedTicket, LogMessageType.Receive, LogDirection.Out, ticket, result.ToString());
-                SaveChanges();
 
                 return result;
             }
             catch (Exception ex)
             {
                 OnException(ex);
+            }
+            finally
+            {
+                SaveChanges();
             }
 
             return -1;
@@ -232,13 +241,16 @@ namespace QbSync.WebConnector
                 }
 
                 LogMessage(authenticatedTicket, LogMessageType.GetError, LogDirection.Out, ticket, result);
-                SaveChanges();
 
                 return result;
             }
             catch (Exception ex)
             {
                 OnException(ex);
+            }
+            finally
+            {
+                SaveChanges();
             }
 
             return null;
@@ -265,13 +277,16 @@ namespace QbSync.WebConnector
                 }
 
                 LogMessage(authenticatedTicket, LogMessageType.Error, LogDirection.Out, ticket, result);
-                SaveChanges();
 
                 return result;
             }
             catch (Exception ex)
             {
                 OnException(ex);
+            }
+            finally
+            {
+                SaveChanges();
             }
 
             return null;
@@ -297,13 +312,16 @@ namespace QbSync.WebConnector
                 }
 
                 LogMessage(authenticatedTicket, LogMessageType.Error, LogDirection.Out, ticket, result);
-                SaveChanges();
 
                 return result;
             }
             catch (Exception ex)
             {
                 OnException(ex);
+            }
+            finally
+            {
+                SaveChanges();
             }
 
             return null;
@@ -359,7 +377,8 @@ namespace QbSync.WebConnector
         /// Returns the minimum version the Web Connector has to support.
         /// </summary>
         /// <returns>Minimum version.</returns>
-        protected internal virtual Version GetMinimumRequiredVersion() {
+        protected internal virtual Version GetMinimumRequiredVersion()
+        {
             return new Version(2, 1, 0, 30);
         }
 
