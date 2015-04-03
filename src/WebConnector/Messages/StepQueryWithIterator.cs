@@ -1,4 +1,5 @@
-﻿using QbSync.QbXml.Objects;
+﻿using QbSync.QbXml;
+using QbSync.QbXml.Objects;
 
 namespace QbSync.WebConnector.Messages
 {

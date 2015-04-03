@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QbSync.QbXml;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -130,6 +131,7 @@ namespace QbSync.WebConnector
                     StepQueryResponse stepQueryResponse = null;
                     while ((stepQueryResponse = FindStep(authenticatedTicket.CurrentStep)) != null)
                     {
+                        stepQueryResponse.SetOptions(GetOptions(authenticatedTicket));
                         result = stepQueryResponse.SendXML(authenticatedTicket);
 
                         if (result == null)
@@ -187,6 +189,7 @@ namespace QbSync.WebConnector
                     StepQueryResponse stepQueryResponse = FindStep(authenticatedTicket.CurrentStep);
                     if (stepQueryResponse != null)
                     {
+                        stepQueryResponse.SetOptions(GetOptions(authenticatedTicket));
                         result = stepQueryResponse.ReceiveXML(authenticatedTicket, response, hresult, message);
 
                         if (result >= 0)
@@ -380,6 +383,16 @@ namespace QbSync.WebConnector
         protected internal virtual Version GetMinimumRequiredVersion()
         {
             return new Version(2, 1, 0, 30);
+        }
+
+        /// <summary>
+        /// Gets the options for the SyncManager.
+        /// </summary>
+        /// <param name="authenticatedTicket">The ticket.</param>
+        /// <returns>Options.</returns>
+        protected internal virtual QbXmlResponseOptions GetOptions(AuthenticatedTicket authenticatedTicket)
+        {
+            return null;
         }
 
         /// <summary>

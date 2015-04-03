@@ -7,6 +7,8 @@ namespace QbSync.WebConnector.Messages
         where T : class, QbRequest, new()
         where Y : class, QbResponse, new()
     {
+        protected QbXmlResponseOptions qbXmlResponseOptions;
+
         public StepQueryResponseBase()
         {
         }
@@ -32,7 +34,7 @@ namespace QbSync.WebConnector.Messages
 
         public virtual int ReceiveXML(AuthenticatedTicket authenticatedTicket, string response, string hresult, string message)
         {
-            var responseObject = new QbXmlResponse();
+            var responseObject = new QbXmlResponse(qbXmlResponseOptions);
 
             if (!string.IsNullOrEmpty(response))
             {
@@ -53,6 +55,11 @@ namespace QbSync.WebConnector.Messages
         public virtual string LastError(AuthenticatedTicket authenticatedTicket)
         {
             return string.Empty;
+        }
+
+        public void SetOptions(QbXmlResponseOptions qbXmlResponseOptions)
+        {
+            this.qbXmlResponseOptions = qbXmlResponseOptions;
         }
 
         protected virtual T CreateRequest(AuthenticatedTicket authenticatedTicket)

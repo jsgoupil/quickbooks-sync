@@ -1,4 +1,5 @@
 ﻿using QbSync.QbXml.Objects;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,10 +8,28 @@ namespace QbSync.QbXml
 {
     public class QbXmlResponse
     {
+        protected QbXmlResponseOptions qbXmlResponseOptions;
+
+        [ThreadStatic]
+        internal static QbXmlResponseOptions qbXmlResponseOptionsStatic;
+
+        public QbXmlResponse()
+            : this(null)
+        {
+        }
+
+        public QbXmlResponse(QbXmlResponseOptions qbXmlResponseOptions)
+        {
+            this.qbXmlResponseOptions = qbXmlResponseOptions;
+        }
+
         public QBXML ParseResponseRaw(string response)
         {
             var reader = new StringReader(response);
-            return QbXmlSerializer.Instance.XmlSerializer.Deserialize(reader) as QBXML;
+            qbXmlResponseOptionsStatic = qbXmlResponseOptions;
+            var ret = QbXmlSerializer.Instance.XmlSerializer.Deserialize(reader) as QBXML;
+            qbXmlResponseOptionsStatic = null;
+            return ret;
         }
 
         public T GetSingleItemFromResponse<T>(string response)

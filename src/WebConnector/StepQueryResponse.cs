@@ -1,4 +1,5 @@
-﻿namespace QbSync.WebConnector
+﻿using QbSync.QbXml;
+namespace QbSync.WebConnector
 {
     public interface StepQueryResponse
     {
@@ -41,5 +42,11 @@
         /// </summary>
         /// <returns>False stays on the current step. True goes to the next step.</returns>
         bool GotoNextStep();
+
+        /// <summary>
+        /// Sets the options to be attached with the step.
+        /// </summary>
+        /// <param name="qbXmlResponseOptions">Options.</param>
+        void SetOptions(QbXmlResponseOptions qbXmlResponseOptions);
     }
 }

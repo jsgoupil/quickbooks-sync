@@ -1,4 +1,4 @@
-# QuickBooks Sync [![Build Status](https://travis-ci.org/jsgoupil/quickbooks-sync.svg?branch=master)](https://travis-ci.org/jsgoupil/quickbooks-sync) #
+todo# QuickBooks Sync [![Build Status](https://travis-ci.org/jsgoupil/quickbooks-sync.svg?branch=master)](https://travis-ci.org/jsgoupil/quickbooks-sync) #
 
 QuickBooks Sync regroups multiple NuGet packages to sync data from QuickBooks Desktop using QbXml. Make requests to QuickBooks Desktop, analyze the returned values, etc.
 
@@ -128,6 +128,7 @@ public SyncManager(ApplicationDbContext db_context, IOwinContext owinContext, IA
 7. ConnectionError - An error happened with the Web Connector.
 8. CloseConnection - Closing the connection. Return a string to show to the user in the Web Connector.
 9. OnException - Called if any of your steps throw an exception. It would be a great time to log this exception for future debugging.
+10. GetOptions - Returns QbXml options. Used for TimeZone bug. See below.
 
 ### Step 3. Register your Step Manager with the ASMX ###
 The registration allows you to create a StepManager with any dependencies that you would like. Here is an example:
@@ -198,6 +199,12 @@ The requests and responses that support an iterator implements `QbIteratorReques
 ### Step X ###
 You can register other steps such as `UpdateCustomer`, `InvoiceQuery`, etc. Just make your own!
 
+## QuickBooks TimeZone bug ##
+QbXml doesn't handle Daylight Saving Time properly when it comes to DateTime.
+When the Daylight Saving Time is activated, the times returned by QuickBooks are off by the delta DST (typically 1h).
+
+To overcome this problem, if you provide a TimeZoneInfo, QbXml package will fix the times that are not properly set.
+Use the `QbXmlResponseOptions.TimeZoneBugFix` by overriding `SyncManager.GetOptions()` and provide the timezone where QuickBooks Desktop is installed.
 
 ## Contributing
 

@@ -1,6 +1,7 @@
 ﻿using Moq;
 using Moq.Protected;
 using NUnit.Framework;
+using QbSync.QbXml;
 using QbSync.QbXml.Objects;
 using QbSync.WebConnector.Messages;
 using System;
@@ -147,6 +148,93 @@ namespace QbSync.WebConnector.Tests
 
             var ret = stepQueryWithIteratorMock.Object.ReceiveXML(authenticatedTicket, xml, string.Empty, string.Empty);
             Assert.AreEqual(0, ret);
+        }
+
+        [Test]
+        public void CustomerQueryWithTimeZoneFix()
+        {
+            var authenticatedTicket = new AuthenticatedTicket
+            {
+                Ticket = Guid.NewGuid().ToString(),
+                CurrentStep = "step4"
+            };
+            var xml = @"<?xml version=""1.0"" ?><QBXML><QBXMLMsgsRs><CustomerQueryRs requestID=""1"" statusCode=""0"" statusSeverity=""Info"" statusMessage=""Status OK"">" +
+                "<CustomerRet>" +
+                    "<ListID>110000-1232697602</ListID>" +
+                    "<TimeCreated>2015-04-03T10:06:17-08:00</TimeCreated>" +
+                    "<TimeModified>2015-04-03T10:06:17-08:00</TimeModified>" +
+                    "<EditSequence>1232697602</EditSequence>" +
+                    "<Name>10th Customer</Name>" +
+                    "<FullName>ABC Customer</FullName>" +
+                    "<IsActive>true</IsActive>" +
+                    "<Sublevel>0</Sublevel>" +
+                    "<Balance>0.00</Balance>" +
+                    "<TotalBalance>0.00</TotalBalance>" +
+                    "<JobStatus>None</JobStatus>" +
+                "</CustomerRet>" +
+                "</CustomerQueryRs></QBXMLMsgsRs></QBXML>";
+
+            var qbXmlResponseOptions = new QbXmlResponseOptions
+            {
+                TimeZoneBugFix = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time")
+            };
+
+            var stepQueryWithIteratorMock = new Mock<StepQueryResponseBase<CustomerQueryRqType, CustomerQueryRsType>>();
+            stepQueryWithIteratorMock
+                .Protected()
+                .Setup("ExecuteResponse", ItExpr.IsAny<AuthenticatedTicket>(), ItExpr.IsAny<CustomerQueryRsType>());
+            stepQueryWithIteratorMock.CallBase = true;
+            stepQueryWithIteratorMock.Object.SetOptions(qbXmlResponseOptions);
+
+            var ret = stepQueryWithIteratorMock.Object.ReceiveXML(authenticatedTicket, xml, string.Empty, string.Empty);
+            Assert.AreEqual(0, ret);
+            var expectedHour = 17;
+            stepQueryWithIteratorMock
+                .Protected()
+                .Verify("ExecuteResponse", Times.Once(), ItExpr.IsAny<AuthenticatedTicket>(), ItExpr.Is<CustomerQueryRsType>(m => m.CustomerRet[0].TimeModified.ToDateTime().ToUniversalTime().Hour == expectedHour));
+        }
+
+        [Test]
+        public void CustomerQueryWithTimeZoneNoFix()
+        {
+            var authenticatedTicket = new AuthenticatedTicket
+            {
+                Ticket = Guid.NewGuid().ToString(),
+                CurrentStep = "step4"
+            };
+            var xml = @"<?xml version=""1.0"" ?><QBXML><QBXMLMsgsRs><CustomerQueryRs requestID=""1"" statusCode=""0"" statusSeverity=""Info"" statusMessage=""Status OK"">" +
+                "<CustomerRet>" +
+                    "<ListID>110000-1232697602</ListID>" +
+                    "<TimeCreated>2015-04-03T10:06:17-08:00</TimeCreated>" +
+                    "<TimeModified>2015-04-03T10:06:17-08:00</TimeModified>" +
+                    "<EditSequence>1232697602</EditSequence>" +
+                    "<Name>10th Customer</Name>" +
+                    "<FullName>ABC Customer</FullName>" +
+                    "<IsActive>true</IsActive>" +
+                    "<Sublevel>0</Sublevel>" +
+                    "<Balance>0.00</Balance>" +
+                    "<TotalBalance>0.00</TotalBalance>" +
+                    "<JobStatus>None</JobStatus>" +
+                "</CustomerRet>" +
+                "</CustomerQueryRs></QBXMLMsgsRs></QBXML>";
+
+            var qbXmlResponseOptions = new QbXmlResponseOptions
+            {
+            };
+
+            var stepQueryWithIteratorMock = new Mock<StepQueryResponseBase<CustomerQueryRqType, CustomerQueryRsType>>();
+            stepQueryWithIteratorMock
+                .Protected()
+                .Setup("ExecuteResponse", ItExpr.IsAny<AuthenticatedTicket>(), ItExpr.IsAny<CustomerQueryRsType>());
+            stepQueryWithIteratorMock.CallBase = true;
+            stepQueryWithIteratorMock.Object.SetOptions(qbXmlResponseOptions);
+
+            var ret = stepQueryWithIteratorMock.Object.ReceiveXML(authenticatedTicket, xml, string.Empty, string.Empty);
+            Assert.AreEqual(0, ret);
+            var expectedHour = 18;
+            stepQueryWithIteratorMock
+                .Protected()
+                .Verify("ExecuteResponse", Times.Once(), ItExpr.IsAny<AuthenticatedTicket>(), ItExpr.Is<CustomerQueryRsType>(m => m.CustomerRet[0].TimeModified.ToDateTime().ToUniversalTime().Hour == expectedHour));
         }
     }
 }

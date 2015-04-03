@@ -6,20 +6,77 @@ namespace QbSync.QbXml.Objects
 {
     public partial class DATETIMETYPE : ITypeWrapper, IComparable<DATETIMETYPE>, IXmlSerializable
     {
-        protected DateTime value;
+        private DateTime _value;
+        protected TimeZoneInfo timeZoneInfo;
 
         public DATETIMETYPE()
+            : this((TimeZoneInfo)null)
         {
+            // Used for serialization
+            if (QbXmlResponse.qbXmlResponseOptionsStatic != null)
+            {
+                this.timeZoneInfo = QbXmlResponse.qbXmlResponseOptionsStatic.TimeZoneBugFix;
+            }
+        }
+
+        public DATETIMETYPE(TimeZoneInfo timeZoneInfo)
+            : this(default(DateTime), timeZoneInfo)
+        {
+            this.timeZoneInfo = timeZoneInfo;
         }
 
         public DATETIMETYPE(string value)
+            : this(value, null)
         {
-            this.value = DateTime.Parse(value);
+        }
+
+        public DATETIMETYPE(string value, TimeZoneInfo timeZoneInfo)
+            : this(DateTime.Parse(value), timeZoneInfo)
+        {
         }
 
         public DATETIMETYPE(DateTime value)
+            : this(value, null)
         {
+        }
+
+        public DATETIMETYPE(DateTime value, TimeZoneInfo timeZoneInfo)
+        {
+            Init(value, timeZoneInfo);
+        }
+
+        private void Init(DateTime value, TimeZoneInfo timeZoneInfo)
+        {
+            this.timeZoneInfo = timeZoneInfo;
+
             this.value = value;
+        }
+
+        protected DateTime value
+        {
+            get
+            {
+                return this._value;
+            }
+
+            set
+            {
+                this._value = value;
+                if (timeZoneInfo != null && timeZoneInfo.IsDaylightSavingTime(this.value))
+                {
+                    // QuickBooks does not handle DST. They will send the date with no DST applied.
+                    // In order to get the correct date, we modify the date if a timezone was provided and
+                    // apply the daylight time saving manually if the date is currently in DST mode.
+                    foreach (var adjustmentRule in timeZoneInfo.GetAdjustmentRules())
+                    {
+                        if (this._value.CompareTo(adjustmentRule.DateStart) > 0 && this._value.CompareTo(adjustmentRule.DateEnd) < 0)
+                        {
+                            this._value = this.value.Add(-adjustmentRule.DaylightDelta);
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         public override string ToString()

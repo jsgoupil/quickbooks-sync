@@ -34,6 +34,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,6 +51,7 @@
     <Compile Include="Objects\Types\PERCENTTYPE.cs" />
     <Compile Include="Objects\Types\QUANTYPE.cs" />
     <Compile Include="Objects\Types\PRICETYPE.cs" />
+    <Compile Include="QbXmlResponseOptions.cs" />
     <Compile Include="QbXmlSerializer.cs" />
     <Compile Include="Objects\ObjectItems.cs" />
     <Compile Include="Objects\QbIteratorRequest.cs" />
