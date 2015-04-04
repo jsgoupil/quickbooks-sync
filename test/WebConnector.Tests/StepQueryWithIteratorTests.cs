@@ -4,6 +4,7 @@ using NUnit.Framework;
 using QbSync.QbXml;
 using QbSync.QbXml.Objects;
 using QbSync.WebConnector.Messages;
+using QbSync.WebConnector.Tests.Helpers;
 using System;
 using System.Xml;
 
@@ -176,7 +177,7 @@ namespace QbSync.WebConnector.Tests
 
             var qbXmlResponseOptions = new QbXmlResponseOptions
             {
-                TimeZoneBugFix = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time")
+                TimeZoneBugFix = QuickBooksTestHelper.GetPacificStandardTimeZoneInfo()
             };
 
             var stepQueryWithIteratorMock = new Mock<StepQueryResponseBase<CustomerQueryRqType, CustomerQueryRsType>>();
