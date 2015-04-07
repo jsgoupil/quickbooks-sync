@@ -130,7 +130,10 @@ namespace QbSync.QbXml.Objects
                 itemsElementNameValue = null;
             }
 
-            itemsElementNameProperty.SetValue(instance, itemsElementNameValue.ToArray(), null);
+            if (itemsElementNameValue != null)
+            {
+                itemsElementNameProperty.SetValue(instance, itemsElementNameValue.ToArray(), null);
+            }
         }
     }
 }
