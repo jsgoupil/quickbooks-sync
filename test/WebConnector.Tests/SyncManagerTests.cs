@@ -175,6 +175,26 @@ namespace QbSync.WebConnector.Tests
 
         [Test]
         [SetupValidTicket]
+        public void SendRequestXML_WithFirstResponse()
+        {
+            var guid = Guid.NewGuid().ToString();
+            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var initial = "INITIAL";
+            syncManagerMock
+                .Protected()
+                .Setup("ProcessClientInformation", ItExpr.IsAny<AuthenticatedTicket>(), ItExpr.IsAny<string>());
+
+            syncManagerMock.CallBase = true;
+
+            var result = syncManagerMock.Object.SendRequestXML(guid, initial, null, null, 1, 1);
+
+            syncManagerMock
+                .Protected()
+                .Verify("ProcessClientInformation", Times.Once(), ItExpr.IsAny<AuthenticatedTicket>(), ItExpr.Is<string>(m => m == initial));
+        }
+
+        [Test]
+        [SetupValidTicket]
         public void SendRequestXML_WithValidTicket_FirstStepHasWork()
         {
             var guid = Guid.NewGuid().ToString();

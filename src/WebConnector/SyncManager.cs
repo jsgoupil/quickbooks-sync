@@ -124,8 +124,12 @@ namespace QbSync.WebConnector
                 var authenticatedTicket = authenticator.GetAuthenticationFromTicket(ticket);
                 LogMessage(authenticatedTicket, LogMessageType.Send, LogDirection.In, ticket, strHCPResponse, strCompanyFileName, qbXMLCountry, qbXMLMajorVers.ToString(), qbXMLMinorVers.ToString());
 
-                var result = string.Empty;
+                if (!string.IsNullOrWhiteSpace(strHCPResponse))
+                {
+                    ProcessClientInformation(authenticatedTicket, strHCPResponse);
+                }
 
+                var result = string.Empty;
                 if (authenticatedTicket != null)
                 {
                     StepQueryResponse stepQueryResponse = null;
@@ -383,6 +387,15 @@ namespace QbSync.WebConnector
         protected internal virtual Version GetMinimumRequiredVersion()
         {
             return new Version(2, 1, 0, 30);
+        }
+
+        /// <summary>
+        /// Process the response sent for the first time by the WebConnector.
+        /// </summary>
+        /// <param name="authenticatedTicket">The ticket.</param>
+        /// <param name="response">First Message.</param>
+        protected virtual void ProcessClientInformation(AuthenticatedTicket authenticatedTicket, string response)
+        {
         }
 
         /// <summary>
