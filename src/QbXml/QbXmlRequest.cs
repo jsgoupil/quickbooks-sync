@@ -44,20 +44,19 @@ namespace QbSync.QbXml
                 ItemsElementName = Enumerable.Repeat<ItemsChoiceType99>(ItemsChoiceType99.QBXMLMsgsRq, qbxmlMsgsRqList.Count()).ToArray()
             };
 
-            XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
+            using (MemoryStream memoryStream = new MemoryStream())
+            using (XmlWriter xmlWriter = new QbXmlTextWriter(memoryStream, Encoding.UTF8))
             {
-                Indent = false,
-                OmitXmlDeclaration = false,
-                Encoding = Encoding.UTF8
-            };
-            using (StringWriter stringWriter = new StringWriter())
-            using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter, xmlWriterSettings))
-            {
+                xmlWriter.WriteProcessingInstruction("xml", "version=\"1.0\" encoding=\"utf-8\"");
                 xmlWriter.WriteProcessingInstruction("qbxml", "version=\"13.0\"");
                 var ns = new XmlSerializerNamespaces();
                 ns.Add("", "");
                 QbXmlSerializer.Instance.XmlSerializer.Serialize(xmlWriter, qbXml, ns);
-                return stringWriter.ToString();
+
+                xmlWriter.Flush();
+                memoryStream.Position = 0;
+                var streamReader = new StreamReader(memoryStream);
+                return streamReader.ReadToEnd();
             }
         }
     }

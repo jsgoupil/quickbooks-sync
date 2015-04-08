@@ -34,6 +34,25 @@ namespace QbSync.QbXml.Tests.QbXml
         }
 
         [Test]
+        public void BasicCustomerQueryRequestWithAccentTest()
+        {
+            var request = new QbXmlRequest();
+            var innerRequest = new CustomerQueryRqType();
+            innerRequest.NameFilter = new NameFilter
+            {
+                MatchCriterion = MatchCriterion.Contains,
+                Name = "Jean-Sébastien Goupil"
+            };
+            request.AddToSingle(innerRequest);
+            var xml = request.GetRequest();
+
+            XmlDocument requestXmlDoc = new XmlDocument();
+            requestXmlDoc.LoadXml(xml);
+
+            Assert.IsTrue(xml.Contains("Jean-S&#233;bastien Goupil"));
+        }
+
+        [Test]
         public void BasicCustomerWhenCallingMaxReturnedMultipleTimes()
         {
             var request = new QbXmlRequest();
