@@ -34,6 +34,7 @@ namespace QbSync.XsdGenerator
             var removeFields = new string[] { "iteratorFieldSpecified" };
             var stringToIntProperties = new string[] { "iteratorRemainingCount" };
             var stringToIntFields = new string[] { "iteratorRemainingCountField" };
+            AddRestriction();
             AddItemsProperties();
             RemoveProperties(removeProperties);
             RemoveFields(removeFields);
@@ -293,11 +294,133 @@ namespace QbSync.XsdGenerator
             }
         }
 
-        private void AddItemsProperties()
+        private XmlSchemaMaxLengthFacet GetStringRestriction(XmlSchemaElement xmlSchemaElement)
         {
-            var i = 0;
+            var xmlSchemaSimpleType = xmlSchemaElement.SchemaType as XmlSchemaSimpleType;
+
+            if (xmlSchemaSimpleType != null)
+            {
+                var xmlSchemaSimpleTypeRestriction = xmlSchemaSimpleType.Content as XmlSchemaSimpleTypeRestriction;
+
+                if (xmlSchemaSimpleTypeRestriction != null)
+                {
+                    return xmlSchemaSimpleTypeRestriction.Facets.OfType<XmlSchemaMaxLengthFacet>().FirstOrDefault();
+                }
+            }
+
+            return null;
+        }
+
+        private XmlSchemaElement GetSchemaElement(XmlSchemaComplexType xmlSchemaComplexType, string name)
+        {
+            var xmlSchemaSequence = xmlSchemaComplexType.ContentTypeParticle as XmlSchemaSequence;
+            if (xmlSchemaSequence != null)
+            {
+                var xmlSchemaElementFound = xmlSchemaSequence.Items.OfType<XmlSchemaElement>()
+                    .FirstOrDefault(m => m.Name == name);
+
+                // Let's try to search in the choices.
+                if (xmlSchemaElementFound == null)
+                {
+                    foreach (var choice in xmlSchemaSequence.Items.OfType<XmlSchemaChoice>())
+                    {
+                        xmlSchemaElementFound = choice.Items.OfType<XmlSchemaElement>().FirstOrDefault(m => m.Name == name);
+                        if (xmlSchemaElementFound != null)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                return xmlSchemaElementFound;
+            }
+
+            return null;
+        }
+
+        private void AddStringLengthAttribute(CodeMemberProperty codeMemberProperty, int maxLength)
+        {
+            CodeAttributeDeclaration stringLengthAttribute = new CodeAttributeDeclaration("System.ComponentModel.DataAnnotations.StringLength", new CodeAttributeArgument(new CodePrimitiveExpression(maxLength)));
+            codeMemberProperty.CustomAttributes.Add(stringLengthAttribute);
+        }
+
+        private CodeVariableReferenceExpression AddSubstringSetStatement(CodeStatementCollection setStatement, int maxLength)
+        {
+            // var temp = value;
+            // if (temp != null)
+            // {
+            //     temp = temp.Substring(0, Math.Min(temp.Length, maxLength));
+            // }
+
+
+            var declaration = new CodeVariableDeclarationStatement(typeof(string), "temp", new CodeVariableReferenceExpression("value"));
+            var tempVariable = new CodeVariableReferenceExpression("temp");
+            var ifStatement =
+                new CodeConditionStatement(
+                    new CodeBinaryOperatorExpression(
+                        tempVariable,
+                        CodeBinaryOperatorType.IdentityInequality,
+                        new CodePrimitiveExpression()
+                    )
+                );
+
+            var mathMin = new CodeMethodInvokeExpression(
+                new CodeMethodReferenceExpression(new CodeVariableReferenceExpression("Math"), "Min"),
+                new CodePrimitiveExpression(maxLength),
+                new CodePropertyReferenceExpression(tempVariable, "Length")
+                );
+
+            var tempSubstring = new CodeMethodInvokeExpression(
+                    new CodeMethodReferenceExpression(tempVariable, "Substring"),
+                    new CodePrimitiveExpression(0),
+                    mathMin
+                );
+
+            var trueStatement = new CodeAssignStatement(
+                tempVariable,
+                tempSubstring
+            );
+
+            ifStatement.TrueStatements.Add(trueStatement);
+
+            setStatement.Add(declaration);
+            setStatement.Add(ifStatement);
+
+            return tempVariable;
+        }
+
+        private void AddRestriction()
+        {
+            var xmlSchemaComplexType = GetXmlSchemaComplexType();
+
+            if (xmlSchemaComplexType != null)
+            {
+                foreach (var codeMember in codeMemberProperties)
+                {
+                    if (codeMember.Type.BaseType == "System.String" && codeMember.Type.ArrayRank == 0)
+                    {
+                        var schemaElement = GetSchemaElement(xmlSchemaComplexType, codeMember.Name);
+                        if (schemaElement != null)
+                        {
+                            var restriction = GetStringRestriction(schemaElement);
+                            if (restriction != null)
+                            {
+                                var intValue = int.Parse(restriction.Value);
+                                AddStringLengthAttribute(codeMember, intValue);
+                                var originalLeftStatement = ((System.CodeDom.CodeAssignStatement)codeMember.SetStatements[0]).Left;
+                                codeMember.SetStatements.Clear();
+                                var tempVariable = AddSubstringSetStatement(codeMember.SetStatements, intValue);
+                                codeMember.SetStatements.Add(new CodeAssignStatement(originalLeftStatement, tempVariable));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private XmlSchemaComplexType GetXmlSchemaComplexType()
+        {
             var xmlSchemaComplexType = GetXmlSchemaComplexTypeQuery(xsds, codeType.Name).FirstOrDefault();
-            List<XmlSchemaObject> choices = null;
             if (xmlSchemaComplexType == null)
             {
                 var xmlSchemaElement = GetXmlSchemaElementFromTypeQuery(xsds, codeType.Name).FirstOrDefault();
@@ -306,6 +429,15 @@ namespace QbSync.XsdGenerator
                     xmlSchemaComplexType = xmlSchemaElement.SchemaType as XmlSchemaComplexType; // Let's check if we have a complex type within the element
                 }
             }
+
+            return xmlSchemaComplexType;
+        }
+
+        private void AddItemsProperties()
+        {
+            var xmlSchemaComplexType = GetXmlSchemaComplexType();
+            var i = 0;
+            List<XmlSchemaObject> choices = null;
             if (xmlSchemaComplexType != null)
             {
                 choices = FindTopLevelSchemaChoices(xmlSchemaComplexType.ContentTypeParticle).Cast<XmlSchemaObject>().ToList();
@@ -333,12 +465,12 @@ namespace QbSync.XsdGenerator
                     codeMemberFields.First(m => m.Name == codeMember.Name.ToLower() + "Field").Type = objectType;
                 }
 
-                AddAppropriateProperties(codeMember, nameOrder);
+                AddAppropriateProperties(codeMember, nameOrder, xmlSchemaComplexType);
                 i++;
             }
         }
 
-        private void AddAppropriateProperties(CodeMemberProperty codeMemberProperty, IEnumerable<string> nameOrder)
+        private void AddAppropriateProperties(CodeMemberProperty codeMemberProperty, IEnumerable<string> nameOrder, XmlSchemaComplexType xmlSchemaComplexType)
         {
             var newMembers = new List<EnhancedProperty>();
             string withEnumChoiceName = null;
@@ -371,14 +503,14 @@ namespace QbSync.XsdGenerator
             foreach (var enhancedProperty in newMembers)
             {
                 var isArray = CheckIfPropertyIsArray(codeType.Name, enhancedProperty.Name);
-                CodeMemberProperty property = CreateAppropriateProperty(withEnumChoiceType, enhancedProperty, isArray, codeMemberProperty.Name);
+                CodeMemberProperty property = CreateAppropriateProperty(withEnumChoiceType, enhancedProperty, isArray, codeMemberProperty.Name, xmlSchemaComplexType);
                 codeType.Members.Add(property);
             }
 
             AddObjectItems(codeType, withEnumChoiceType, !codeMemberProperty.Name.StartsWith("Items"), codeMemberProperty, nameOrder);
         }
 
-        private CodeMemberProperty CreateAppropriateProperty(string withEnumChoice, EnhancedProperty enhancedProperty, bool isArray, string codeTypeMemberName)
+        private CodeMemberProperty CreateAppropriateProperty(string withEnumChoice, EnhancedProperty enhancedProperty, bool isArray, string codeTypeMemberName, XmlSchemaComplexType xmlSchemaComplexType)
         {
             CodeMemberProperty property = null;
             if (string.IsNullOrEmpty(withEnumChoice))
@@ -389,7 +521,7 @@ namespace QbSync.XsdGenerator
                 }
                 else
                 {
-                    property = CreateSinglePropertyWithoutChoice(enhancedProperty, codeTypeMemberName);
+                    property = CreateSinglePropertyWithoutChoice(enhancedProperty, codeTypeMemberName, xmlSchemaComplexType);
                 }
             }
             else
@@ -400,7 +532,7 @@ namespace QbSync.XsdGenerator
                 }
                 else
                 {
-                    property = CreateSinglePropertyWithChoice(enhancedProperty, withEnumChoice, codeTypeMemberName);
+                    property = CreateSinglePropertyWithChoice(enhancedProperty, withEnumChoice, codeTypeMemberName, xmlSchemaComplexType);
                 }
             }
 
@@ -647,7 +779,7 @@ namespace QbSync.XsdGenerator
             return property;
         }
 
-        private CodeMemberProperty CreateSinglePropertyWithChoice(EnhancedProperty enhancedProperty, string choice, string codeTypeMemberName)
+        private CodeMemberProperty CreateSinglePropertyWithChoice(EnhancedProperty enhancedProperty, string choice, string codeTypeMemberName, XmlSchemaComplexType xmlSchemaComplexType)
         {
             var propertyName = "Object" + codeTypeMemberName;
             var property = CreateProperty(enhancedProperty, false);
@@ -662,19 +794,35 @@ namespace QbSync.XsdGenerator
                 )
             );
 
+            var saveReference = new CodeVariableReferenceExpression("value");
+            if (enhancedProperty.Type == "System.String")
+            {
+                var schemaElement = GetSchemaElement(xmlSchemaComplexType, enhancedProperty.Name);
+                if (schemaElement != null)
+                {
+                    var restriction = GetStringRestriction(schemaElement);
+                    if (restriction != null)
+                    {
+                        var intValue = int.Parse(restriction.Value);
+                        AddStringLengthAttribute(property, intValue);
+                        saveReference = AddSubstringSetStatement(property.SetStatements, intValue);
+                    }
+                }
+            }
+
             //ObjectItems.SetItem(choice.name, value);
             property.SetStatements.Add(
                 new CodeMethodInvokeExpression(
                     new CodeMethodReferenceExpression(new CodeVariableReferenceExpression(propertyName), "SetItem"),
                     new CodePropertyReferenceExpression(new CodeVariableReferenceExpression(choice), enhancedProperty.Name),
-                    new CodeVariableReferenceExpression("value")
+                    saveReference
                 )
             );
 
             return property;
         }
 
-        private CodeMemberProperty CreateSinglePropertyWithoutChoice(EnhancedProperty enhancedProperty, string codeTypeMemberName)
+        private CodeMemberProperty CreateSinglePropertyWithoutChoice(EnhancedProperty enhancedProperty, string codeTypeMemberName, XmlSchemaComplexType xmlSchemaComplexType)
         {
             var propertyName = "Object" + codeTypeMemberName;
             var property = CreateProperty(enhancedProperty, false);
@@ -689,12 +837,28 @@ namespace QbSync.XsdGenerator
                 )
             );
 
+            var saveReference = new CodeVariableReferenceExpression("value");
+            if (enhancedProperty.Type == "System.String")
+            {
+                var schemaElement = GetSchemaElement(xmlSchemaComplexType, enhancedProperty.Name);
+                if (schemaElement != null)
+                {
+                    var restriction = GetStringRestriction(schemaElement);
+                    if (restriction != null)
+                    {
+                        var intValue = int.Parse(restriction.Value);
+                        AddStringLengthAttribute(property, intValue);
+                        saveReference = AddSubstringSetStatement(property.SetStatements, intValue);
+                    }
+                }
+            }
+
             //ObjectItems.SetItem(name, value);
             property.SetStatements.Add(
                 new CodeMethodInvokeExpression(
                     new CodeMethodReferenceExpression(new CodeVariableReferenceExpression(propertyName), "SetItem"),
                     new CodePrimitiveExpression(enhancedProperty.Name),
-                    new CodeVariableReferenceExpression("value")
+                    saveReference
                 )
             );
 

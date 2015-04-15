@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Messages\Requests\CustomerAddRequestTests.cs" />
     <Compile Include="Messages\Requests\ItemNonInventoryAddRequestTests.cs" />
     <Compile Include="Messages\Requests\InvoiceModRequestTests.cs" />
     <Compile Include="Messages\Requests\InvoiceAddRequestTests.cs" />
