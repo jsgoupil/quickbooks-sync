@@ -18,7 +18,7 @@ namespace QbSync.QbXml.Tests.Helpers
             schemas.Add(string.Empty, "./Schemas/qbxmltypes130.xsd");
             schemas.Add(string.Empty, "./Schemas/qbxmlso130.xsd");
             schemas.Add(string.Empty, "./Schemas/qbxmlops130.xsd");
-            schemas.Add(string.Empty, "./Schemas/qbxml130.xsd");
+            schemas.Add(string.Empty, "./Schemas/qbxml130_modified.xsd");
 
             var doc = new XmlDocument();
             doc.Schemas.Add(schemas);

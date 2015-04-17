@@ -15,7 +15,7 @@
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
 <xsd:include schemaLocation="qbxmltypes130.xsd"/>
-<xsd:include schemaLocation="qbxml130.xsd"/>
+<xsd:include schemaLocation="qbxml130_modified.xsd"/>
 <xsd:include schemaLocation="qbxmlso130.xsd"/>
 
 

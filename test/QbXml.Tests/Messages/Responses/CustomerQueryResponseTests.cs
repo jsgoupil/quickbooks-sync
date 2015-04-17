@@ -87,5 +87,19 @@ namespace QbSync.QbXml.Tests.QbXml
 
             Assert.AreEqual(17, customer.TimeModified.ToDateTime().ToUniversalTime().Hour);
         }
+
+        [Test]
+        public void PreferredDeliveryMethod_Mail_ShouldBeValid()
+        {
+            var ret = "<CustomerRet><ListID>80000001-1422671082</ListID><TimeCreated>2015-04-03T10:06:17-08:00</TimeCreated><TimeModified>2015-04-03T10:06:17-08:00</TimeModified><EditSequence>1422671082</EditSequence><Name>Jean-S&#233;bastien Goupil</Name><FullName>Jean-S&#233;bastien Goupil</FullName><IsActive>true</IsActive><PreferredDeliveryMethod>Mail</PreferredDeliveryMethod></CustomerRet>";
+
+            var response = new QbXmlResponse();
+            var rs = response.GetSingleItemFromResponse<CustomerQueryRsType>(QuickBooksTestHelper.CreateQbXmlWithEnvelope(ret, "CustomerQueryRs"));
+            var customers = rs.CustomerRet;
+            var customer = customers[0];
+
+            Assert.AreEqual(1, customers.Length);
+            Assert.AreEqual(PreferredDeliveryMethod.Mail, customer.PreferredDeliveryMethod);
+        }
     }
 }
