@@ -52,5 +52,24 @@ namespace QbSync.QbXml.Tests.QbXml
             Assert.AreEqual(innerRequest.CustomerAdd.Name, requestXmlDoc.SelectSingleNode("//CustomerAdd/Name").InnerText);
             Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(xml));
         }
+
+        [Test]
+        public void UTF8CharactersMustBeEncoded()
+        {
+            var request = new QbXmlRequest();
+            var innerRequest = new CustomerAddRqType();
+            innerRequest.CustomerAdd = new CustomerAdd
+            {
+                Name = "Name",
+                Notes = "Note—1é"
+            };
+            request.AddToSingle(innerRequest);
+            var xml = request.GetRequest();
+
+            XmlDocument requestXmlDoc = new XmlDocument();
+            requestXmlDoc.LoadXml(xml);
+
+            Assert.IsTrue(xml.Contains("Note&#8212;1&#233;"));
+        }
     }
 }

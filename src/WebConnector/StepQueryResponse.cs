@@ -44,6 +44,13 @@ namespace QbSync.WebConnector
         bool GotoNextStep();
 
         /// <summary>
+        /// After receiving XML from the Web Connector, the step can decide to go to a specific step.
+        /// If you return a non null step, we will go to that step.
+        /// </summary>
+        /// <returns>Step name to go to. Null to continue.</returns>
+        string GotoStep();
+
+        /// <summary>
         /// Sets the options to be attached with the step.
         /// </summary>
         /// <param name="qbXmlResponseOptions">Options.</param>

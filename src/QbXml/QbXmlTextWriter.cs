@@ -14,7 +14,25 @@ namespace QbSync.QbXml
 
         public override void WriteString(string text)
         {
-            base.WriteRaw(HttpUtility.HtmlEncode(text));
+            base.WriteRaw(htmlEncodeSpecialCharacters(text));
+        }
+
+        private string htmlEncodeSpecialCharacters(string text)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (char c in text)
+            {
+                if (c > 127)
+                {
+                    sb.Append(string.Format("&#{0};", (int)c));
+                }
+                else
+                {
+                    sb.Append(c);
+                }
+            }
+
+            return sb.ToString();
         }
     }
 }

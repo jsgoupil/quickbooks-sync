@@ -402,6 +402,40 @@ namespace QbSync.WebConnector.Tests
 
         [Test]
         [SetupValidTicket]
+        public void ReceiveRequestXML_WithValidTicket_ValidResponseAndGoToStep()
+        {
+            var guid = Guid.NewGuid().ToString();
+            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            syncManagerMock
+                .Protected()
+                .Setup("SaveChanges");
+
+            syncManagerMock.CallBase = true;
+
+            var expectedResult = "step2";
+            var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
+            stepQueryResponseMock1
+                .Setup(m => m.ReceiveXML(AuthenticatedTicket, null, null, null))
+                .Returns(0);
+            stepQueryResponseMock1
+                .Setup(m => m.GotoStep())
+                .Returns(expectedResult);
+            stepQueryResponseMock1
+                .Setup(m => m.GetName())
+                .Returns("Mock1");
+
+            syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
+
+            var result = syncManagerMock.Object.ReceiveRequestXML(guid, null, null, null);
+
+            syncManagerMock
+                .Protected()
+                .Verify("SaveChanges", Times.Once());
+            Assert.AreEqual(expectedResult, AuthenticatedTicket.CurrentStep);
+        }
+
+        [Test]
+        [SetupValidTicket]
         public void ReceiveRequestXML_WithValidTicket_ValidResponseAndAndStaySameStep()
         {
             var guid = Guid.NewGuid().ToString();

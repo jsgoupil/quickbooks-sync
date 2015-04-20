@@ -47,6 +47,11 @@ namespace QbSync.WebConnector.Messages
             return -1;
         }
 
+        public virtual string GotoStep()
+        {
+            return null;
+        }
+
         public virtual bool GotoNextStep()
         {
             return true;

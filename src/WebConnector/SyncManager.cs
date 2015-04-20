@@ -198,8 +198,14 @@ namespace QbSync.WebConnector
 
                         if (result >= 0)
                         {
+                            var stepName = stepQueryResponse.GotoStep();
+
                             // We go to the next step if we are asked to
-                            if (stepQueryResponse.GotoNextStep())
+                            if (!string.IsNullOrEmpty(stepName))
+                            {
+                                authenticatedTicket.CurrentStep = stepName;
+                            }
+                            else if (stepQueryResponse.GotoNextStep())
                             {
                                 authenticatedTicket.CurrentStep = FindNextStepName(authenticatedTicket.CurrentStep);
                             }
