@@ -19,6 +19,7 @@ namespace QbSync.QbXml
 
         private string htmlEncodeSpecialCharacters(string text)
         {
+            text = HttpUtility.HtmlEncode(text);
             StringBuilder sb = new StringBuilder();
             foreach (char c in text)
             {
