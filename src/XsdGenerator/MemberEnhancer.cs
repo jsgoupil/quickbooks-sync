@@ -346,45 +346,19 @@ namespace QbSync.XsdGenerator
 
         private CodeVariableReferenceExpression AddSubstringSetStatement(CodeStatementCollection setStatement, int maxLength)
         {
-            // var temp = value;
-            // if (temp != null)
-            // {
-            //     temp = temp.Substring(0, Math.Min(temp.Length, maxLength));
-            // }
+            // var temp = QbNormalizer.NormalizeString(value, maxLength);
 
-
-            var declaration = new CodeVariableDeclarationStatement(typeof(string), "temp", new CodeVariableReferenceExpression("value"));
-            var tempVariable = new CodeVariableReferenceExpression("temp");
-            var ifStatement =
-                new CodeConditionStatement(
-                    new CodeBinaryOperatorExpression(
-                        tempVariable,
-                        CodeBinaryOperatorType.IdentityInequality,
-                        new CodePrimitiveExpression()
-                    )
-                );
-
-            var mathMin = new CodeMethodInvokeExpression(
-                new CodeMethodReferenceExpression(new CodeVariableReferenceExpression("Math"), "Min"),
-                new CodePrimitiveExpression(maxLength),
-                new CodePropertyReferenceExpression(tempVariable, "Length")
-                );
-
-            var tempSubstring = new CodeMethodInvokeExpression(
-                    new CodeMethodReferenceExpression(tempVariable, "Substring"),
-                    new CodePrimitiveExpression(0),
-                    mathMin
-                );
-
-            var trueStatement = new CodeAssignStatement(
-                tempVariable,
-                tempSubstring
+            var normalizeString = new CodeMethodInvokeExpression(
+                new CodeMethodReferenceExpression(new CodeVariableReferenceExpression("QbNormalizer"), "NormalizeString"),
+                new CodeExpression[] {
+                    new CodeVariableReferenceExpression("value"),
+                    new CodePrimitiveExpression(maxLength)
+                }
             );
 
-            ifStatement.TrueStatements.Add(trueStatement);
-
+            var declaration = new CodeVariableDeclarationStatement(typeof(string), "temp", normalizeString);
+            var tempVariable = new CodeVariableReferenceExpression("temp");
             setStatement.Add(declaration);
-            setStatement.Add(ifStatement);
 
             return tempVariable;
         }
