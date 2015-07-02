@@ -1,6 +1,7 @@
 ﻿using Moq;
 using Moq.Protected;
 using NUnit.Framework;
+using QbSync.QbXml;
 using QbSync.WebConnector.Tests.Helpers;
 using System;
 
@@ -165,7 +166,7 @@ namespace QbSync.WebConnector.Tests
                 .Setup("SaveChanges");
 
             syncManagerMock.CallBase = true;
-            var result = syncManagerMock.Object.SendRequestXML(guid, null, null, null, 1, 1);
+            var result = syncManagerMock.Object.SendRequestXML(guid, null, null, null, 13, 0);
 
             Assert.IsEmpty(result);
             syncManagerMock
@@ -186,7 +187,7 @@ namespace QbSync.WebConnector.Tests
 
             syncManagerMock.CallBase = true;
 
-            var result = syncManagerMock.Object.SendRequestXML(guid, initial, null, null, 1, 1);
+            var result = syncManagerMock.Object.SendRequestXML(guid, initial, null, null, 13, 0);
 
             syncManagerMock
                 .Protected()
@@ -205,6 +206,12 @@ namespace QbSync.WebConnector.Tests
 
             syncManagerMock.CallBase = true;
 
+            var versionValidator = new Mock<IVersionValidator>();
+            versionValidator
+                .Setup(m => m.ValidateVersion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(true);
+            syncManagerMock.Object.VersionValidator = versionValidator.Object;
+
             var expectedResult = "abc";
             var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
             stepQueryResponseMock1
@@ -216,13 +223,50 @@ namespace QbSync.WebConnector.Tests
 
             syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
 
-            var result = syncManagerMock.Object.SendRequestXML(guid, null, null, null, 1, 1);
+            var result = syncManagerMock.Object.SendRequestXML(guid, null, null, null, 13, 0);
 
             Assert.AreEqual(expectedResult, result);
             syncManagerMock
                 .Protected()
                 .Verify("SaveChanges", Times.Once());
             Assert.AreEqual(AuthenticatedTicket.InitialStep, AuthenticatedTicket.CurrentStep);
+        }
+
+        [Test]
+        [SetupValidTicket]
+        public void SendRequestXML_WithValidTicket_WithOldQbXML()
+        {
+            var guid = Guid.NewGuid().ToString();
+            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            syncManagerMock
+                .Protected()
+                .Setup("SaveChanges");
+
+            syncManagerMock.CallBase = true;
+
+            var versionValidator = new Mock<IVersionValidator>();
+            versionValidator
+                .Setup(m => m.ValidateVersion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(false);
+            syncManagerMock.Object.VersionValidator = versionValidator.Object;
+
+            var expectedResult = string.Empty;
+            var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
+            stepQueryResponseMock1
+                .Setup(m => m.SendXML(AuthenticatedTicket))
+                .Returns("abc");
+            stepQueryResponseMock1
+                .Setup(m => m.GetName())
+                .Returns("Mock1");
+
+            syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
+
+            var result = syncManagerMock.Object.SendRequestXML(guid, null, null, null, 12, 0);
+
+            Assert.AreEqual(expectedResult, result);
+            syncManagerMock
+                .Protected()
+                .Verify("SaveChanges", Times.Once());
         }
 
         [Test]
@@ -257,7 +301,7 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
             syncManagerMock.Object.RegisterStep(stepQueryResponseMock2.Object);
 
-            var result = syncManagerMock.Object.SendRequestXML(guid, null, null, null, 1, 1);
+            var result = syncManagerMock.Object.SendRequestXML(guid, null, null, null, 13, 0);
 
             Assert.AreEqual(expectedResult, result);
             syncManagerMock
@@ -306,7 +350,7 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock.Object.RegisterStep(stepQueryResponseMock2.Object);
             syncManagerMock.Object.RegisterStep(stepQueryResponseMock3.Object);
 
-            var result = syncManagerMock.Object.SendRequestXML(guid, null, null, null, 1, 1);
+            var result = syncManagerMock.Object.SendRequestXML(guid, null, null, null, 13, 0);
 
             Assert.AreEqual(expectedResult, result);
             syncManagerMock
@@ -337,7 +381,7 @@ namespace QbSync.WebConnector.Tests
 
             syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
 
-            var result = syncManagerMock.Object.SendRequestXML(guid, null, null, null, 1, 1);
+            var result = syncManagerMock.Object.SendRequestXML(guid, null, null, null, 13, 0);
 
             Assert.AreEqual(string.Empty, result);
             syncManagerMock
@@ -543,6 +587,34 @@ namespace QbSync.WebConnector.Tests
 
             syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
 
+            var result = syncManagerMock.Object.GetLastError(guid);
+
+            Assert.AreEqual(expectedResult, result);
+            syncManagerMock
+                .Protected()
+                .Verify("SaveChanges", Times.Once());
+            Assert.AreEqual(AuthenticatedTicket.InitialStep, AuthenticatedTicket.CurrentStep);
+        }
+
+        [Test]
+        [SetupValidTicket]
+        public void GetLastError_WithValidTicket_WrongVersion()
+        {
+            var guid = Guid.NewGuid().ToString();
+            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            syncManagerMock
+                .Protected()
+                .Setup("SaveChanges");
+
+            var versionValidator = new Mock<IVersionValidator>();
+            versionValidator
+                .Setup(m => m.IsValidTicket(It.IsAny<string>()))
+                .Returns(false);
+            syncManagerMock.Object.VersionValidator = versionValidator.Object;
+
+            syncManagerMock.CallBase = true;
+
+            var expectedResult = string.Format("The server requires QbXml version {0}.{1} or higher. Please upgrade QuickBooks.", QbXmlRequest.VERSION.Major, QbXmlRequest.VERSION.Minor);
             var result = syncManagerMock.Object.GetLastError(guid);
 
             Assert.AreEqual(expectedResult, result);

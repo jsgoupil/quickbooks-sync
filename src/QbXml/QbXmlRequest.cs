@@ -1,4 +1,5 @@
 ﻿using QbSync.QbXml.Objects;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace QbSync.QbXml
 {
     public class QbXmlRequest
     {
+        public static readonly Version VERSION = new Version(13, 0);
         private List<QBXMLMsgsRq> qbxmlMsgsRqList;
 
         public QbXmlRequest()
@@ -48,7 +50,7 @@ namespace QbSync.QbXml
             using (XmlWriter xmlWriter = new QbXmlTextWriter(memoryStream, Encoding.UTF8))
             {
                 xmlWriter.WriteProcessingInstruction("xml", "version=\"1.0\" encoding=\"utf-8\"");
-                xmlWriter.WriteProcessingInstruction("qbxml", "version=\"13.0\"");
+                xmlWriter.WriteProcessingInstruction("qbxml", string.Format("version=\"{0}.{1}\"", VERSION.Major, VERSION.Minor));
                 var ns = new XmlSerializerNamespaces();
                 ns.Add("", "");
                 QbXmlSerializer.Instance.XmlSerializer.Serialize(xmlWriter, qbXml, ns);

@@ -22,6 +22,12 @@ namespace QbSync.WebConnector
             set;
         }
 
+        public IVersionValidator VersionValidator
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// Authenticate a login/password and return important information regarding if more requests
         /// should be executed immediately.
@@ -132,26 +138,34 @@ namespace QbSync.WebConnector
                 var result = string.Empty;
                 if (authenticatedTicket != null)
                 {
-                    StepQueryResponse stepQueryResponse = null;
-                    while ((stepQueryResponse = FindStep(authenticatedTicket.CurrentStep)) != null)
-                    {
-                        stepQueryResponse.SetOptions(GetOptions(authenticatedTicket));
-                        result = stepQueryResponse.SendXML(authenticatedTicket);
-
-                        if (result == null)
-                        {
-                            authenticatedTicket.CurrentStep = FindNextStepName(authenticatedTicket.CurrentStep);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-
-                    // If we don't have more steps to execute, let's return nothing.
-                    if (result == null)
+                    // Check the version, if we can't have the minimum version, we must fail.
+                    if (VersionValidator != null && !VersionValidator.ValidateVersion(authenticatedTicket.Ticket, qbXMLCountry, qbXMLMajorVers, qbXMLMinorVers))
                     {
                         result = string.Empty;
+                    }
+                    else
+                    {
+                        StepQueryResponse stepQueryResponse = null;
+                        while ((stepQueryResponse = FindStep(authenticatedTicket.CurrentStep)) != null)
+                        {
+                            stepQueryResponse.SetOptions(GetOptions(authenticatedTicket));
+                            result = stepQueryResponse.SendXML(authenticatedTicket);
+
+                            if (result == null)
+                            {
+                                authenticatedTicket.CurrentStep = FindNextStepName(authenticatedTicket.CurrentStep);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+
+                        // If we don't have more steps to execute, let's return nothing.
+                        if (result == null)
+                        {
+                            result = string.Empty;
+                        }
                     }
                 }
 
@@ -245,12 +259,18 @@ namespace QbSync.WebConnector
 
                 if (authenticatedTicket != null)
                 {
-                    StepQueryResponse stepQueryResponse = FindStep(authenticatedTicket.CurrentStep);
-                    if (stepQueryResponse != null)
+                    if (VersionValidator != null && !VersionValidator.IsValidTicket(authenticatedTicket.Ticket))
                     {
-                        result = stepQueryResponse.LastError(authenticatedTicket);
+                        result = string.Format("The server requires QbXml version {0}.{1} or higher. Please upgrade QuickBooks.", QbXmlRequest.VERSION.Major, QbXmlRequest.VERSION.Minor);
                     }
-
+                    else
+                    {
+                        StepQueryResponse stepQueryResponse = FindStep(authenticatedTicket.CurrentStep);
+                        if (stepQueryResponse != null)
+                        {
+                            result = stepQueryResponse.LastError(authenticatedTicket);
+                        }
+                    }
                 }
 
                 LogMessage(authenticatedTicket, LogMessageType.GetError, LogDirection.Out, ticket, result);

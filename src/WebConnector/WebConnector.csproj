@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuthenticatedTicket.cs" />
+    <Compile Include="IVersionValidator.cs" />
     <Compile Include="IAuthenticator.cs" />
     <Compile Include="LogDirection.cs" />
     <Compile Include="LogMessageType.cs" />

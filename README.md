@@ -197,6 +197,16 @@ By default, if you derive from the iterator, the query is batched with 100 objec
 
 The requests and responses that support an iterator implements `QbIteratorRequest` and `QbIteratorResponse`.
 
+### Step 5. Create a VersionValidator ###
+QuickBooks supports multiple versions. However, this package supports only version 13.0 and above. In order to validate a request, you must provide a `IVersionValidator`.
+The reason this package cannot validate the version is because of the nature of the WebConnector: it takes 2 calls from the WebConnector to validate the version then warn the user.
+
+1. The first call sends a version to your server. You can validate the version and must save the ticket for reference in the second call.
+2. The second call, you need to tell the WebConnector the version was wrong based on the ticket saved in step 1.
+
+Since this is done with two requests, the first request must persist that the version is wrong based on the ticket.
+With `IsValidTicket`, simply check if the ticket has been saved in your database (as invalid). If you find the ticket in your database, you can safely remove it from it as this method will not be called again with the same ticket.
+
 ### Step X ###
 You can register other steps such as `UpdateCustomer`, `InvoiceQuery`, etc. Just make your own!
 
