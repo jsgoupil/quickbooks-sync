@@ -27,14 +27,14 @@ namespace QbSync.WebConnector.Tests
             var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
-                .Setup("OnException", ItExpr.IsAny<Exception>());
+                .Setup("OnException", ItExpr.IsAny<AuthenticatedTicket>(), ItExpr.IsAny<Exception>());
 
             syncManagerMock.CallBase = true;
             syncManagerMock.Object.Authenticate("user", "password");
 
             syncManagerMock
                 .Protected()
-                .Verify("OnException", Times.Once(), ItExpr.Is<Exception>(m => m.Message == "GetAuthenticationFromLogin must return a ticket."));
+                .Verify("OnException", Times.Once(), ItExpr.Is<AuthenticatedTicket>(m => m == null), ItExpr.Is<Exception>(m => m.Message == "GetAuthenticationFromLogin must return a ticket."));
         }
 
         [Test]
@@ -710,7 +710,7 @@ namespace QbSync.WebConnector.Tests
             var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
-                .Setup("OnException", ItExpr.IsAny<Exception>());
+                .Setup("OnException", ItExpr.IsAny<AuthenticatedTicket>(), ItExpr.IsAny<Exception>());
 
             syncManagerMock.CallBase = true;
 
@@ -728,7 +728,7 @@ namespace QbSync.WebConnector.Tests
             Assert.AreEqual(expectedResult, result);
             syncManagerMock
                 .Protected()
-                .Verify("OnException", Times.Once(), ex);
+                .Verify("OnException", Times.Once(), ItExpr.Is<AuthenticatedTicket>(m => m == AuthenticatedTicket), ItExpr.Is<Exception>(m => m.InnerException == ex));
         }
     }
 }

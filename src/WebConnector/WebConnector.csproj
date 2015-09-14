@@ -49,6 +49,7 @@
     <Compile Include="Messages\StepQueryResponseBase.cs" />
     <Compile Include="Messages\StepQueryWithIterator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QbSyncException.cs" />
     <Compile Include="QbWebConnectorSvc.cs">
       <SubType>Component</SubType>
     </Compile>

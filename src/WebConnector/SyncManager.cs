@@ -45,38 +45,49 @@ namespace QbSync.WebConnector
                     throw new Exception("GetAuthenticationFromLogin must return a ticket.");
                 }
 
-                LogMessage(authenticatedTicket, LogMessageType.Authenticate, LogDirection.In, authenticatedTicket.Ticket, login, password);
-
-                var ret = new string[4];
-                ret[0] = authenticatedTicket.Ticket;
-                ret[2] = string.Empty;
-                ret[3] = string.Empty; // Not used
-
-                if (authenticatedTicket.Authenticated == false)
+                try
                 {
-                    ret[1] = "nvu"; // Invalid user
-                }
-                else
-                {
-                    var waitTime = GetWaitTime(authenticatedTicket);
-                    if (waitTime == 0)
+                    LogMessage(authenticatedTicket, LogMessageType.Authenticate, LogDirection.In, authenticatedTicket.Ticket, login, password);
+
+                    var ret = new string[4];
+                    ret[0] = authenticatedTicket.Ticket;
+                    ret[2] = string.Empty;
+                    ret[3] = string.Empty; // Not used
+
+                    if (authenticatedTicket.Authenticated == false)
                     {
-                        ret[1] = string.Empty; // Use the company that is opened on the client.
+                        ret[1] = "nvu"; // Invalid user
                     }
                     else
                     {
-                        ret[1] = "none"; // No work is necessary
-                        ret[2] = waitTime.ToString();
+                        var waitTime = GetWaitTime(authenticatedTicket);
+                        if (waitTime == 0)
+                        {
+                            ret[1] = string.Empty; // Use the company that is opened on the client.
+                        }
+                        else
+                        {
+                            ret[1] = "none"; // No work is necessary
+                            ret[2] = waitTime.ToString();
+                        }
                     }
+
+                    LogMessage(authenticatedTicket, LogMessageType.Authenticate, LogDirection.Out, authenticatedTicket.Ticket, ret);
+
+                    return ret;
                 }
-
-                LogMessage(authenticatedTicket, LogMessageType.Authenticate, LogDirection.Out, authenticatedTicket.Ticket, ret);
-
-                return ret;
+                catch (Exception ex)
+                {
+                    throw new QbSyncException(authenticatedTicket, ex);
+                }
+            }
+            catch (QbSyncException ex)
+            {
+                OnException(ex.Ticket, ex);
             }
             catch (Exception ex)
             {
-                OnException(ex);
+                OnException(null, ex);
             }
             finally
             {
@@ -128,54 +139,66 @@ namespace QbSync.WebConnector
             try
             {
                 var authenticatedTicket = authenticator.GetAuthenticationFromTicket(ticket);
-                LogMessage(authenticatedTicket, LogMessageType.Send, LogDirection.In, ticket, strHCPResponse, strCompanyFileName, qbXMLCountry, qbXMLMajorVers.ToString(), qbXMLMinorVers.ToString());
 
-                if (!string.IsNullOrWhiteSpace(strHCPResponse))
+                try
                 {
-                    ProcessClientInformation(authenticatedTicket, strHCPResponse);
-                }
+                    LogMessage(authenticatedTicket, LogMessageType.Send, LogDirection.In, ticket, strHCPResponse, strCompanyFileName, qbXMLCountry, qbXMLMajorVers.ToString(), qbXMLMinorVers.ToString());
 
-                var result = string.Empty;
-                if (authenticatedTicket != null)
-                {
-                    // Check the version, if we can't have the minimum version, we must fail.
-                    if (VersionValidator != null && !VersionValidator.ValidateVersion(authenticatedTicket.Ticket, qbXMLCountry, qbXMLMajorVers, qbXMLMinorVers))
+                    if (!string.IsNullOrWhiteSpace(strHCPResponse))
                     {
-                        result = string.Empty;
+                        ProcessClientInformation(authenticatedTicket, strHCPResponse);
                     }
-                    else
+
+                    var result = string.Empty;
+                    if (authenticatedTicket != null)
                     {
-                        StepQueryResponse stepQueryResponse = null;
-                        while ((stepQueryResponse = FindStep(authenticatedTicket.CurrentStep)) != null)
-                        {
-                            stepQueryResponse.SetOptions(GetOptions(authenticatedTicket));
-                            result = stepQueryResponse.SendXML(authenticatedTicket);
-
-                            if (result == null)
-                            {
-                                authenticatedTicket.CurrentStep = FindNextStepName(authenticatedTicket.CurrentStep);
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-
-                        // If we don't have more steps to execute, let's return nothing.
-                        if (result == null)
+                        // Check the version, if we can't have the minimum version, we must fail.
+                        if (VersionValidator != null && !VersionValidator.ValidateVersion(authenticatedTicket.Ticket, qbXMLCountry, qbXMLMajorVers, qbXMLMinorVers))
                         {
                             result = string.Empty;
                         }
+                        else
+                        {
+                            StepQueryResponse stepQueryResponse = null;
+                            while ((stepQueryResponse = FindStep(authenticatedTicket.CurrentStep)) != null)
+                            {
+                                stepQueryResponse.SetOptions(GetOptions(authenticatedTicket));
+                                result = stepQueryResponse.SendXML(authenticatedTicket);
+
+                                if (result == null)
+                                {
+                                    authenticatedTicket.CurrentStep = FindNextStepName(authenticatedTicket.CurrentStep);
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+
+                            // If we don't have more steps to execute, let's return nothing.
+                            if (result == null)
+                            {
+                                result = string.Empty;
+                            }
+                        }
                     }
+
+                    LogMessage(authenticatedTicket, LogMessageType.Send, LogDirection.Out, ticket, result);
+
+                    return result;
                 }
-
-                LogMessage(authenticatedTicket, LogMessageType.Send, LogDirection.Out, ticket, result);
-
-                return result;
+                catch (Exception ex)
+                {
+                    throw new QbSyncException(authenticatedTicket, ex);
+                }
+            }
+            catch (QbSyncException ex)
+            {
+                OnException(ex.Ticket, ex);
             }
             catch (Exception ex)
             {
-                OnException(ex);
+                OnException(null, ex);
             }
             finally
             {
@@ -198,42 +221,54 @@ namespace QbSync.WebConnector
             try
             {
                 var authenticatedTicket = authenticator.GetAuthenticationFromTicket(ticket);
-                LogMessage(authenticatedTicket, LogMessageType.Receive, LogDirection.In, ticket, response, hresult, message);
 
-                var result = -1;
-
-                if (authenticatedTicket != null)
+                try
                 {
-                    StepQueryResponse stepQueryResponse = FindStep(authenticatedTicket.CurrentStep);
-                    if (stepQueryResponse != null)
+                    LogMessage(authenticatedTicket, LogMessageType.Receive, LogDirection.In, ticket, response, hresult, message);
+
+                    var result = -1;
+
+                    if (authenticatedTicket != null)
                     {
-                        stepQueryResponse.SetOptions(GetOptions(authenticatedTicket));
-                        result = stepQueryResponse.ReceiveXML(authenticatedTicket, response, hresult, message);
-
-                        if (result >= 0)
+                        StepQueryResponse stepQueryResponse = FindStep(authenticatedTicket.CurrentStep);
+                        if (stepQueryResponse != null)
                         {
-                            var stepName = stepQueryResponse.GotoStep();
+                            stepQueryResponse.SetOptions(GetOptions(authenticatedTicket));
+                            result = stepQueryResponse.ReceiveXML(authenticatedTicket, response, hresult, message);
 
-                            // We go to the next step if we are asked to
-                            if (!string.IsNullOrEmpty(stepName))
+                            if (result >= 0)
                             {
-                                authenticatedTicket.CurrentStep = stepName;
-                            }
-                            else if (stepQueryResponse.GotoNextStep())
-                            {
-                                authenticatedTicket.CurrentStep = FindNextStepName(authenticatedTicket.CurrentStep);
+                                var stepName = stepQueryResponse.GotoStep();
+
+                                // We go to the next step if we are asked to
+                                if (!string.IsNullOrEmpty(stepName))
+                                {
+                                    authenticatedTicket.CurrentStep = stepName;
+                                }
+                                else if (stepQueryResponse.GotoNextStep())
+                                {
+                                    authenticatedTicket.CurrentStep = FindNextStepName(authenticatedTicket.CurrentStep);
+                                }
                             }
                         }
                     }
+
+                    LogMessage(authenticatedTicket, LogMessageType.Receive, LogDirection.Out, ticket, result.ToString());
+
+                    return result;
                 }
-
-                LogMessage(authenticatedTicket, LogMessageType.Receive, LogDirection.Out, ticket, result.ToString());
-
-                return result;
+                catch (Exception ex)
+                {
+                    throw new QbSyncException(authenticatedTicket, ex);
+                }
+            }
+            catch (QbSyncException ex)
+            {
+                OnException(ex.Ticket, ex);
             }
             catch (Exception ex)
             {
-                OnException(ex);
+                OnException(null, ex);
             }
             finally
             {
@@ -253,33 +288,45 @@ namespace QbSync.WebConnector
             try
             {
                 var authenticatedTicket = authenticator.GetAuthenticationFromTicket(ticket);
-                LogMessage(authenticatedTicket, LogMessageType.GetError, LogDirection.In, ticket);
 
-                var result = string.Empty;
-
-                if (authenticatedTicket != null)
+                try
                 {
-                    if (VersionValidator != null && !VersionValidator.IsValidTicket(authenticatedTicket.Ticket))
+                    LogMessage(authenticatedTicket, LogMessageType.GetError, LogDirection.In, ticket);
+
+                    var result = string.Empty;
+
+                    if (authenticatedTicket != null)
                     {
-                        result = string.Format("The server requires QbXml version {0}.{1} or higher. Please upgrade QuickBooks.", QbXmlRequest.VERSION.Major, QbXmlRequest.VERSION.Minor);
-                    }
-                    else
-                    {
-                        StepQueryResponse stepQueryResponse = FindStep(authenticatedTicket.CurrentStep);
-                        if (stepQueryResponse != null)
+                        if (VersionValidator != null && !VersionValidator.IsValidTicket(authenticatedTicket.Ticket))
                         {
-                            result = stepQueryResponse.LastError(authenticatedTicket);
+                            result = string.Format("The server requires QbXml version {0}.{1} or higher. Please upgrade QuickBooks.", QbXmlRequest.VERSION.Major, QbXmlRequest.VERSION.Minor);
+                        }
+                        else
+                        {
+                            StepQueryResponse stepQueryResponse = FindStep(authenticatedTicket.CurrentStep);
+                            if (stepQueryResponse != null)
+                            {
+                                result = stepQueryResponse.LastError(authenticatedTicket);
+                            }
                         }
                     }
+
+                    LogMessage(authenticatedTicket, LogMessageType.GetError, LogDirection.Out, ticket, result);
+
+                    return result;
                 }
-
-                LogMessage(authenticatedTicket, LogMessageType.GetError, LogDirection.Out, ticket, result);
-
-                return result;
+                catch (Exception ex)
+                {
+                    throw new QbSyncException(authenticatedTicket, ex);
+                }
+            }
+            catch (QbSyncException ex)
+            {
+                OnException(ex.Ticket, ex);
             }
             catch (Exception ex)
             {
-                OnException(ex);
+                OnException(null, ex);
             }
             finally
             {
@@ -301,21 +348,33 @@ namespace QbSync.WebConnector
             try
             {
                 var authenticatedTicket = authenticator.GetAuthenticationFromTicket(ticket);
-                LogMessage(authenticatedTicket, LogMessageType.Error, LogDirection.In, ticket, hresult, message);
 
-                var result = "done";
-
-                if (authenticatedTicket != null)
+                try
                 {
+                    LogMessage(authenticatedTicket, LogMessageType.Error, LogDirection.In, ticket, hresult, message);
+
+                    var result = "done";
+
+                    if (authenticatedTicket != null)
+                    {
+                    }
+
+                    LogMessage(authenticatedTicket, LogMessageType.Error, LogDirection.Out, ticket, result);
+
+                    return result;
                 }
-
-                LogMessage(authenticatedTicket, LogMessageType.Error, LogDirection.Out, ticket, result);
-
-                return result;
+                catch (Exception ex)
+                {
+                    throw new QbSyncException(authenticatedTicket, ex);
+                }
+            }
+            catch (QbSyncException ex)
+            {
+                OnException(ex.Ticket, ex);
             }
             catch (Exception ex)
             {
-                OnException(ex);
+                OnException(null, ex);
             }
             finally
             {
@@ -335,22 +394,34 @@ namespace QbSync.WebConnector
             try
             {
                 var authenticatedTicket = authenticator.GetAuthenticationFromTicket(ticket);
-                LogMessage(authenticatedTicket, LogMessageType.Close, LogDirection.In, ticket);
 
-                var result = "Invalid Ticket";
-
-                if (authenticatedTicket != null)
+                try
                 {
-                    result = "Sync Completed";
+                    LogMessage(authenticatedTicket, LogMessageType.Close, LogDirection.In, ticket);
+
+                    var result = "Invalid Ticket";
+
+                    if (authenticatedTicket != null)
+                    {
+                        result = "Sync Completed";
+                    }
+
+                    LogMessage(authenticatedTicket, LogMessageType.Error, LogDirection.Out, ticket, result);
+
+                    return result;
                 }
-
-                LogMessage(authenticatedTicket, LogMessageType.Error, LogDirection.Out, ticket, result);
-
-                return result;
+                catch (Exception ex)
+                {
+                    throw new QbSyncException(authenticatedTicket, ex);
+                }
+            }
+            catch (QbSyncException ex)
+            {
+                OnException(ex.Ticket, ex);
             }
             catch (Exception ex)
             {
-                OnException(ex);
+                OnException(null, ex);
             }
             finally
             {
@@ -372,8 +443,9 @@ namespace QbSync.WebConnector
         /// <summary>
         /// Called when an exception occurs.
         /// </summary>
+        /// <param name="ticket">The ticket if found. It might be null if no ticket has been provided or if the code failed when trying to create the authenticated ticket.</param>
         /// <param name="exception">Exception.</param>
-        protected internal virtual void OnException(Exception exception)
+        protected internal virtual void OnException(AuthenticatedTicket ticket, Exception exception)
         {
         }
 
