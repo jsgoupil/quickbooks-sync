@@ -8,6 +8,7 @@ namespace QbSync.WebConnector.Messages
         where Y : class, QbIteratorResponse, QbResponse, new()
     {
         internal const string IteratorKey = "Iterator";
+        private const string MaxReturnedDefault = "100";
         private bool gotoNextStep = true;
 
         public StepQueryWithIterator()
@@ -26,7 +27,14 @@ namespace QbSync.WebConnector.Messages
                 request.iteratorID = savedMessage;
             }
 
-            request.MaxReturned = "100";
+            int maxVal;
+            bool isValid = int.TryParse(request.MaxReturned, out maxVal);
+
+            if (!isValid || (isValid && (maxVal < 1)))
+            {
+                // Not a valid max returned value. Set to 100 by default.
+                request.MaxReturned = MaxReturnedDefault;
+            }
 
             return base.ExecuteRequest(authenticatedTicket, request);
         }

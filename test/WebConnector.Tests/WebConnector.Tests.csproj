@@ -66,6 +66,7 @@
     <Compile Include="Helpers\QuickBooksTestHelper.cs" />
     <Compile Include="Helpers\SetupValidTicketAttribute.cs" />
     <Compile Include="Helpers\SetupInvalidTicketAttribute.cs" />
+    <Compile Include="Helpers\StepQueryWithIteratorMaxReturnedHarness.cs" />
     <Compile Include="StepQueryWithIteratorTests.cs" />
     <Compile Include="SyncManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
