@@ -6,6 +6,7 @@ using QbSync.QbXml.Objects;
 using QbSync.WebConnector.Messages;
 using QbSync.WebConnector.Tests.Helpers;
 using System;
+using System.Reflection;
 using System.Xml;
 
 namespace QbSync.WebConnector.Tests
@@ -236,6 +237,116 @@ namespace QbSync.WebConnector.Tests
             stepQueryWithIteratorMock
                 .Protected()
                 .Verify("ExecuteResponse", Times.Once(), ItExpr.IsAny<AuthenticatedTicket>(), ItExpr.Is<CustomerQueryRsType>(m => m.CustomerRet[0].TimeModified.ToDateTime().ToUniversalTime().Hour == expectedHour));
+        }
+
+        [Test]
+        public void CustomerQueryWithIteratorInvalidMaxReturned()
+        {
+            const int expectedMaxResult = 100;
+
+            var defaultMaxResult = "INVALID_MAX_RETURN_VALUE";
+            var authenticatedTicket = new AuthenticatedTicket
+            {
+                Ticket = Guid.NewGuid().ToString(),
+                CurrentStep = "step4"
+            };
+
+            var stepQueryWithIteratorMock = new Mock<StepQueryWithIteratorMaxReturnedHarness>(defaultMaxResult);
+            stepQueryWithIteratorMock.CallBase = true;
+
+            var xml = stepQueryWithIteratorMock.Object.SendXML(authenticatedTicket);
+
+            XmlDocument requestXmlDoc = new XmlDocument();
+            requestXmlDoc.LoadXml(xml);
+
+            var node = requestXmlDoc.SelectSingleNode("//CustomerQueryRq");
+
+            Assert.IsNotNull(node);
+            Assert.AreEqual("Start", node.Attributes.GetNamedItem("iterator").Value);
+            Assert.IsNotNull(node.SelectSingleNode("MaxReturned"));
+            Assert.AreEqual(expectedMaxResult.ToString(), node.SelectSingleNode("MaxReturned").InnerText);
+        }
+
+        [Test]
+        public void CustomerQueryWithIteratorZeroMaxReturned()
+        {
+            const int expectedMaxResult = 100;
+
+            var defaultMaxResult = "0";
+            var authenticatedTicket = new AuthenticatedTicket
+            {
+                Ticket = Guid.NewGuid().ToString(),
+                CurrentStep = "step4"
+            };
+
+            var stepQueryWithIteratorMock = new Mock<StepQueryWithIteratorMaxReturnedHarness>(defaultMaxResult);
+            stepQueryWithIteratorMock.CallBase = true;
+
+            var xml = stepQueryWithIteratorMock.Object.SendXML(authenticatedTicket);
+
+            XmlDocument requestXmlDoc = new XmlDocument();
+            requestXmlDoc.LoadXml(xml);
+
+            var node = requestXmlDoc.SelectSingleNode("//CustomerQueryRq");
+
+            Assert.IsNotNull(node);
+            Assert.AreEqual("Start", node.Attributes.GetNamedItem("iterator").Value);
+            Assert.IsNotNull(node.SelectSingleNode("MaxReturned"));
+            Assert.AreEqual(expectedMaxResult.ToString(), node.SelectSingleNode("MaxReturned").InnerText);
+        }
+
+        [Test]
+        public void CustomerQueryWithIteratorNegativeMaxReturned()
+        {
+            const int expectedMaxResult = 100;
+
+            var defaultMaxResult = "-1";
+            var authenticatedTicket = new AuthenticatedTicket
+            {
+                Ticket = Guid.NewGuid().ToString(),
+                CurrentStep = "step4"
+            };
+
+            var stepQueryWithIteratorMock = new Mock<StepQueryWithIteratorMaxReturnedHarness>(defaultMaxResult);
+            stepQueryWithIteratorMock.CallBase = true;
+
+            var xml = stepQueryWithIteratorMock.Object.SendXML(authenticatedTicket);
+
+            XmlDocument requestXmlDoc = new XmlDocument();
+            requestXmlDoc.LoadXml(xml);
+
+            var node = requestXmlDoc.SelectSingleNode("//CustomerQueryRq");
+
+            Assert.IsNotNull(node);
+            Assert.AreEqual("Start", node.Attributes.GetNamedItem("iterator").Value);
+            Assert.IsNotNull(node.SelectSingleNode("MaxReturned"));
+            Assert.AreEqual(expectedMaxResult.ToString(), node.SelectSingleNode("MaxReturned").InnerText);
+        }
+
+        [Test]
+        public void CustomerQueryWithIteratorValidMaxReturned()
+        {
+            string defaultMaxResult = "500";
+            var authenticatedTicket = new AuthenticatedTicket
+            {
+                Ticket = Guid.NewGuid().ToString(),
+                CurrentStep = "step4"
+            };
+
+            var stepQueryWithIteratorMock = new Mock<StepQueryWithIteratorMaxReturnedHarness>(defaultMaxResult);
+            stepQueryWithIteratorMock.CallBase = true;
+
+            var xml = stepQueryWithIteratorMock.Object.SendXML(authenticatedTicket);
+
+            XmlDocument requestXmlDoc = new XmlDocument();
+            requestXmlDoc.LoadXml(xml);
+
+            var node = requestXmlDoc.SelectSingleNode("//CustomerQueryRq");
+
+            Assert.IsNotNull(node);
+            Assert.AreEqual("Start", node.Attributes.GetNamedItem("iterator").Value);
+            Assert.IsNotNull(node.SelectSingleNode("MaxReturned"));
+            Assert.AreEqual(defaultMaxResult.ToString(), node.SelectSingleNode("MaxReturned").InnerText);
         }
     }
 }
