@@ -53,7 +53,7 @@ namespace QbSync.WebConnector.Tests
             var updateCustomerMock = new Mock<StepQueryWithIterator<CustomerQueryRqType, CustomerQueryRsType>>();
             updateCustomerMock
                 .Protected()
-                .Setup<string>("RetrieveMessage", ItExpr.Is<string>(s => s == authenticatedTicket.Ticket), ItExpr.Is<string>(s => s == authenticatedTicket.CurrentStep), ItExpr.Is<string>(s => s == iteratorKey))
+                .Setup<string>("RetrieveMessage", ItExpr.Is<AuthenticatedTicket>(s => s == authenticatedTicket), ItExpr.Is<string>(s => s == iteratorKey))
                 .Returns(iteratorID);
             updateCustomerMock.CallBase = true;
 
