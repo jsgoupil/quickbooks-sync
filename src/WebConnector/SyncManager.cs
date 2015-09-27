@@ -518,7 +518,7 @@ namespace QbSync.WebConnector
                 return StepSync.FirstOrDefault();
             }
 
-            return StepSync.FirstOrDefault(s => s.GetName() == step);
+            return StepSync.FirstOrDefault(s => s.Name == step);
         }
 
         /// <summary>
@@ -532,17 +532,17 @@ namespace QbSync.WebConnector
             {
                 if (StepSync.Count >= 2)
                 {
-                    return StepSync[1].GetName();
+                    return StepSync[1].Name;
                 }
             }
 
             for (var i = 0; i < StepSync.Count; i++)
             {
-                if (StepSync[i].GetName() == step)
+                if (StepSync[i].Name == step)
                 {
                     if (i + 1 < StepSync.Count)
                     {
-                        return StepSync[i + 1].GetName();
+                        return StepSync[i + 1].Name;
                     }
                 }
             }

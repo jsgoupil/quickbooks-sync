@@ -4,8 +4,8 @@ using QbSync.QbXml.Objects;
 namespace QbSync.WebConnector.Messages
 {
     public abstract class StepQueryResponseBase<T, Y> : StepQueryResponse
-        where T : class, QbRequest, new()
-        where Y : class, QbResponse, new()
+        where T : class, IQbRequest, new()
+        where Y : class, IQbResponse, new()
     {
         protected QbXmlResponseOptions qbXmlResponseOptions;
 
@@ -13,7 +13,7 @@ namespace QbSync.WebConnector.Messages
         {
         }
 
-        public abstract string GetName();
+        public abstract string Name { get; }
 
         public virtual string SendXML(AuthenticatedTicket authenticatedTicket)
         {

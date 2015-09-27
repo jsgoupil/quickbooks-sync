@@ -7,7 +7,7 @@ namespace QbSync.WebConnector
         /// Returns the step name.
         /// </summary>
         /// <returns>Step name.</returns>
-        string GetName();
+        string Name { get; }
 
         /// <summary>
         /// Returns the string that has to be sent to the Web Connector.

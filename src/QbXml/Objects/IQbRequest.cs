@@ -1,6 +1,6 @@
 ﻿namespace QbSync.QbXml.Objects
 {
-    public interface QbRequest
+    public interface IQbRequest
     {
     }
 }
