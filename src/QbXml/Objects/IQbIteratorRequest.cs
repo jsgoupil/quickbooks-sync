@@ -1,6 +1,6 @@
 ﻿namespace QbSync.QbXml.Objects
 {
-    public interface QbIteratorRequest
+    public interface IQbIteratorRequest
     {
         IteratorType? iterator
         {

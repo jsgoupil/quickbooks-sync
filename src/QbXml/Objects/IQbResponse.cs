@@ -1,6 +1,6 @@
 ﻿namespace QbSync.QbXml.Objects
 {
-    public interface QbResponse
+    public interface IQbResponse
     {
         string requestID { get; set; }
         string statusCode { get; set; }

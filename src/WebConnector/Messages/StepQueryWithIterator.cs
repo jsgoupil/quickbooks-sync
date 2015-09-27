@@ -4,8 +4,8 @@ using QbSync.QbXml.Objects;
 namespace QbSync.WebConnector.Messages
 {
     public abstract class StepQueryWithIterator<T, Y> : StepQueryResponseBase<T, Y>
-        where T : class, QbIteratorRequest, QbRequest, new()
-        where Y : class, QbIteratorResponse, QbResponse, new()
+        where T : class, IQbIteratorRequest, IQbRequest, new()
+        where Y : class, IQbIteratorResponse, IQbResponse, new()
     {
         internal const string IteratorKey = "Iterator";
         private const string MaxReturnedDefault = "100";

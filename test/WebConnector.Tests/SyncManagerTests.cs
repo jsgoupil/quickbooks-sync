@@ -218,7 +218,7 @@ namespace QbSync.WebConnector.Tests
                 .Setup(m => m.SendXML(AuthenticatedTicket))
                 .Returns(expectedResult);
             stepQueryResponseMock1
-                .Setup(m => m.GetName())
+                .SetupGet(m => m.Name)
                 .Returns("Mock1");
 
             syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
@@ -256,7 +256,7 @@ namespace QbSync.WebConnector.Tests
                 .Setup(m => m.SendXML(AuthenticatedTicket))
                 .Returns("abc");
             stepQueryResponseMock1
-                .Setup(m => m.GetName())
+                .SetupGet(m => m.Name)
                 .Returns("Mock1");
 
             syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
@@ -288,14 +288,14 @@ namespace QbSync.WebConnector.Tests
                 .Setup(m => m.SendXML(AuthenticatedTicket))
                 .Returns((string)null);
             stepQueryResponseMock1
-                .Setup(m => m.GetName())
+                .SetupGet(m => m.Name)
                 .Returns("Mock1");
             var stepQueryResponseMock2 = new Mock<StepQueryResponse>();
             stepQueryResponseMock2
                 .Setup(m => m.SendXML(AuthenticatedTicket))
                 .Returns(expectedResult);
             stepQueryResponseMock2
-                .Setup(m => m.GetName())
+                .SetupGet(m => m.Name)
                 .Returns("Mock2");
 
             syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
@@ -307,7 +307,7 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock
                 .Protected()
                 .Verify("SaveChanges", Times.Once());
-            Assert.AreEqual(stepQueryResponseMock2.Object.GetName(), AuthenticatedTicket.CurrentStep);
+            Assert.AreEqual(stepQueryResponseMock2.Object.Name, AuthenticatedTicket.CurrentStep);
         }
 
         [Test]
@@ -329,21 +329,21 @@ namespace QbSync.WebConnector.Tests
                 .Setup(m => m.SendXML(AuthenticatedTicket))
                 .Returns((string)null);
             stepQueryResponseMock1
-                .Setup(m => m.GetName())
+                .SetupGet(m => m.Name)
                 .Returns("Mock1");
             var stepQueryResponseMock2 = new Mock<StepQueryResponse>();
             stepQueryResponseMock2
                 .Setup(m => m.SendXML(AuthenticatedTicket))
                 .Returns((string)null);
             stepQueryResponseMock2
-                .Setup(m => m.GetName())
+                .SetupGet(m => m.Name)
                 .Returns("Mock2");
             var stepQueryResponseMock3 = new Mock<StepQueryResponse>();
             stepQueryResponseMock3
                 .Setup(m => m.SendXML(AuthenticatedTicket))
                 .Returns(expectedResult);
             stepQueryResponseMock3
-                .Setup(m => m.GetName())
+                .SetupGet(m => m.Name)
                 .Returns("Mock3");
 
             syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
@@ -356,7 +356,7 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock
                 .Protected()
                 .Verify("SaveChanges", Times.Once());
-            Assert.AreEqual(stepQueryResponseMock3.Object.GetName(), AuthenticatedTicket.CurrentStep);
+            Assert.AreEqual(stepQueryResponseMock3.Object.Name, AuthenticatedTicket.CurrentStep);
         }
 
         [Test]
@@ -376,7 +376,7 @@ namespace QbSync.WebConnector.Tests
                 .Setup(m => m.SendXML(AuthenticatedTicket))
                 .Returns((string)null);
             stepQueryResponseMock1
-                .Setup(m => m.GetName())
+                .SetupGet(m => m.Name)
                 .Returns("Mock1");
 
             syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
@@ -430,7 +430,7 @@ namespace QbSync.WebConnector.Tests
                 .Setup(m => m.GotoNextStep())
                 .Returns(true);
             stepQueryResponseMock1
-                .Setup(m => m.GetName())
+                .SetupGet(m => m.Name)
                 .Returns("Mock1");
 
             syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
@@ -465,7 +465,7 @@ namespace QbSync.WebConnector.Tests
                 .Setup(m => m.GotoStep())
                 .Returns(expectedResult);
             stepQueryResponseMock1
-                .Setup(m => m.GetName())
+                .SetupGet(m => m.Name)
                 .Returns("Mock1");
 
             syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
@@ -499,7 +499,7 @@ namespace QbSync.WebConnector.Tests
                 .Setup(m => m.GotoNextStep())
                 .Returns(false);
             stepQueryResponseMock1
-                .Setup(m => m.GetName())
+                .SetupGet(m => m.Name)
                 .Returns("Mock1");
 
             syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
@@ -531,7 +531,7 @@ namespace QbSync.WebConnector.Tests
                 .Setup(m => m.ReceiveXML(AuthenticatedTicket, null, null, null))
                 .Returns(expectedResult);
             stepQueryResponseMock1
-                .Setup(m => m.GetName())
+                .SetupGet(m => m.Name)
                 .Returns("Mock1");
 
             syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
@@ -582,7 +582,7 @@ namespace QbSync.WebConnector.Tests
                 .Setup(m => m.LastError(AuthenticatedTicket))
                 .Returns(expectedResult);
             stepQueryResponseMock1
-                .Setup(m => m.GetName())
+                .SetupGet(m => m.Name)
                 .Returns("Mock1");
 
             syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
