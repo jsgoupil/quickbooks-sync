@@ -446,6 +446,55 @@ namespace QbSync.WebConnector.Tests
 
         [Test]
         [SetupValidTicket]
+        public void ReceiveRequestXML_WithValidTicket_WithTwoSteps_ValidResponseAndGoToNext()
+        {
+            var guid = Guid.NewGuid().ToString();
+            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            syncManagerMock
+                .Protected()
+                .Setup("SaveChanges");
+
+            syncManagerMock.CallBase = true;
+
+            var expectedResult = 0;
+            var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
+            stepQueryResponseMock1
+                .Setup(m => m.ReceiveXML(AuthenticatedTicket, null, null, null))
+                .Returns(expectedResult);
+            stepQueryResponseMock1
+                .Setup(m => m.GotoNextStep())
+                .Returns(true);
+            stepQueryResponseMock1
+                .SetupGet(m => m.Name)
+                .Returns("Mock1");
+
+            var stepQueryResponseMock2 = new Mock<StepQueryResponse>();
+            stepQueryResponseMock2
+                .Setup(m => m.ReceiveXML(AuthenticatedTicket, null, null, null))
+                .Returns(expectedResult);
+            stepQueryResponseMock2
+                .Setup(m => m.GotoNextStep())
+                .Returns(true);
+            stepQueryResponseMock2
+                .SetupGet(m => m.Name)
+                .Returns("Mock2");
+
+            syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
+            syncManagerMock.Object.RegisterStep(stepQueryResponseMock2.Object);
+
+            var result = syncManagerMock.Object.ReceiveRequestXML(guid, null, null, null);
+
+            Assert.AreEqual(expectedResult, result);
+            syncManagerMock
+                .Protected()
+                .Verify("SaveChanges", Times.Once());
+            stepQueryResponseMock2
+                .Verify(m => m.ReceiveXML(AuthenticatedTicket, null, null, null), Times.Once());
+            Assert.AreEqual(null, AuthenticatedTicket.CurrentStep);
+        }
+
+        [Test]
+        [SetupValidTicket]
         public void ReceiveRequestXML_WithValidTicket_ValidResponseAndGoToStep()
         {
             var guid = Guid.NewGuid().ToString();

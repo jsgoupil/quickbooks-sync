@@ -230,8 +230,8 @@ namespace QbSync.WebConnector
 
                     if (authenticatedTicket != null)
                     {
-                        StepQueryResponse stepQueryResponse = FindStep(authenticatedTicket.CurrentStep);
-                        if (stepQueryResponse != null)
+                        StepQueryResponse stepQueryResponse = null;
+                        while ((stepQueryResponse = FindStep(authenticatedTicket.CurrentStep)) != null)
                         {
                             stepQueryResponse.SetOptions(GetOptions(authenticatedTicket));
                             result = stepQueryResponse.ReceiveXML(authenticatedTicket, response, hresult, message);
@@ -249,6 +249,14 @@ namespace QbSync.WebConnector
                                 {
                                     authenticatedTicket.CurrentStep = FindNextStepName(authenticatedTicket.CurrentStep);
                                 }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                break;
                             }
                         }
                     }
