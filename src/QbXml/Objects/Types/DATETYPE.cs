@@ -13,8 +13,8 @@ namespace QbSync.QbXml.Objects
         }
 
         public DATETYPE(string value)
+            : this(Parse(value))
         {
-            this.value = DateTime.ParseExact(value, "yyyy-MM-dd", CultureInfo.InvariantCulture);
         }
 
         public DATETYPE(DateTime value)
@@ -102,7 +102,7 @@ namespace QbSync.QbXml.Objects
             reader.ReadStartElement();
             if (!isEmptyElement)
             {
-                value = DateTime.Parse(reader.ReadContentAsString());
+                value = Parse(reader.ReadContentAsString());
                 reader.ReadEndElement();
             }
         }
@@ -110,6 +110,17 @@ namespace QbSync.QbXml.Objects
         public void WriteXml(System.Xml.XmlWriter writer)
         {
             writer.WriteString(ToString());
+        }
+
+        private static DateTime Parse(string value)
+        {
+            DateTime output;
+            if (DateTime.TryParse(value, out output))
+            {
+                return output;
+            }
+
+            return DateTime.MinValue;
         }
     }
 }

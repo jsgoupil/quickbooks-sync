@@ -36,5 +36,13 @@ namespace QbSync.QbXml.Tests.Types
 
             Assert.AreEqual(18, dt.ToDateTime().ToUniversalTime().Hour);
         }
+
+        [Test]
+        public void DateTimeInvalidSentByQuickBooks()
+        {
+            var dt = new DATETIMETYPE("0000-00-00", QuickBooksTestHelper.GetPacificStandardTimeZoneInfo());
+
+            Assert.AreEqual(DateTime.MinValue, dt.ToDateTime());
+        }
     }
 }

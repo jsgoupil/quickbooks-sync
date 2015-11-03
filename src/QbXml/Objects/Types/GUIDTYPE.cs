@@ -14,8 +14,8 @@ namespace QbSync.QbXml.Objects
         }
 
         public GUIDTYPE(string value)
+            : this(Parse(value))
         {
-            this.value = Guid.Parse(value);
         }
 
         public GUIDTYPE(Guid value)
@@ -123,7 +123,7 @@ namespace QbSync.QbXml.Objects
             reader.ReadStartElement();
             if (!isEmptyElement)
             {
-                value = Guid.Parse(reader.ReadContentAsString());
+                value = Parse(reader.ReadContentAsString());
                 reader.ReadEndElement();
             }
         }
@@ -131,6 +131,17 @@ namespace QbSync.QbXml.Objects
         public void WriteXml(System.Xml.XmlWriter writer)
         {
             writer.WriteString(ToString());
+        }
+
+        private static Guid Parse(string value)
+        {
+            Guid output;
+            if (Guid.TryParse(value, out output))
+            {
+                return output;
+            }
+
+            return Guid.Empty;
         }
     }
 }

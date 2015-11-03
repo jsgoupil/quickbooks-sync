@@ -13,8 +13,8 @@ namespace QbSync.QbXml.Objects
         }
 
         public FLOATTYPE(string value)
+            : this(Parse(value))
         {
-            this.value = Decimal.Parse(value);
         }
 
         public FLOATTYPE(decimal value)
@@ -102,7 +102,7 @@ namespace QbSync.QbXml.Objects
             reader.ReadStartElement();
             if (!isEmptyElement)
             {
-                value = Decimal.Parse(reader.ReadContentAsString());
+                value = Parse(reader.ReadContentAsString());
                 reader.ReadEndElement();
             }
         }
@@ -110,6 +110,17 @@ namespace QbSync.QbXml.Objects
         public void WriteXml(System.Xml.XmlWriter writer)
         {
             writer.WriteString(ToString());
+        }
+
+        private static decimal Parse(string value)
+        {
+            decimal output;
+            if (decimal.TryParse(value, out output))
+            {
+                return output;
+            }
+
+            return 0m;
         }
     }
 }

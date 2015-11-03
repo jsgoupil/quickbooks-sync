@@ -31,7 +31,7 @@ namespace QbSync.QbXml.Objects
         }
 
         public DATETIMETYPE(string value, TimeZoneInfo timeZoneInfo)
-            : this(DateTime.Parse(value), timeZoneInfo)
+            : this(Parse(value), timeZoneInfo)
         {
         }
 
@@ -167,9 +167,7 @@ namespace QbSync.QbXml.Objects
             reader.ReadStartElement();
             if (!isEmptyElement)
             {
-                DateTime dt;
-                DateTime.TryParse(reader.ReadContentAsString(), out dt);
-                value = dt;
+                value = Parse(reader.ReadContentAsString());
                 reader.ReadEndElement();
             }
         }
@@ -177,6 +175,17 @@ namespace QbSync.QbXml.Objects
         public void WriteXml(System.Xml.XmlWriter writer)
         {
             writer.WriteString(ToString());
+        }
+
+        private static DateTime Parse(string value)
+        {
+            DateTime output;
+            if (DateTime.TryParse(value, out output))
+            {
+                return output;
+            }
+
+            return DateTime.MinValue;
         }
     }
 }

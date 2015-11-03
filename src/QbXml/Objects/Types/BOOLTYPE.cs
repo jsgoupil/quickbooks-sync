@@ -13,8 +13,8 @@ namespace QbSync.QbXml.Objects
         }
 
         public BOOLTYPE(string value)
+            : this(Parse(value))
         {
-            this.value = Boolean.Parse(value);
         }
 
         public BOOLTYPE(bool value)
@@ -102,7 +102,7 @@ namespace QbSync.QbXml.Objects
             reader.ReadStartElement();
             if (!isEmptyElement)
             {
-                value = Boolean.Parse(reader.ReadContentAsString());
+                value = Parse(reader.ReadContentAsString());
                 reader.ReadEndElement();
             }
         }
@@ -110,6 +110,17 @@ namespace QbSync.QbXml.Objects
         public void WriteXml(System.Xml.XmlWriter writer)
         {
             writer.WriteString(ToString());
+        }
+
+        private static bool Parse(string value)
+        {
+            bool output;
+            if (bool.TryParse(value, out output))
+            {
+                return output;
+            }
+
+            return false;
         }
     }
 }
