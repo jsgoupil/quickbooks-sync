@@ -62,17 +62,23 @@ namespace QbSync.QbXml.Objects
             set
             {
                 this._value = value;
-                if (timeZoneInfo != null && timeZoneInfo.IsDaylightSavingTime(this.value))
+
+                // Mono Build does not like having IsDaylightSavingTime with an invalid date.
+                // Let's make a check here.
+                if (this.value != DateTime.MinValue)
                 {
-                    // QuickBooks does not handle DST. They will send the date with no DST applied.
-                    // In order to get the correct date, we modify the date if a timezone was provided and
-                    // apply the daylight time saving manually if the date is currently in DST mode.
-                    foreach (var adjustmentRule in timeZoneInfo.GetAdjustmentRules())
+                    if (timeZoneInfo != null && timeZoneInfo.IsDaylightSavingTime(this.value))
                     {
-                        if (this._value.CompareTo(adjustmentRule.DateStart) > 0 && this._value.CompareTo(adjustmentRule.DateEnd) < 0)
+                        // QuickBooks does not handle DST. They will send the date with no DST applied.
+                        // In order to get the correct date, we modify the date if a timezone was provided and
+                        // apply the daylight time saving manually if the date is currently in DST mode.
+                        foreach (var adjustmentRule in timeZoneInfo.GetAdjustmentRules())
                         {
-                            this._value = this.value.Add(-adjustmentRule.DaylightDelta);
-                            break;
+                            if (this._value.CompareTo(adjustmentRule.DateStart) > 0 && this._value.CompareTo(adjustmentRule.DateEnd) < 0)
+                            {
+                                this._value = this.value.Add(-adjustmentRule.DaylightDelta);
+                                break;
+                            }
                         }
                     }
                 }
