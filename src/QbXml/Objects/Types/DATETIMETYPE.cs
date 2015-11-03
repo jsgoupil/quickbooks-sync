@@ -167,7 +167,9 @@ namespace QbSync.QbXml.Objects
             reader.ReadStartElement();
             if (!isEmptyElement)
             {
-                value = DateTime.Parse(reader.ReadContentAsString());
+                DateTime dt;
+                DateTime.TryParse(reader.ReadContentAsString(), out dt);
+                value = dt;
                 reader.ReadEndElement();
             }
         }
