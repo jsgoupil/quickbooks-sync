@@ -63,7 +63,7 @@ namespace QbSync.WebConnector
                         var waitTime = GetWaitTime(authenticatedTicket);
                         if (waitTime == 0)
                         {
-                            ret[1] = string.Empty; // Use the company that is opened on the client.
+                            ret[1] = GetCompanyFile(authenticatedTicket);
                         }
                         else
                         {
@@ -488,7 +488,18 @@ namespace QbSync.WebConnector
         }
 
         /// <summary>
-        /// Process the response sent for the first time by the WebConnector.
+        /// Returns the path where the client company file is located.
+        /// Override this method if you wish to open a different file than the current one open on the client.
+        /// </summary>
+        /// <param name="authenticatedTicket">The ticket.</param>
+        /// <returns>Path where company file is located.</returns>
+        protected internal virtual string GetCompanyFile(AuthenticatedTicket authenticatedTicket)
+        {
+            return string.Empty; // Use the company that is opened on the client.
+        }
+
+        /// <summary>
+        /// Processes the response sent for the first time by the WebConnector.
         /// </summary>
         /// <param name="authenticatedTicket">The ticket.</param>
         /// <param name="response">First Message.</param>

@@ -92,6 +92,33 @@ namespace QbSync.WebConnector.Tests
 
         [Test]
         [SetupValidTicket]
+        public void AuthenticateWithValidCredentialsOpenCustomCompanyFile()
+        {
+            var companyFile = "D:\\file.qbw";
+
+            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            syncManagerMock
+                .Protected()
+                .Setup("SaveChanges");
+            syncManagerMock
+                .Protected()
+                .Setup<string>("GetCompanyFile", ItExpr.IsAny<AuthenticatedTicket>())
+                .Returns(companyFile);
+
+            syncManagerMock.CallBase = true;
+            var result = syncManagerMock.Object.Authenticate("user", "password");
+
+            Assert.IsNotEmpty(result[0]);
+            Assert.AreEqual(companyFile, result[1]);
+            Assert.IsEmpty(result[2]);
+            Assert.IsEmpty(result[3]);
+            syncManagerMock
+                .Protected()
+                .Verify("SaveChanges", Times.Once());
+        }
+
+        [Test]
+        [SetupValidTicket]
         public void AuthenticateWithValidCredentialsHasNoWork()
         {
             var timeWait = 60;

@@ -130,6 +130,7 @@ public SyncManager(ApplicationDbContext db_context, IOwinContext owinContext, IA
 9. OnException - Called if any of your steps throw an exception. It would be a great time to log this exception for future debugging.
 10. ProcessClientInformation - Called when the WebConnector first connect to the service. It contains the information about the QuickBooks database.
 11. GetOptions - Returns QbXml options. Used for TimeZone bug. See below.
+12. GetCompanyFile - Indicates which company file to use on the client. By default, it uses the one currently opened.
 
 ### Step 3. Register your Step Manager with the ASMX ###
 The registration allows you to create a StepManager with any dependencies that you would like. Here is an example:
