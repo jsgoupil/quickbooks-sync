@@ -18,7 +18,7 @@ namespace QbSync.WebConnector.Messages
 
         protected override bool ExecuteRequest(AuthenticatedTicket authenticatedTicket, T request)
         {
-            var savedMessage = RetrieveMessage(authenticatedTicket.Ticket, authenticatedTicket.CurrentStep, IteratorKey);
+            var savedMessage = RetrieveMessage(authenticatedTicket, IteratorKey);
 
             request.iterator = IteratorType.Start;
             if (!string.IsNullOrEmpty(savedMessage))
@@ -45,7 +45,7 @@ namespace QbSync.WebConnector.Messages
             if (response.iteratorRemainingCount.HasValue && response.iteratorRemainingCount.Value > 0)
             {
                 gotoNextStep = false;
-                SaveMessage(authenticatedTicket.Ticket, authenticatedTicket.CurrentStep, IteratorKey, response.iteratorID);
+                SaveMessage(authenticatedTicket, IteratorKey, response.iteratorID);
             }
 
             base.ExecuteResponse(authenticatedTicket, response);
@@ -56,7 +56,7 @@ namespace QbSync.WebConnector.Messages
             return gotoNextStep;
         }
 
-        protected abstract void SaveMessage(string ticket, string step, string key, string value);
-        protected abstract string RetrieveMessage(string ticket, string step, string key);
+        protected abstract void SaveMessage(AuthenticatedTicket ticket, string key, string value);
+        protected abstract string RetrieveMessage(AuthenticatedTicket ticket, string key);
     }
 }
