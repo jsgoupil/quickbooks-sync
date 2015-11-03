@@ -96,7 +96,7 @@ namespace QbSync.XsdGenerator
             normalizeString.Parameters.Add(lengthParameter);
             normalizeString.Attributes = MemberAttributes.Static | MemberAttributes.FamilyAndAssembly;
             normalizeString.ReturnType = new CodeTypeReference(typeof(string));
-            var declaration = new CodeVariableDeclarationStatement(typeof(string), "temp", new CodeVariableReferenceExpression("value"));
+
             var inputReference = new CodeVariableReferenceExpression("input");
             var lengthReference = new CodeVariableReferenceExpression("length");
             var newlinePatternReference = new CodeVariableReferenceExpression("newlinePattern");

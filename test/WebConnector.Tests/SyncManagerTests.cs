@@ -214,7 +214,7 @@ namespace QbSync.WebConnector.Tests
 
             syncManagerMock.CallBase = true;
 
-            var result = syncManagerMock.Object.SendRequestXML(guid, initial, null, null, 13, 0);
+            syncManagerMock.Object.SendRequestXML(guid, initial, null, null, 13, 0);
 
             syncManagerMock
                 .Protected()
@@ -497,7 +497,7 @@ namespace QbSync.WebConnector.Tests
 
             syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
 
-            var result = syncManagerMock.Object.ReceiveRequestXML(guid, null, null, null);
+            syncManagerMock.Object.ReceiveRequestXML(guid, null, null, null);
 
             syncManagerMock
                 .Protected()
