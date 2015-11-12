@@ -64,7 +64,7 @@ namespace QbSync.QbXml
                 {
                     foreach (var innerItem in typedItem.Items)
                     {
-                        if (innerItem.GetType() == type || innerItem.GetType().IsSubclassOf(type))
+                        if (innerItem.GetType() == type || type.IsAssignableFrom(innerItem.GetType()))
                         {
                             yield return innerItem;
                         }
