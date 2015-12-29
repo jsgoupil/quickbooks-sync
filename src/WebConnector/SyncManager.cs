@@ -399,14 +399,16 @@ namespace QbSync.WebConnector
                 {
                     LogMessage(authenticatedTicket, LogMessageType.Close, LogDirection.In, ticket);
 
+                    var logMessageType = LogMessageType.Error;
                     var result = "Invalid Ticket";
 
                     if (authenticatedTicket != null)
                     {
                         result = "Sync Completed";
+                        logMessageType = LogMessageType.Close;
                     }
 
-                    LogMessage(authenticatedTicket, LogMessageType.Error, LogDirection.Out, ticket, result);
+                    LogMessage(authenticatedTicket, logMessageType, LogDirection.Out, ticket, result);
 
                     return result;
                 }
