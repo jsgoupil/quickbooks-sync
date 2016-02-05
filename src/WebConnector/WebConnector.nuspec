@@ -19,6 +19,7 @@
     </frameworkAssemblies>
     <dependencies>
       <dependency id="QbSync.QbXml" version="0.0.3.0" />
+      <dependency id="Nito.AsyncEx" version="3.0.1" />
     </dependencies>
   </metadata>
   <files>
