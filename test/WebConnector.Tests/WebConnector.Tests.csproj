@@ -80,7 +80,7 @@
     <Compile Include="Asynchronous\Helpers\SetupInvalidTicketAttribute.cs" />
     <Compile Include="Asynchronous\Helpers\SetupValidTicketAttribute.cs" />
     <Compile Include="Asynchronous\Helpers\StepQueryWithIteratorMaxReturnedHarness.cs" />
-    <Compile Include="Asynchronous\QBManagerTests.cs" />
+    <Compile Include="Asynchronous\QbManagerTests.cs" />
     <Compile Include="Asynchronous\StepQueryWithIteratorTests.cs" />
     <Compile Include="Synchronous\Helpers\AuthenticatorAttribute.cs" />
     <Compile Include="Helpers\QuickBooksTestHelper.cs" />
@@ -88,7 +88,7 @@
     <Compile Include="Synchronous\Helpers\SetupInvalidTicketAttribute.cs" />
     <Compile Include="Synchronous\Helpers\StepQueryWithIteratorMaxReturnedHarness.cs" />
     <Compile Include="Synchronous\StepQueryWithIteratorTests.cs" />
-    <Compile Include="Synchronous\QBManagerTests.cs" />
+    <Compile Include="Synchronous\QbManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

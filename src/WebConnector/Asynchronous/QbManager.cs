@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace QbSync.WebConnector.Asynchronous
 {
-    public class QBManager : QBManagerBase<IStepQueryResponse>
+    public class QbManager : QbManagerBase<IStepQueryResponse>
     {
         protected IAuthenticator authenticator;
 
-        public QBManager(IAuthenticator authenticator)
+        public QbManager(IAuthenticator authenticator)
         {
             this.authenticator = authenticator;
             Steps = new List<IStepQueryResponse>();

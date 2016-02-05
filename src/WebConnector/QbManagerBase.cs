@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace QbSync.WebConnector
 {
-    public abstract class QBManagerBase<T>
+    public abstract class QbManagerBase<T>
         where T : IStepQueryResponseBase
     {
         protected internal List<T> Steps

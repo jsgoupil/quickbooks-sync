@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace QbSync.WebConnector.Tests.Asynchronous
 {
     [TestFixture]
-    class QBManagerTests
+    class QbManagerTests
     {
         // Used by AuthenticatorAttribute
         public Mock<IAuthenticator> authenticatorMock;
@@ -26,7 +26,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         [SetupInvalidTicket]
         public async Task AuthenticateWithInvalidImplementation()
         {
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<Task>("OnExceptionAsync", ItExpr.IsAny<AuthenticatedTicket>(), ItExpr.IsAny<Exception>())
@@ -51,7 +51,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
                     Authenticated = false
                 }));
 
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<Task>("SaveChangesAsync")
@@ -73,7 +73,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         [SetupValidTicket]
         public async Task AuthenticateWithValidCredentials()
         {
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<Task>("SaveChangesAsync")
@@ -101,7 +101,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         {
             var companyFile = "D:\\file.qbw";
 
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<Task>("SaveChangesAsync")
@@ -128,7 +128,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         public async Task AuthenticateWithValidCredentialsHasNoWork()
         {
             var timeWait = 60;
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<int>("GetWaitTime", ItExpr.IsAny<AuthenticatedTicket>())
@@ -146,7 +146,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         [Test]
         public void ClientVersionWithValidVersion()
         {
-            var syncManager = new QBManager(null);
+            var syncManager = new QbManager(null);
             var result = syncManager.ClientVersion("2.1.0.30");
 
             Assert.IsEmpty(result);
@@ -155,7 +155,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         [Test]
         public void ClientVersionWithNewerVersion()
         {
-            var syncManager = new QBManager(null);
+            var syncManager = new QbManager(null);
             var result = syncManager.ClientVersion("2.1.0.31");
 
             Assert.IsEmpty(result);
@@ -164,7 +164,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         [Test]
         public void ClientVersionWithInvalidVersion()
         {
-            var syncManager = new QBManager(null);
+            var syncManager = new QbManager(null);
             var result = syncManager.ClientVersion("2.1.0.29");
 
             Assert.AreEqual("W:", result.Substring(0, 2));
@@ -174,7 +174,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         public void ClientVersionWithSpecifiedVersion()
         {
             var specifiedVersion = new Version(1, 1, 1, 1);
-            var syncManagerMock = new Mock<QBManager>(null);
+            var syncManagerMock = new Mock<QbManager>(null);
             syncManagerMock
                 .Protected()
                 .Setup<Version>("GetMinimumRequiredVersion")
@@ -193,7 +193,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         public async Task SendRequestXML_WithInvalidTicket()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<Task>("SaveChangesAsync")
@@ -213,7 +213,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         public async Task SendRequestXML_WithFirstResponse()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             var initial = "INITIAL";
             syncManagerMock
                 .Protected()
@@ -234,7 +234,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         public async Task SendRequestXML_WithValidTicket_FirstStepHasWork()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<Task>("SaveChangesAsync")
@@ -273,7 +273,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         public async Task SendRequestXML_WithValidTicket_WithOldQbXML()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<Task>("SaveChangesAsync")
@@ -312,7 +312,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         {
             var guid = Guid.NewGuid().ToString();
 
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<Task>("SaveChangesAsync")
@@ -354,7 +354,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         {
             var guid = Guid.NewGuid().ToString();
 
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<Task>("SaveChangesAsync")
@@ -403,7 +403,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         public async Task SendRequestXML_WithValidTicket_NoStepsHaveWork()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<Task>("SaveChangesAsync")
@@ -435,7 +435,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         public async Task ReceiveRequestXML_WithInvalidTicket()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<Task>("SaveChangesAsync")
@@ -455,7 +455,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         public async Task ReceiveRequestXML_WithValidTicket_ValidResponseAndGoToNext()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<Task>("SaveChangesAsync")
@@ -491,7 +491,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         public async Task ReceiveRequestXML_WithValidTicket_ValidResponseAndGoToStep()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<Task>("SaveChangesAsync")
@@ -526,7 +526,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         public async Task ReceiveRequestXML_WithValidTicket_ValidResponseAndAndStaySameStep()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<Task>("SaveChangesAsync")
@@ -562,7 +562,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         public async Task ReceiveRequestXML_WithValidTicket_InvalidResponse()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<Task>("SaveChangesAsync")
@@ -595,7 +595,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         public async Task GetLastError_WithInvalidTicket()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<Task>("SaveChangesAsync")
@@ -615,7 +615,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         public async Task GetLastError_WithValidTicket_ValidResponse()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<Task>("SaveChangesAsync")
@@ -648,7 +648,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         public async Task GetLastError_WithValidTicket_WrongVersion()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<Task>("SaveChangesAsync")
@@ -677,7 +677,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         public async Task ConnectionError_WithInvalidTicket()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<Task>("SaveChangesAsync")
@@ -697,7 +697,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         public async Task ConnectionError_WithValidTicket_ValidResponse()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<Task>("SaveChangesAsync")
@@ -719,7 +719,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         {
             var guid = Guid.NewGuid().ToString();
 
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<Task>("SaveChangesAsync")
@@ -739,7 +739,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         public async Task CloseConnection_WithValidTicket_ValidResponse()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<Task>("SaveChangesAsync")
@@ -759,7 +759,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
         public async Task Function_With_Exception()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QbManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<Task>("OnExceptionAsync", ItExpr.IsAny<AuthenticatedTicket>(), ItExpr.IsAny<Exception>())

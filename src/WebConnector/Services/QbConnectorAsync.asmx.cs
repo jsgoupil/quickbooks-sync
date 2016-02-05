@@ -7,22 +7,22 @@ namespace QbSync.WebConnector.Asynchronous
 {
     [WebService(Namespace = "http://developer.intuit.com/")]
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
-    public class QBConnector : QBWebConnectorSvc
+    public class QbConnector : QbWebConnectorSvc
     {
-        public static Func<QBConnector, QBManager> QBManager
+        public static Func<QbConnector, QbManager> QbManager
         {
             get;
             set;
         }
 
-        public QBConnector()
+        public QbConnector()
         {
         }
 
         #region authenticate
         private Task<string[]> authenticateAsync(string strUserName, string strPassword)
         {
-            return GetQBManager().AuthenticateAsync(strUserName, strPassword);
+            return GetQbManager().AuthenticateAsync(strUserName, strPassword);
         }
 
         [WebMethod]
@@ -42,7 +42,7 @@ namespace QbSync.WebConnector.Asynchronous
         [WebMethod]
         public override string serverVersion()
         {
-            return GetQBManager().ServerVersion();
+            return GetQbManager().ServerVersion();
         }
         #endregion
 
@@ -50,14 +50,14 @@ namespace QbSync.WebConnector.Asynchronous
         [WebMethod]
         public override string clientVersion(string strVersion)
         {
-            return GetQBManager().ClientVersion(strVersion);
+            return GetQbManager().ClientVersion(strVersion);
         }
         #endregion
 
         #region connectionError
         private Task<string> connectionErrorAsync(string ticket, string hresult, string message)
         {
-            return GetQBManager().ConnectionErrorAsync(ticket, hresult, message);
+            return GetQbManager().ConnectionErrorAsync(ticket, hresult, message);
         }
 
         [WebMethod]
@@ -76,7 +76,7 @@ namespace QbSync.WebConnector.Asynchronous
         #region sendRequestXML
         private Task<string> sendRequestXMLAsync(string ticket, string strHCPResponse, string strCompanyFileName, string qbXMLCountry, int qbXMLMajorVers, int qbXMLMinorVers)
         {
-            return GetQBManager().SendRequestXMLAsync(ticket, strHCPResponse, strCompanyFileName, qbXMLCountry, qbXMLMajorVers, qbXMLMinorVers);
+            return GetQbManager().SendRequestXMLAsync(ticket, strHCPResponse, strCompanyFileName, qbXMLCountry, qbXMLMajorVers, qbXMLMinorVers);
         }
 
         [WebMethod]
@@ -95,7 +95,7 @@ namespace QbSync.WebConnector.Asynchronous
         #region receiveResponseXML
         private Task<int> receiveResponseXMLAsync(string ticket, string response, string hresult, string message)
         {
-            return GetQBManager().ReceiveRequestXMLAsync(ticket, response, hresult, message);
+            return GetQbManager().ReceiveRequestXMLAsync(ticket, response, hresult, message);
         }
 
         [WebMethod]
@@ -114,7 +114,7 @@ namespace QbSync.WebConnector.Asynchronous
         #region getLastError
         private Task<string> getLastErrorAsync(string ticket)
         {
-            return GetQBManager().GetLastErrorAsync(ticket);
+            return GetQbManager().GetLastErrorAsync(ticket);
         }
 
         [WebMethod]
@@ -133,7 +133,7 @@ namespace QbSync.WebConnector.Asynchronous
         #region closeConnection
         private Task<string> closeConnectionAsync(string ticket)
         {
-            return GetQBManager().CloseConnectionAsync(ticket);
+            return GetQbManager().CloseConnectionAsync(ticket);
         }
 
         [WebMethod]
@@ -149,14 +149,14 @@ namespace QbSync.WebConnector.Asynchronous
         }
         #endregion
 
-        private QBManager GetQBManager()
+        private QbManager GetQbManager()
         {
-            if (QBManager != null)
+            if (QbManager != null)
             {
-                return QBManager(this);
+                return QbManager(this);
             }
 
-            throw new Exception("QBManager has not been specified.");
+            throw new Exception("QbManager has not been specified.");
         }
     }
 }

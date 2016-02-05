@@ -10,7 +10,7 @@ namespace QbSync.WebConnector.Asynchronous
     [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.18020")]
     [System.Web.Services.WebServiceAttribute(Namespace = "http://developer.intuit.com/")]
     [System.Web.Services.WebServiceBindingAttribute(Name = "TroubleshootWebServiceFSSoap", Namespace = "http://developer.intuit.com/")]
-    public abstract partial class QBWebConnectorSvc : System.Web.Services.WebService
+    public abstract partial class QbWebConnectorSvc : System.Web.Services.WebService
     {
         #region serverVersion
         /// <remarks/>

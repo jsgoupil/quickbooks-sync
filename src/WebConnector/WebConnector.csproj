@@ -69,27 +69,27 @@
     <Compile Include="Synchronous\StepQueryResponseBase.cs" />
     <Compile Include="Synchronous\StepQueryWithIterator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QBManagerBase.cs" />
+    <Compile Include="QbManagerBase.cs" />
     <Compile Include="QbSyncException.cs" />
     <Compile Include="Asynchronous\QbWebConnectorSvc.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Services\QBConnectorAsync.asmx.cs">
-      <DependentUpon>QBConnectorAsync.asmx</DependentUpon>
+    <Compile Include="Services\QbConnectorAsync.asmx.cs">
+      <DependentUpon>QbConnectorAsync.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Synchronous\IStepQueryResponse.cs" />
-    <Compile Include="Asynchronous\QBManager.cs" />
-    <Compile Include="Synchronous\QBManager.cs" />
+    <Compile Include="Asynchronous\QbManager.cs" />
+    <Compile Include="Synchronous\QbManager.cs" />
     <Compile Include="Synchronous\QbWebConnectorSvc.cs">
       <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Services\QBConnectorAsync.asmx" />
-    <Content Include="Services\QBConnector.asmx" />
-    <Compile Include="Services\QBConnector.asmx.cs">
-      <DependentUpon>QBConnector.asmx</DependentUpon>
+    <Content Include="Services\QbConnectorAsync.asmx" />
+    <Content Include="Services\QbConnector.asmx" />
+    <Compile Include="Services\QbConnector.asmx.cs">
+      <DependentUpon>QbConnector.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
   </ItemGroup>

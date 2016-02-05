@@ -14,7 +14,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous.Helpers
 
         public override void BeforeTest(TestDetails testDetails)
         {
-            var baseTests = testDetails.Fixture as QBManagerTests;
+            var baseTests = testDetails.Fixture as QbManagerTests;
             if (baseTests != null)
             {
                 baseTests.AuthenticatedTicket = AuthenticatedTicket;
