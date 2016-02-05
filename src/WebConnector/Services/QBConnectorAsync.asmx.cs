@@ -7,15 +7,15 @@ namespace QbSync.WebConnector.Asynchronous
 {
     [WebService(Namespace = "http://developer.intuit.com/")]
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
-    public class QBConnectorAsync : QBWebConnectorSvc
+    public class QBConnector : QBWebConnectorSvc
     {
-        public static Func<QBConnectorAsync, QBManager> QBManager
+        public static Func<QBConnector, QBManager> QBManager
         {
             get;
             set;
         }
 
-        public QBConnectorAsync()
+        public QBConnector()
         {
         }
 

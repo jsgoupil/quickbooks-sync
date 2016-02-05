@@ -15,12 +15,6 @@ namespace QbSync.WebConnector
             set;
         }
 
-        public IVersionValidator VersionValidator
-        {
-            get;
-            set;
-        }
-
         /// <summary>
         /// Registers a step to use.
         /// </summary>

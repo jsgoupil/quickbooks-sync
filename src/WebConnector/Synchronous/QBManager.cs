@@ -16,6 +16,12 @@ namespace QbSync.WebConnector.Synchronous
             Steps = new List<IStepQueryResponse>();
         }
 
+        public IVersionValidator VersionValidator
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// Authenticate a login/password and return important information regarding if more requests
         /// should be executed immediately.

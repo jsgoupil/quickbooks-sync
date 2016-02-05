@@ -1,4 +1,6 @@
-﻿namespace QbSync.WebConnector
+﻿using System.Threading.Tasks;
+
+namespace QbSync.WebConnector.Asynchronous
 {
     public interface IVersionValidator
     {
@@ -13,13 +15,13 @@
         /// <param name="qbXMLMajorVers">QbXml Major Version.</param>
         /// <param name="qbXMLMinorVers">QbXml Minor Version.</param>
         /// <returns>False if the version is too low.</returns>
-        bool ValidateVersion(string ticket, string qbXMLCountry, int qbXMLMajorVers, int qbXMLMinorVers);
+        Task<bool> ValidateVersionAsync(string ticket, string qbXMLCountry, int qbXMLMajorVers, int qbXMLMinorVers);
 
         /// <summary>
         /// Returns false if the ticket has been marked as invalid version.
         /// </summary>
         /// <param name="ticket">The ticket.</param>
         /// <returns>False if the version is too low for the ticket.</returns>
-        bool IsValidTicket(string ticket);
+        Task<bool> IsValidTicketAsync(string ticket);
     }
 }

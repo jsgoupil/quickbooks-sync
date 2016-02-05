@@ -17,6 +17,12 @@ namespace QbSync.WebConnector.Asynchronous
             Steps = new List<IStepQueryResponse>();
         }
 
+        public IVersionValidator VersionValidator
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// Authenticate a login/password and return important information regarding if more requests
         /// should be executed immediately.
@@ -121,7 +127,7 @@ namespace QbSync.WebConnector.Asynchronous
                     if (authenticatedTicket != null)
                     {
                         // Check the version, if we can't have the minimum version, we must fail.
-                        if (VersionValidator != null && !VersionValidator.ValidateVersion(authenticatedTicket.Ticket, qbXMLCountry, qbXMLMajorVers, qbXMLMinorVers))
+                        if (VersionValidator != null && !(await VersionValidator.ValidateVersionAsync(authenticatedTicket.Ticket, qbXMLCountry, qbXMLMajorVers, qbXMLMinorVers)))
                         {
                             result = string.Empty;
                         }
@@ -265,7 +271,7 @@ namespace QbSync.WebConnector.Asynchronous
 
                     if (authenticatedTicket != null)
                     {
-                        if (VersionValidator != null && !VersionValidator.IsValidTicket(authenticatedTicket.Ticket))
+                        if (VersionValidator != null && !(await VersionValidator.IsValidTicketAsync(authenticatedTicket.Ticket)))
                         {
                             result = string.Format("The server requires QbXml version {0}.{1} or higher. Please upgrade QuickBooks.", QbXmlRequest.VERSION.Major, QbXmlRequest.VERSION.Minor);
                         }

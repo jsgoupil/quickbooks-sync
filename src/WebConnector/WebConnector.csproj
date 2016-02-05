@@ -57,10 +57,11 @@
   <ItemGroup>
     <Compile Include="Asynchronous\IAuthenticator.cs" />
     <Compile Include="Asynchronous\IStepQueryResponse.cs" />
+    <Compile Include="Asynchronous\IVersionValidator.cs" />
     <Compile Include="Asynchronous\StepQueryResponseBase.cs" />
     <Compile Include="Asynchronous\StepQueryWithIterator.cs" />
     <Compile Include="AuthenticatedTicket.cs" />
-    <Compile Include="IVersionValidator.cs" />
+    <Compile Include="Synchronous\IVersionValidator.cs" />
     <Compile Include="IStepQueryResponseBase.cs" />
     <Compile Include="Synchronous\IAuthenticator.cs" />
     <Compile Include="LogDirection.cs" />

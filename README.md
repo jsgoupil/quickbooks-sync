@@ -65,6 +65,25 @@ The Web Connector executes the following tasks:
 4. GOTO Step 2 - Until you return an empty string, indicating that you are done.
 5. CloseConnection - Connection is done.
 
+### async vs sync ###
+WCF Web Service are usually only called synchronously. This README will help you setup your QBManager for synchronous implementation. When loading the classes, use the following using:
+
+```C#
+using QbSync.WebConnector;
+using QbSync.WebConnector.Synchronous;
+```
+
+If most of your calls are using asynchronous methods, you might want to implement the web service asynchronously. Instead of the previous using, use the following:
+
+```C#
+using QbSync.WebConnector;
+using QbSync.WebConnector.Asynchronous;
+```
+
+The main difference is that methods are returning a Task and are called *Async*. Also, make sure to use the `QBConnectorAsync.asmsx`.
+
+I recommend that you make the decision of which implementation to use early before your project becomes too complicated.
+
 ### Database state ###
 Multiple "synchronous" connections are done between the Web Connector and your website. There is a need to keep some states with a database. The NuGet package doesn't provide such thing because it doesn't know which database provider/schema you are using; this is where you have to start coding your own implementation.
 
@@ -97,11 +116,11 @@ public class AuthenticatedTicket
 
 If a user is not authenticated, make sure to return a ticket value, but set the Authenticated to `false`.
 
-### Step 2. Create a SyncManager ###
-Extend the `QbSync.WebConnector.SyncManager` and override only the methods that you really need. You will most likely need a database context, make sure you get it from your constructor. From your constructor, register the steps you want to execute:
+### Step 2. Create a QBManager ###
+Extend the `QbSync.WebConnector.QBManager` and override only the methods that you really need. You will most likely need a database context, make sure you get it from your constructor. From your constructor, register the steps you want to execute:
 
 ```C#
-public SyncManager(ApplicationDbContext db_context, IOwinContext owinContext, IAuthenticator authenticator)
+public QBManager(ApplicationDbContext db_context, IOwinContext owinContext, IAuthenticator authenticator)
   : base(authenticator)
 {
   this.db_context = db_context;
@@ -136,9 +155,9 @@ public SyncManager(ApplicationDbContext db_context, IOwinContext owinContext, IA
 The registration allows you to create a StepManager with any dependencies that you would like. Here is an example:
 
 ```C#
-QbSync.WebConnector.QBConnectorSync.SyncManager = (QbSync.WebConnector.QBConnectorSync qbConnectorSync) =>
+QbSync.WebConnector.QBConnector.QBManager = (QbSync.WebConnector.QBConnector qbConnectorSync) =>
 {
-  return new MyOwn.SyncManager(kernel.Get<ApplicationDbContext>(), qbConnectorSync.Context.GetOwinContext());
+  return new MyOwn.QBManager(kernel.Get<ApplicationDbContext>(), qbConnectorSync.Context.GetOwinContext());
 };
 ```
 
@@ -216,7 +235,7 @@ QbXml doesn't handle Daylight Saving Time properly when it comes to DateTime.
 When the Daylight Saving Time is activated, the times returned by QuickBooks are off by the delta DST (typically 1h).
 
 To overcome this problem, if you provide a TimeZoneInfo, QbXml package will fix the times that are not properly set.
-Use the `QbXmlResponseOptions.TimeZoneBugFix` by overriding `SyncManager.GetOptions()` and provide the timezone where QuickBooks Desktop is installed.
+Use the `QbXmlResponseOptions.TimeZoneBugFix` by overriding `QBManager.GetOptions()` and provide the timezone where QuickBooks Desktop is installed.
 
 ## Contributing
 

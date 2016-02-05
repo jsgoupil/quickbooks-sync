@@ -244,8 +244,8 @@ namespace QbSync.WebConnector.Tests.Asynchronous
 
             var versionValidator = new Mock<IVersionValidator>();
             versionValidator
-                .Setup(m => m.ValidateVersion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(true);
+                .Setup(m => m.ValidateVersionAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(Task.FromResult(true));
             syncManagerMock.Object.VersionValidator = versionValidator.Object;
 
             var expectedResult = "abc";
@@ -283,8 +283,8 @@ namespace QbSync.WebConnector.Tests.Asynchronous
 
             var versionValidator = new Mock<IVersionValidator>();
             versionValidator
-                .Setup(m => m.ValidateVersion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(false);
+                .Setup(m => m.ValidateVersionAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(Task.FromResult(false));
             syncManagerMock.Object.VersionValidator = versionValidator.Object;
 
             var expectedResult = string.Empty;
@@ -656,8 +656,8 @@ namespace QbSync.WebConnector.Tests.Asynchronous
 
             var versionValidator = new Mock<IVersionValidator>();
             versionValidator
-                .Setup(m => m.IsValidTicket(It.IsAny<string>()))
-                .Returns(false);
+                .Setup(m => m.IsValidTicketAsync(It.IsAny<string>()))
+                .Returns(Task.FromResult(false));
             syncManagerMock.Object.VersionValidator = versionValidator.Object;
 
             syncManagerMock.CallBase = true;

@@ -1,1 +1,1 @@
-﻿<%@ WebService Language="C#" CodeBehind="QBConnectorSync.asmx.cs" Class="QbSync.WebConnector.QBConnectorSync" %>
+﻿<%@ WebService Language="C#" CodeBehind="QBConnectorAsync.asmx.cs" Class="QbSync.WebConnector.Asynchronous.QBConnector" %>

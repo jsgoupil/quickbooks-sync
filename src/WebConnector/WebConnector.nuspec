@@ -22,6 +22,7 @@
     </dependencies>
   </metadata>
   <files>
-    <file src=".\Services\QBConnectorSync.asmx" target=".\Services\QBConnectorSync.asmx" />
+    <file src=".\Services\QBConnector.asmx" target=".\Services\QBConnector.asmx" />
+    <file src=".\Services\QBConnectorAsync.asmx" target=".\Services\QBConnectorAsync.asmx" />
   </files>
 </package>
