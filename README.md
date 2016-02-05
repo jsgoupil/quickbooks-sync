@@ -66,7 +66,7 @@ The Web Connector executes the following tasks:
 5. CloseConnection - Connection is done.
 
 ### async vs sync ###
-WCF Web Service are usually only called synchronously. This README will help you setup your QBManager for synchronous implementation. When loading the classes, use the following using:
+Web Services are usually only called synchronously. This README will help you setup your QBManager for synchronous implementation. When loading the classes, use the following using:
 
 ```C#
 using QbSync.WebConnector;
