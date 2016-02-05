@@ -3,29 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
-namespace QbSync.WebConnector
+namespace QbSync.WebConnector.Asynchronous
 {
-    public class SyncManager
+    public class QBManager : QBManagerBase<IStepQueryResponse>
     {
         protected IAuthenticator authenticator;
 
-        public SyncManager(IAuthenticator authenticator)
+        public QBManager(IAuthenticator authenticator)
         {
             this.authenticator = authenticator;
-            StepSync = new List<StepQueryResponse>();
-        }
-
-        internal List<StepQueryResponse> StepSync
-        {
-            get;
-            set;
-        }
-
-        public IVersionValidator VersionValidator
-        {
-            get;
-            set;
+            Steps = new List<IStepQueryResponse>();
         }
 
         /// <summary>
@@ -35,11 +24,11 @@ namespace QbSync.WebConnector
         /// <param name="login">Login.</param>
         /// <param name="password">Password.</param>
         /// <returns>Array of 4 strings. 0: ticket; 1: nvu if invalid user, or empty string if valid; 2: time to wait in seconds before coming back; 3: not used</returns>
-        public virtual string[] Authenticate(string login, string password)
+        public virtual async Task<string[]> AuthenticateAsync(string login, string password)
         {
             try
             {
-                var authenticatedTicket = authenticator.GetAuthenticationFromLogin(login, password);
+                var authenticatedTicket = await authenticator.GetAuthenticationFromLoginAsync(login, password);
                 if (authenticatedTicket == null)
                 {
                     throw new Exception("GetAuthenticationFromLogin must return a ticket.");
@@ -47,32 +36,11 @@ namespace QbSync.WebConnector
 
                 try
                 {
-                    LogMessage(authenticatedTicket, LogMessageType.Authenticate, LogDirection.In, authenticatedTicket.Ticket, login, password);
+                    await LogMessageAsync(authenticatedTicket, LogMessageType.Authenticate, LogDirection.In, authenticatedTicket.Ticket, login, password);
 
-                    var ret = new string[4];
-                    ret[0] = authenticatedTicket.Ticket;
-                    ret[2] = string.Empty;
-                    ret[3] = string.Empty; // Not used
+                    var ret = base.AuthenticateInternal(authenticatedTicket);
 
-                    if (authenticatedTicket.Authenticated == false)
-                    {
-                        ret[1] = "nvu"; // Invalid user
-                    }
-                    else
-                    {
-                        var waitTime = GetWaitTime(authenticatedTicket);
-                        if (waitTime == 0)
-                        {
-                            ret[1] = GetCompanyFile(authenticatedTicket);
-                        }
-                        else
-                        {
-                            ret[1] = "none"; // No work is necessary
-                            ret[2] = waitTime.ToString();
-                        }
-                    }
-
-                    LogMessage(authenticatedTicket, LogMessageType.Authenticate, LogDirection.Out, authenticatedTicket.Ticket, ret);
+                    await LogMessageAsync(authenticatedTicket, LogMessageType.Authenticate, LogDirection.Out, authenticatedTicket.Ticket, ret);
 
                     return ret;
                 }
@@ -83,15 +51,15 @@ namespace QbSync.WebConnector
             }
             catch (QbSyncException ex)
             {
-                OnException(ex.Ticket, ex);
+                await OnExceptionAsync(ex.Ticket, ex);
             }
             catch (Exception ex)
             {
-                OnException(null, ex);
+                await OnExceptionAsync(null, ex);
             }
             finally
             {
-                SaveChanges();
+                await SaveChangesAsync();
             }
 
             return null;
@@ -134,19 +102,19 @@ namespace QbSync.WebConnector
         /// <param name="qbXMLMajorVers">QbXml Major Version.</param>
         /// <param name="qbXMLMinorVers">QbXml Minor Version.</param>
         /// <returns></returns>
-        public virtual string SendRequestXML(string ticket, string strHCPResponse, string strCompanyFileName, string qbXMLCountry, int qbXMLMajorVers, int qbXMLMinorVers)
+        public virtual async Task<string> SendRequestXMLAsync(string ticket, string strHCPResponse, string strCompanyFileName, string qbXMLCountry, int qbXMLMajorVers, int qbXMLMinorVers)
         {
             try
             {
-                var authenticatedTicket = authenticator.GetAuthenticationFromTicket(ticket);
+                var authenticatedTicket = await authenticator.GetAuthenticationFromTicketAsync(ticket);
 
                 try
                 {
-                    LogMessage(authenticatedTicket, LogMessageType.Send, LogDirection.In, ticket, strHCPResponse, strCompanyFileName, qbXMLCountry, qbXMLMajorVers.ToString(), qbXMLMinorVers.ToString());
+                    await LogMessageAsync(authenticatedTicket, LogMessageType.Send, LogDirection.In, ticket, strHCPResponse, strCompanyFileName, qbXMLCountry, qbXMLMajorVers.ToString(), qbXMLMinorVers.ToString());
 
                     if (!string.IsNullOrWhiteSpace(strHCPResponse))
                     {
-                        ProcessClientInformation(authenticatedTicket, strHCPResponse);
+                        await ProcessClientInformationAsync(authenticatedTicket, strHCPResponse);
                     }
 
                     var result = string.Empty;
@@ -159,11 +127,11 @@ namespace QbSync.WebConnector
                         }
                         else
                         {
-                            StepQueryResponse stepQueryResponse = null;
+                            IStepQueryResponse stepQueryResponse = null;
                             while ((stepQueryResponse = FindStep(authenticatedTicket.CurrentStep)) != null)
                             {
-                                stepQueryResponse.SetOptions(GetOptions(authenticatedTicket));
-                                result = stepQueryResponse.SendXML(authenticatedTicket);
+                                await stepQueryResponse.SetOptionsAsync(await GetOptionsAsync(authenticatedTicket));
+                                result = await stepQueryResponse.SendXMLAsync(authenticatedTicket);
 
                                 if (result == null)
                                 {
@@ -183,7 +151,7 @@ namespace QbSync.WebConnector
                         }
                     }
 
-                    LogMessage(authenticatedTicket, LogMessageType.Send, LogDirection.Out, ticket, result);
+                    await LogMessageAsync(authenticatedTicket, LogMessageType.Send, LogDirection.Out, ticket, result);
 
                     return result;
                 }
@@ -194,15 +162,15 @@ namespace QbSync.WebConnector
             }
             catch (QbSyncException ex)
             {
-                OnException(ex.Ticket, ex);
+                await OnExceptionAsync(ex.Ticket, ex);
             }
             catch (Exception ex)
             {
-                OnException(null, ex);
+                await OnExceptionAsync(null, ex);
             }
             finally
             {
-                SaveChanges();
+                await SaveChangesAsync();
             }
 
             return null;
@@ -216,36 +184,36 @@ namespace QbSync.WebConnector
         /// <param name="hresult">Code in case of an error.</param>
         /// <param name="message">Human message in case of an error.</param>
         /// <returns></returns>
-        public virtual int ReceiveRequestXML(string ticket, string response, string hresult, string message)
+        public virtual async Task<int> ReceiveRequestXMLAsync(string ticket, string response, string hresult, string message)
         {
             try
             {
-                var authenticatedTicket = authenticator.GetAuthenticationFromTicket(ticket);
+                var authenticatedTicket = await authenticator.GetAuthenticationFromTicketAsync(ticket);
 
                 try
                 {
-                    LogMessage(authenticatedTicket, LogMessageType.Receive, LogDirection.In, ticket, response, hresult, message);
+                    await LogMessageAsync(authenticatedTicket, LogMessageType.Receive, LogDirection.In, ticket, response, hresult, message);
 
                     var result = -1;
 
                     if (authenticatedTicket != null)
                     {
-                        StepQueryResponse stepQueryResponse = FindStep(authenticatedTicket.CurrentStep);
+                        var stepQueryResponse = FindStep(authenticatedTicket.CurrentStep);
                         if (stepQueryResponse != null)
                         {
-                            stepQueryResponse.SetOptions(GetOptions(authenticatedTicket));
-                            result = stepQueryResponse.ReceiveXML(authenticatedTicket, response, hresult, message);
+                            await stepQueryResponse.SetOptionsAsync(await GetOptionsAsync(authenticatedTicket));
+                            result = await stepQueryResponse.ReceiveXMLAsync(authenticatedTicket, response, hresult, message);
 
                             if (result >= 0)
                             {
-                                var stepName = stepQueryResponse.GotoStep();
+                                var stepName = await stepQueryResponse.GotoStepAsync();
 
                                 // We go to the next step if we are asked to
                                 if (!string.IsNullOrEmpty(stepName))
                                 {
                                     authenticatedTicket.CurrentStep = stepName;
                                 }
-                                else if (stepQueryResponse.GotoNextStep())
+                                else if (await stepQueryResponse.GotoNextStepAsync())
                                 {
                                     authenticatedTicket.CurrentStep = FindNextStepName(authenticatedTicket.CurrentStep);
                                 }
@@ -253,7 +221,7 @@ namespace QbSync.WebConnector
                         }
                     }
 
-                    LogMessage(authenticatedTicket, LogMessageType.Receive, LogDirection.Out, ticket, result.ToString());
+                    await LogMessageAsync(authenticatedTicket, LogMessageType.Receive, LogDirection.Out, ticket, result.ToString());
 
                     return result;
                 }
@@ -264,15 +232,15 @@ namespace QbSync.WebConnector
             }
             catch (QbSyncException ex)
             {
-                OnException(ex.Ticket, ex);
+                await OnExceptionAsync(ex.Ticket, ex);
             }
             catch (Exception ex)
             {
-                OnException(null, ex);
+                await OnExceptionAsync(null, ex);
             }
             finally
             {
-                SaveChanges();
+                await SaveChangesAsync();
             }
 
             return -1;
@@ -283,15 +251,15 @@ namespace QbSync.WebConnector
         /// </summary>
         /// <param name="ticket">The ticket.</param>
         /// <returns>Tell the Web Connector what is the error.</returns>
-        public virtual string GetLastError(string ticket)
+        public virtual async Task<string> GetLastErrorAsync(string ticket)
         {
             try
             {
-                var authenticatedTicket = authenticator.GetAuthenticationFromTicket(ticket);
+                var authenticatedTicket = await authenticator.GetAuthenticationFromTicketAsync(ticket);
 
                 try
                 {
-                    LogMessage(authenticatedTicket, LogMessageType.GetError, LogDirection.In, ticket);
+                    await LogMessageAsync(authenticatedTicket, LogMessageType.GetError, LogDirection.In, ticket);
 
                     var result = string.Empty;
 
@@ -303,15 +271,15 @@ namespace QbSync.WebConnector
                         }
                         else
                         {
-                            StepQueryResponse stepQueryResponse = FindStep(authenticatedTicket.CurrentStep);
+                            var stepQueryResponse = FindStep(authenticatedTicket.CurrentStep);
                             if (stepQueryResponse != null)
                             {
-                                result = stepQueryResponse.LastError(authenticatedTicket);
+                                result = await stepQueryResponse.LastErrorAsync(authenticatedTicket);
                             }
                         }
                     }
 
-                    LogMessage(authenticatedTicket, LogMessageType.GetError, LogDirection.Out, ticket, result);
+                    await LogMessageAsync(authenticatedTicket, LogMessageType.GetError, LogDirection.Out, ticket, result);
 
                     return result;
                 }
@@ -322,15 +290,15 @@ namespace QbSync.WebConnector
             }
             catch (QbSyncException ex)
             {
-                OnException(ex.Ticket, ex);
+                await OnExceptionAsync(ex.Ticket, ex);
             }
             catch (Exception ex)
             {
-                OnException(null, ex);
+                await OnExceptionAsync(null, ex);
             }
             finally
             {
-                SaveChanges();
+                await SaveChangesAsync();
             }
 
             return null;
@@ -343,15 +311,15 @@ namespace QbSync.WebConnector
         /// <param name="hresult">Code in case of an error.</param>
         /// <param name="message">Human message in case of an error.</param>
         /// <returns>Tell the Web Connector what is the error.</returns>
-        public virtual string ConnectionError(string ticket, string hresult, string message)
+        public virtual async Task<string> ConnectionErrorAsync(string ticket, string hresult, string message)
         {
             try
             {
-                var authenticatedTicket = authenticator.GetAuthenticationFromTicket(ticket);
+                var authenticatedTicket = await authenticator.GetAuthenticationFromTicketAsync(ticket);
 
                 try
                 {
-                    LogMessage(authenticatedTicket, LogMessageType.Error, LogDirection.In, ticket, hresult, message);
+                    await LogMessageAsync(authenticatedTicket, LogMessageType.Error, LogDirection.In, ticket, hresult, message);
 
                     var result = "done";
 
@@ -359,7 +327,7 @@ namespace QbSync.WebConnector
                     {
                     }
 
-                    LogMessage(authenticatedTicket, LogMessageType.Error, LogDirection.Out, ticket, result);
+                    await LogMessageAsync(authenticatedTicket, LogMessageType.Error, LogDirection.Out, ticket, result);
 
                     return result;
                 }
@@ -370,15 +338,15 @@ namespace QbSync.WebConnector
             }
             catch (QbSyncException ex)
             {
-                OnException(ex.Ticket, ex);
+                await OnExceptionAsync(ex.Ticket, ex);
             }
             catch (Exception ex)
             {
-                OnException(null, ex);
+                await OnExceptionAsync(null, ex);
             }
             finally
             {
-                SaveChanges();
+                await SaveChangesAsync();
             }
 
             return null;
@@ -389,18 +357,18 @@ namespace QbSync.WebConnector
         /// </summary>
         /// <param name="ticket">The ticket</param>
         /// <returns>String to display to the user.</returns>
-        public virtual string CloseConnection(string ticket)
+        public virtual async Task<string> CloseConnectionAsync(string ticket)
         {
             try
             {
-                var authenticatedTicket = authenticator.GetAuthenticationFromTicket(ticket);
+                var authenticatedTicket = await authenticator.GetAuthenticationFromTicketAsync(ticket);
 
                 try
                 {
-                    LogMessage(authenticatedTicket, LogMessageType.Close, LogDirection.In, ticket);
+                    await LogMessageAsync(authenticatedTicket, LogMessageType.Close, LogDirection.In, ticket);
 
-                    var logMessageType = LogMessageType.Error;
                     var result = "Invalid Ticket";
+                    var logMessageType = LogMessageType.Error;
 
                     if (authenticatedTicket != null)
                     {
@@ -408,7 +376,7 @@ namespace QbSync.WebConnector
                         logMessageType = LogMessageType.Close;
                     }
 
-                    LogMessage(authenticatedTicket, logMessageType, LogDirection.Out, ticket, result);
+                    await LogMessageAsync(authenticatedTicket, logMessageType, LogDirection.Out, ticket, result);
 
                     return result;
                 }
@@ -419,27 +387,18 @@ namespace QbSync.WebConnector
             }
             catch (QbSyncException ex)
             {
-                OnException(ex.Ticket, ex);
+                await OnExceptionAsync(ex.Ticket, ex);
             }
             catch (Exception ex)
             {
-                OnException(null, ex);
+                await OnExceptionAsync(null, ex);
             }
             finally
             {
-                SaveChanges();
+                await SaveChangesAsync();
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Registers a step to use.
-        /// </summary>
-        /// <param name="stepQueryResponse">Step.</param>
-        public void RegisterStep(StepQueryResponse stepQueryResponse)
-        {
-            StepSync.Add(stepQueryResponse);
         }
 
         /// <summary>
@@ -447,19 +406,9 @@ namespace QbSync.WebConnector
         /// </summary>
         /// <param name="ticket">The ticket if found. It might be null if no ticket has been provided or if the code failed when trying to create the authenticated ticket.</param>
         /// <param name="exception">Exception.</param>
-        protected internal virtual void OnException(AuthenticatedTicket ticket, Exception exception)
+        protected internal virtual Task OnExceptionAsync(AuthenticatedTicket ticket, Exception exception)
         {
-        }
-
-        /// <summary>
-        /// Indicates if there is anything to be done with the current ticket.
-        /// Return 0 if you have work to do immediately. Otherwise return the number of seconds
-        /// when you want the Web Connector to come back.
-        /// </summary>
-        /// <returns>Number of seconds to wait before the Web Connector comes back, or 0 to do some work right now.</returns>
-        protected internal virtual int GetWaitTime(AuthenticatedTicket authenticatedTicket)
-        {
-            return 0;
+            return Task.FromResult<object>(null);
         }
 
         /// <summary>
@@ -469,35 +418,17 @@ namespace QbSync.WebConnector
         /// <param name="messageType">Type of message.</param>
         /// <param name="direction">Direction of the message (In the WebService, or Out the WebService).</param>
         /// <param name="arguments">Other arguments to save.</param>
-        protected internal virtual void LogMessage(AuthenticatedTicket authenticatedTicket, LogMessageType messageType, LogDirection direction, string ticket, params string[] arguments)
+        protected internal virtual Task LogMessageAsync(AuthenticatedTicket authenticatedTicket, LogMessageType messageType, LogDirection direction, string ticket, params string[] arguments)
         {
+            return Task.FromResult<object>(null);
         }
 
         /// <summary>
         /// Implement this function in order to save the states to your database.
         /// </summary>
-        protected internal virtual void SaveChanges()
+        protected internal virtual Task SaveChangesAsync()
         {
-        }
-
-        /// <summary>
-        /// Returns the minimum version the Web Connector has to support.
-        /// </summary>
-        /// <returns>Minimum version.</returns>
-        protected internal virtual Version GetMinimumRequiredVersion()
-        {
-            return new Version(2, 1, 0, 30);
-        }
-
-        /// <summary>
-        /// Returns the path where the client company file is located.
-        /// Override this method if you wish to open a different file than the current one open on the client.
-        /// </summary>
-        /// <param name="authenticatedTicket">The ticket.</param>
-        /// <returns>Path where company file is located.</returns>
-        protected internal virtual string GetCompanyFile(AuthenticatedTicket authenticatedTicket)
-        {
-            return string.Empty; // Use the company that is opened on the client.
+            return Task.FromResult<object>(null);
         }
 
         /// <summary>
@@ -505,8 +436,9 @@ namespace QbSync.WebConnector
         /// </summary>
         /// <param name="authenticatedTicket">The ticket.</param>
         /// <param name="response">First Message.</param>
-        protected virtual void ProcessClientInformation(AuthenticatedTicket authenticatedTicket, string response)
+        protected virtual Task ProcessClientInformationAsync(AuthenticatedTicket authenticatedTicket, string response)
         {
+            return Task.FromResult<object>(null);
         }
 
         /// <summary>
@@ -514,53 +446,9 @@ namespace QbSync.WebConnector
         /// </summary>
         /// <param name="authenticatedTicket">The ticket.</param>
         /// <returns>Options.</returns>
-        protected internal virtual QbXmlResponseOptions GetOptions(AuthenticatedTicket authenticatedTicket)
+        protected internal virtual Task<QbXmlResponseOptions> GetOptionsAsync(AuthenticatedTicket authenticatedTicket)
         {
-            return null;
-        }
-
-        /// <summary>
-        /// Finds the step based on its name.
-        /// </summary>
-        /// <param name="step">Step name.</param>
-        /// <returns>The step associated with the name.</returns>
-        protected internal StepQueryResponse FindStep(string step)
-        {
-            if (step == AuthenticatedTicket.InitialStep)
-            {
-                return StepSync.FirstOrDefault();
-            }
-
-            return StepSync.FirstOrDefault(s => s.Name == step);
-        }
-
-        /// <summary>
-        /// Finds the next step after the step name.
-        /// </summary>
-        /// <param name="step">Step name.</param>
-        /// <returns>The next step name or null if none.</returns>
-        protected internal string FindNextStepName(string step)
-        {
-            if (step == AuthenticatedTicket.InitialStep)
-            {
-                if (StepSync.Count >= 2)
-                {
-                    return StepSync[1].Name;
-                }
-            }
-
-            for (var i = 0; i < StepSync.Count; i++)
-            {
-                if (StepSync[i].Name == step)
-                {
-                    if (i + 1 < StepSync.Count)
-                    {
-                        return StepSync[i + 1].Name;
-                    }
-                }
-            }
-
-            return null;
+            return Task.FromResult<QbXmlResponseOptions>(null);
         }
     }
 }

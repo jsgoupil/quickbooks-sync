@@ -1,4 +1,4 @@
-﻿namespace QbSync.WebConnector.Tests.Helpers
+﻿namespace QbSync.WebConnector.Tests.Asynchronous.Helpers
 {
     class SetupInvalidTicketAttribute : AuthenticatorAttribute
     {

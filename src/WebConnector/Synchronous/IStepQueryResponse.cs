@@ -1,14 +1,10 @@
 ﻿using QbSync.QbXml;
-namespace QbSync.WebConnector
-{
-    public interface StepQueryResponse
-    {
-        /// <summary>
-        /// Returns the step name.
-        /// </summary>
-        /// <returns>Step name.</returns>
-        string Name { get; }
+using System.Threading.Tasks;
 
+namespace QbSync.WebConnector.Synchronous
+{
+    public interface IStepQueryResponse : IStepQueryResponseBase
+    {
         /// <summary>
         /// Returns the string that has to be sent to the Web Connector.
         /// Return null if your step has nothing to do this time. The next step will be executed immediately.

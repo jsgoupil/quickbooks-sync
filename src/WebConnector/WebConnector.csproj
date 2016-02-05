@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>QbSync.WebConnector</RootNamespace>
     <AssemblyName>QbSync.WebConnector</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,8 +30,21 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Nito.AsyncEx, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Nito.AsyncEx.3.0.1\lib\net45\Nito.AsyncEx.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nito.AsyncEx.Concurrent, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Nito.AsyncEx.3.0.1\lib\net45\Nito.AsyncEx.Concurrent.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nito.AsyncEx.Enlightenment, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Nito.AsyncEx.3.0.1\lib\net45\Nito.AsyncEx.Enlightenment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web.Services" />
@@ -41,29 +55,45 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Asynchronous\IAuthenticator.cs" />
+    <Compile Include="Asynchronous\IStepQueryResponse.cs" />
+    <Compile Include="Asynchronous\StepQueryResponseBase.cs" />
+    <Compile Include="Asynchronous\StepQueryWithIterator.cs" />
     <Compile Include="AuthenticatedTicket.cs" />
     <Compile Include="IVersionValidator.cs" />
-    <Compile Include="IAuthenticator.cs" />
+    <Compile Include="IStepQueryResponseBase.cs" />
+    <Compile Include="Synchronous\IAuthenticator.cs" />
     <Compile Include="LogDirection.cs" />
     <Compile Include="LogMessageType.cs" />
-    <Compile Include="Messages\StepQueryResponseBase.cs" />
-    <Compile Include="Messages\StepQueryWithIterator.cs" />
+    <Compile Include="Synchronous\StepQueryResponseBase.cs" />
+    <Compile Include="Synchronous\StepQueryWithIterator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QBManagerBase.cs" />
     <Compile Include="QbSyncException.cs" />
-    <Compile Include="QbWebConnectorSvc.cs">
+    <Compile Include="Asynchronous\QbWebConnectorSvc.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="StepQueryResponse.cs" />
-    <Compile Include="SyncManager.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Services\QBConnectorSync.asmx" />
-    <Compile Include="Services\QBConnectorSync.asmx.cs">
-      <DependentUpon>QBConnectorSync.asmx</DependentUpon>
+    <Compile Include="Services\QBConnectorAsync.asmx.cs">
+      <DependentUpon>QBConnectorAsync.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Synchronous\IStepQueryResponse.cs" />
+    <Compile Include="Asynchronous\QBManager.cs" />
+    <Compile Include="Synchronous\QBManager.cs" />
+    <Compile Include="Synchronous\QbWebConnectorSvc.cs">
       <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Services\QBConnectorAsync.asmx" />
+    <Content Include="Services\QBConnector.asmx" />
+    <Compile Include="Services\QBConnector.asmx.cs">
+      <DependentUpon>QBConnector.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
     <None Include="WebConnector.nuspec" />
   </ItemGroup>
   <ItemGroup>
@@ -71,6 +101,9 @@
       <Project>{90be199d-5652-46b9-9c96-dfa9229b129c}</Project>
       <Name>QbXml</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Messages\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

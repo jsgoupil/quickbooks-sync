@@ -2,13 +2,14 @@
 using Moq.Protected;
 using NUnit.Framework;
 using QbSync.QbXml;
-using QbSync.WebConnector.Tests.Helpers;
+using QbSync.WebConnector.Synchronous;
+using QbSync.WebConnector.Tests.Synchronous.Helpers;
 using System;
 
-namespace QbSync.WebConnector.Tests
+namespace QbSync.WebConnector.Tests.Synchronous
 {
     [TestFixture]
-    class SyncManagerTests
+    class QBManagerTests
     {
         // Used by AuthenticatorAttribute
         public Mock<IAuthenticator> authenticatorMock;
@@ -24,7 +25,7 @@ namespace QbSync.WebConnector.Tests
         [SetupInvalidTicket]
         public void AuthenticateWithInvalidImplementation()
         {
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup("OnException", ItExpr.IsAny<AuthenticatedTicket>(), ItExpr.IsAny<Exception>());
@@ -48,7 +49,7 @@ namespace QbSync.WebConnector.Tests
                     Authenticated = false
                 });
 
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup("SaveChanges");
@@ -69,7 +70,7 @@ namespace QbSync.WebConnector.Tests
         [SetupValidTicket]
         public void AuthenticateWithValidCredentials()
         {
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup("SaveChanges");
@@ -96,7 +97,7 @@ namespace QbSync.WebConnector.Tests
         {
             var companyFile = "D:\\file.qbw";
 
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup("SaveChanges");
@@ -122,7 +123,7 @@ namespace QbSync.WebConnector.Tests
         public void AuthenticateWithValidCredentialsHasNoWork()
         {
             var timeWait = 60;
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup<int>("GetWaitTime", ItExpr.IsAny<AuthenticatedTicket>())
@@ -140,7 +141,7 @@ namespace QbSync.WebConnector.Tests
         [Test]
         public void ClientVersionWithValidVersion()
         {
-            var syncManager = new SyncManager(null);
+            var syncManager = new QBManager(null);
             var result = syncManager.ClientVersion("2.1.0.30");
 
             Assert.IsEmpty(result);
@@ -149,7 +150,7 @@ namespace QbSync.WebConnector.Tests
         [Test]
         public void ClientVersionWithNewerVersion()
         {
-            var syncManager = new SyncManager(null);
+            var syncManager = new QBManager(null);
             var result = syncManager.ClientVersion("2.1.0.31");
 
             Assert.IsEmpty(result);
@@ -158,7 +159,7 @@ namespace QbSync.WebConnector.Tests
         [Test]
         public void ClientVersionWithInvalidVersion()
         {
-            var syncManager = new SyncManager(null);
+            var syncManager = new QBManager(null);
             var result = syncManager.ClientVersion("2.1.0.29");
 
             Assert.AreEqual("W:", result.Substring(0, 2));
@@ -168,7 +169,7 @@ namespace QbSync.WebConnector.Tests
         public void ClientVersionWithSpecifiedVersion()
         {
             var specifiedVersion = new Version(1, 1, 1, 1);
-            var syncManagerMock = new Mock<SyncManager>(null);
+            var syncManagerMock = new Mock<QBManager>(null);
             syncManagerMock
                 .Protected()
                 .Setup<Version>("GetMinimumRequiredVersion")
@@ -187,7 +188,7 @@ namespace QbSync.WebConnector.Tests
         public void SendRequestXML_WithInvalidTicket()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup("SaveChanges");
@@ -206,7 +207,7 @@ namespace QbSync.WebConnector.Tests
         public void SendRequestXML_WithFirstResponse()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             var initial = "INITIAL";
             syncManagerMock
                 .Protected()
@@ -226,7 +227,7 @@ namespace QbSync.WebConnector.Tests
         public void SendRequestXML_WithValidTicket_FirstStepHasWork()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup("SaveChanges");
@@ -240,15 +241,15 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock.Object.VersionValidator = versionValidator.Object;
 
             var expectedResult = "abc";
-            var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
-            stepQueryResponseMock1
+            var IStepQueryResponseMock1 = new Mock<IStepQueryResponse>();
+            IStepQueryResponseMock1
                 .Setup(m => m.SendXML(AuthenticatedTicket))
                 .Returns(expectedResult);
-            stepQueryResponseMock1
+            IStepQueryResponseMock1
                 .SetupGet(m => m.Name)
                 .Returns("Mock1");
 
-            syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
+            syncManagerMock.Object.RegisterStep(IStepQueryResponseMock1.Object);
 
             var result = syncManagerMock.Object.SendRequestXML(guid, null, null, null, 13, 0);
 
@@ -264,7 +265,7 @@ namespace QbSync.WebConnector.Tests
         public void SendRequestXML_WithValidTicket_WithOldQbXML()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup("SaveChanges");
@@ -278,15 +279,15 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock.Object.VersionValidator = versionValidator.Object;
 
             var expectedResult = string.Empty;
-            var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
-            stepQueryResponseMock1
+            var IStepQueryResponseMock1 = new Mock<IStepQueryResponse>();
+            IStepQueryResponseMock1
                 .Setup(m => m.SendXML(AuthenticatedTicket))
                 .Returns("abc");
-            stepQueryResponseMock1
+            IStepQueryResponseMock1
                 .SetupGet(m => m.Name)
                 .Returns("Mock1");
 
-            syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
+            syncManagerMock.Object.RegisterStep(IStepQueryResponseMock1.Object);
 
             var result = syncManagerMock.Object.SendRequestXML(guid, null, null, null, 12, 0);
 
@@ -302,7 +303,7 @@ namespace QbSync.WebConnector.Tests
         {
             var guid = Guid.NewGuid().ToString();
 
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup("SaveChanges");
@@ -310,23 +311,23 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock.CallBase = true;
 
             var expectedResult = "abc";
-            var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
-            stepQueryResponseMock1
+            var IStepQueryResponseMock1 = new Mock<IStepQueryResponse>();
+            IStepQueryResponseMock1
                 .Setup(m => m.SendXML(AuthenticatedTicket))
                 .Returns((string)null);
-            stepQueryResponseMock1
+            IStepQueryResponseMock1
                 .SetupGet(m => m.Name)
                 .Returns("Mock1");
-            var stepQueryResponseMock2 = new Mock<StepQueryResponse>();
-            stepQueryResponseMock2
+            var IStepQueryResponseMock2 = new Mock<IStepQueryResponse>();
+            IStepQueryResponseMock2
                 .Setup(m => m.SendXML(AuthenticatedTicket))
                 .Returns(expectedResult);
-            stepQueryResponseMock2
+            IStepQueryResponseMock2
                 .SetupGet(m => m.Name)
                 .Returns("Mock2");
 
-            syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
-            syncManagerMock.Object.RegisterStep(stepQueryResponseMock2.Object);
+            syncManagerMock.Object.RegisterStep(IStepQueryResponseMock1.Object);
+            syncManagerMock.Object.RegisterStep(IStepQueryResponseMock2.Object);
 
             var result = syncManagerMock.Object.SendRequestXML(guid, null, null, null, 13, 0);
 
@@ -334,7 +335,7 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock
                 .Protected()
                 .Verify("SaveChanges", Times.Once());
-            Assert.AreEqual(stepQueryResponseMock2.Object.Name, AuthenticatedTicket.CurrentStep);
+            Assert.AreEqual(IStepQueryResponseMock2.Object.Name, AuthenticatedTicket.CurrentStep);
         }
 
         [Test]
@@ -343,7 +344,7 @@ namespace QbSync.WebConnector.Tests
         {
             var guid = Guid.NewGuid().ToString();
 
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup("SaveChanges");
@@ -351,31 +352,31 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock.CallBase = true;
 
             var expectedResult = "abc";
-            var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
-            stepQueryResponseMock1
+            var IStepQueryResponseMock1 = new Mock<IStepQueryResponse>();
+            IStepQueryResponseMock1
                 .Setup(m => m.SendXML(AuthenticatedTicket))
                 .Returns((string)null);
-            stepQueryResponseMock1
+            IStepQueryResponseMock1
                 .SetupGet(m => m.Name)
                 .Returns("Mock1");
-            var stepQueryResponseMock2 = new Mock<StepQueryResponse>();
-            stepQueryResponseMock2
+            var IStepQueryResponseMock2 = new Mock<IStepQueryResponse>();
+            IStepQueryResponseMock2
                 .Setup(m => m.SendXML(AuthenticatedTicket))
                 .Returns((string)null);
-            stepQueryResponseMock2
+            IStepQueryResponseMock2
                 .SetupGet(m => m.Name)
                 .Returns("Mock2");
-            var stepQueryResponseMock3 = new Mock<StepQueryResponse>();
-            stepQueryResponseMock3
+            var IStepQueryResponseMock3 = new Mock<IStepQueryResponse>();
+            IStepQueryResponseMock3
                 .Setup(m => m.SendXML(AuthenticatedTicket))
                 .Returns(expectedResult);
-            stepQueryResponseMock3
+            IStepQueryResponseMock3
                 .SetupGet(m => m.Name)
                 .Returns("Mock3");
 
-            syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
-            syncManagerMock.Object.RegisterStep(stepQueryResponseMock2.Object);
-            syncManagerMock.Object.RegisterStep(stepQueryResponseMock3.Object);
+            syncManagerMock.Object.RegisterStep(IStepQueryResponseMock1.Object);
+            syncManagerMock.Object.RegisterStep(IStepQueryResponseMock2.Object);
+            syncManagerMock.Object.RegisterStep(IStepQueryResponseMock3.Object);
 
             var result = syncManagerMock.Object.SendRequestXML(guid, null, null, null, 13, 0);
 
@@ -383,7 +384,7 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock
                 .Protected()
                 .Verify("SaveChanges", Times.Once());
-            Assert.AreEqual(stepQueryResponseMock3.Object.Name, AuthenticatedTicket.CurrentStep);
+            Assert.AreEqual(IStepQueryResponseMock3.Object.Name, AuthenticatedTicket.CurrentStep);
         }
 
         [Test]
@@ -391,22 +392,22 @@ namespace QbSync.WebConnector.Tests
         public void SendRequestXML_WithValidTicket_NoStepsHaveWork()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup("SaveChanges");
 
             syncManagerMock.CallBase = true;
 
-            var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
-            stepQueryResponseMock1
+            var IStepQueryResponseMock1 = new Mock<IStepQueryResponse>();
+            IStepQueryResponseMock1
                 .Setup(m => m.SendXML(AuthenticatedTicket))
                 .Returns((string)null);
-            stepQueryResponseMock1
+            IStepQueryResponseMock1
                 .SetupGet(m => m.Name)
                 .Returns("Mock1");
 
-            syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
+            syncManagerMock.Object.RegisterStep(IStepQueryResponseMock1.Object);
 
             var result = syncManagerMock.Object.SendRequestXML(guid, null, null, null, 13, 0);
 
@@ -422,7 +423,7 @@ namespace QbSync.WebConnector.Tests
         public void ReceiveRequestXML_WithInvalidTicket()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup("SaveChanges");
@@ -441,7 +442,7 @@ namespace QbSync.WebConnector.Tests
         public void ReceiveRequestXML_WithValidTicket_ValidResponseAndGoToNext()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup("SaveChanges");
@@ -449,18 +450,18 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock.CallBase = true;
 
             var expectedResult = 0;
-            var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
-            stepQueryResponseMock1
+            var IStepQueryResponseMock1 = new Mock<IStepQueryResponse>();
+            IStepQueryResponseMock1
                 .Setup(m => m.ReceiveXML(AuthenticatedTicket, null, null, null))
                 .Returns(expectedResult);
-            stepQueryResponseMock1
+            IStepQueryResponseMock1
                 .Setup(m => m.GotoNextStep())
                 .Returns(true);
-            stepQueryResponseMock1
+            IStepQueryResponseMock1
                 .SetupGet(m => m.Name)
                 .Returns("Mock1");
 
-            syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
+            syncManagerMock.Object.RegisterStep(IStepQueryResponseMock1.Object);
 
             var result = syncManagerMock.Object.ReceiveRequestXML(guid, null, null, null);
 
@@ -476,7 +477,7 @@ namespace QbSync.WebConnector.Tests
         public void ReceiveRequestXML_WithValidTicket_ValidResponseAndGoToStep()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup("SaveChanges");
@@ -484,18 +485,18 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock.CallBase = true;
 
             var expectedResult = "step2";
-            var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
-            stepQueryResponseMock1
+            var IStepQueryResponseMock1 = new Mock<IStepQueryResponse>();
+            IStepQueryResponseMock1
                 .Setup(m => m.ReceiveXML(AuthenticatedTicket, null, null, null))
                 .Returns(0);
-            stepQueryResponseMock1
+            IStepQueryResponseMock1
                 .Setup(m => m.GotoStep())
                 .Returns(expectedResult);
-            stepQueryResponseMock1
+            IStepQueryResponseMock1
                 .SetupGet(m => m.Name)
                 .Returns("Mock1");
 
-            syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
+            syncManagerMock.Object.RegisterStep(IStepQueryResponseMock1.Object);
 
             syncManagerMock.Object.ReceiveRequestXML(guid, null, null, null);
 
@@ -510,7 +511,7 @@ namespace QbSync.WebConnector.Tests
         public void ReceiveRequestXML_WithValidTicket_ValidResponseAndAndStaySameStep()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup("SaveChanges");
@@ -518,18 +519,18 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock.CallBase = true;
 
             var expectedResult = 0;
-            var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
-            stepQueryResponseMock1
+            var IStepQueryResponseMock1 = new Mock<IStepQueryResponse>();
+            IStepQueryResponseMock1
                 .Setup(m => m.ReceiveXML(AuthenticatedTicket, null, null, null))
                 .Returns(expectedResult);
-            stepQueryResponseMock1
+            IStepQueryResponseMock1
                 .Setup(m => m.GotoNextStep())
                 .Returns(false);
-            stepQueryResponseMock1
+            IStepQueryResponseMock1
                 .SetupGet(m => m.Name)
                 .Returns("Mock1");
 
-            syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
+            syncManagerMock.Object.RegisterStep(IStepQueryResponseMock1.Object);
 
             var result = syncManagerMock.Object.ReceiveRequestXML(guid, null, null, null);
 
@@ -545,7 +546,7 @@ namespace QbSync.WebConnector.Tests
         public void ReceiveRequestXML_WithValidTicket_InvalidResponse()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup("SaveChanges");
@@ -553,15 +554,15 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock.CallBase = true;
 
             var expectedResult = -1;
-            var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
-            stepQueryResponseMock1
+            var IStepQueryResponseMock1 = new Mock<IStepQueryResponse>();
+            IStepQueryResponseMock1
                 .Setup(m => m.ReceiveXML(AuthenticatedTicket, null, null, null))
                 .Returns(expectedResult);
-            stepQueryResponseMock1
+            IStepQueryResponseMock1
                 .SetupGet(m => m.Name)
                 .Returns("Mock1");
 
-            syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
+            syncManagerMock.Object.RegisterStep(IStepQueryResponseMock1.Object);
 
             var result = syncManagerMock.Object.ReceiveRequestXML(guid, null, null, null);
 
@@ -577,7 +578,7 @@ namespace QbSync.WebConnector.Tests
         public void GetLastError_WithInvalidTicket()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup("SaveChanges");
@@ -596,7 +597,7 @@ namespace QbSync.WebConnector.Tests
         public void GetLastError_WithValidTicket_ValidResponse()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup("SaveChanges");
@@ -604,15 +605,15 @@ namespace QbSync.WebConnector.Tests
             syncManagerMock.CallBase = true;
 
             var expectedResult = "abc";
-            var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
-            stepQueryResponseMock1
+            var IStepQueryResponseMock1 = new Mock<IStepQueryResponse>();
+            IStepQueryResponseMock1
                 .Setup(m => m.LastError(AuthenticatedTicket))
                 .Returns(expectedResult);
-            stepQueryResponseMock1
+            IStepQueryResponseMock1
                 .SetupGet(m => m.Name)
                 .Returns("Mock1");
 
-            syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
+            syncManagerMock.Object.RegisterStep(IStepQueryResponseMock1.Object);
 
             var result = syncManagerMock.Object.GetLastError(guid);
 
@@ -628,7 +629,7 @@ namespace QbSync.WebConnector.Tests
         public void GetLastError_WithValidTicket_WrongVersion()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup("SaveChanges");
@@ -656,7 +657,7 @@ namespace QbSync.WebConnector.Tests
         public void ConnectionError_WithInvalidTicket()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup("SaveChanges");
@@ -675,7 +676,7 @@ namespace QbSync.WebConnector.Tests
         public void ConnectionError_WithValidTicket_ValidResponse()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup("SaveChanges");
@@ -696,7 +697,7 @@ namespace QbSync.WebConnector.Tests
         {
             var guid = Guid.NewGuid().ToString();
 
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup("SaveChanges");
@@ -715,7 +716,7 @@ namespace QbSync.WebConnector.Tests
         public void CloseConnection_WithValidTicket_ValidResponse()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup("SaveChanges");
@@ -734,7 +735,7 @@ namespace QbSync.WebConnector.Tests
         public void Function_With_Exception()
         {
             var guid = Guid.NewGuid().ToString();
-            var syncManagerMock = new Mock<SyncManager>(authenticatorMock.Object);
+            var syncManagerMock = new Mock<QBManager>(authenticatorMock.Object);
             syncManagerMock
                 .Protected()
                 .Setup("OnException", ItExpr.IsAny<AuthenticatedTicket>(), ItExpr.IsAny<Exception>());
@@ -743,12 +744,12 @@ namespace QbSync.WebConnector.Tests
 
             var ex = new Exception();
             var expectedResult = -1;
-            var stepQueryResponseMock1 = new Mock<StepQueryResponse>();
-            stepQueryResponseMock1
+            var IStepQueryResponseMock1 = new Mock<IStepQueryResponse>();
+            IStepQueryResponseMock1
                 .Setup(m => m.ReceiveXML(AuthenticatedTicket, null, null, null))
                 .Throws(ex);
 
-            syncManagerMock.Object.RegisterStep(stepQueryResponseMock1.Object);
+            syncManagerMock.Object.RegisterStep(IStepQueryResponseMock1.Object);
 
             var result = syncManagerMock.Object.ReceiveRequestXML(guid, null, null, null);
 

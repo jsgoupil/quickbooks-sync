@@ -3,13 +3,14 @@ using Moq.Protected;
 using NUnit.Framework;
 using QbSync.QbXml;
 using QbSync.QbXml.Objects;
-using QbSync.WebConnector.Messages;
+using QbSync.WebConnector.Synchronous.Messages;
 using QbSync.WebConnector.Tests.Helpers;
+using QbSync.WebConnector.Tests.Synchronous.Helpers;
 using System;
 using System.Reflection;
 using System.Xml;
 
-namespace QbSync.WebConnector.Tests
+namespace QbSync.WebConnector.Synchronous.Tests
 {
     [TestFixture]
     class StepQueryWithIteratorTests

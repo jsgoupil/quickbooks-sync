@@ -1,7 +1,7 @@
 ﻿using Moq;
 using NUnit.Framework;
 
-namespace QbSync.WebConnector.Tests.Helpers
+namespace QbSync.WebConnector.Tests.Synchronous.Helpers
 {
     class AuthenticatorAttribute : TestActionAttribute
     {
@@ -13,7 +13,7 @@ namespace QbSync.WebConnector.Tests.Helpers
 
         public override void BeforeTest(TestDetails testDetails)
         {
-            var baseTests = testDetails.Fixture as SyncManagerTests;
+            var baseTests = testDetails.Fixture as QBManagerTests;
             if (baseTests != null)
             {
                 baseTests.AuthenticatedTicket = AuthenticatedTicket;

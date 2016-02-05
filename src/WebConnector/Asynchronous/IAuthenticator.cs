@@ -1,4 +1,6 @@
-﻿namespace QbSync.WebConnector
+﻿using System.Threading.Tasks;
+
+namespace QbSync.WebConnector.Asynchronous
 {
     public interface IAuthenticator
     {
@@ -11,7 +13,7 @@
         /// <param name="login">Login.</param>
         /// <param name="password">Password.</param>
         /// <returns>Always an AuthenticatedTicket.</returns>
-        AuthenticatedTicket GetAuthenticationFromLogin(string login, string password);
+        Task<AuthenticatedTicket> GetAuthenticationFromLoginAsync(string login, string password);
 
         /// <summary>
         /// Returns the AuthenticatedTicket based on the ticket string.
@@ -20,6 +22,6 @@
         /// </summary>
         /// <param name="ticket">The ticket.</param>
         /// <returns>The AuthenticatedTicket if found, null if invalid ticket.</returns>
-        AuthenticatedTicket GetAuthenticationFromTicket(string ticket);
+        Task<AuthenticatedTicket> GetAuthenticationFromTicketAsync(string ticket);
     }
 }

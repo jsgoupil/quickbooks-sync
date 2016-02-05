@@ -1,7 +1,8 @@
 ﻿using QbSync.QbXml.Objects;
-using QbSync.WebConnector.Messages;
+using QbSync.WebConnector.Synchronous.Messages;
+using System.Threading.Tasks;
 
-namespace QbSync.WebConnector.Tests.Helpers
+namespace QbSync.WebConnector.Tests.Synchronous.Helpers
 {
     public abstract class StepQueryWithIteratorMaxReturnedHarness : StepQueryWithIterator<CustomerQueryRqType, CustomerQueryRsType>
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace QbSync.WebConnector.Tests.Helpers
+namespace QbSync.WebConnector.Tests.Synchronous.Helpers
 {
     class SetupValidTicketAttribute : AuthenticatorAttribute
     {
