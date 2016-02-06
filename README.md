@@ -66,7 +66,7 @@ The Web Connector executes the following tasks:
 5. CloseConnection - Connection is done.
 
 ### async vs sync ###
-Web Services are usually only called synchronously. This README will help you setup your QBManager for synchronous implementation. When loading the classes, use the following using:
+Web Services are usually only called synchronously. This README will help you setup your QbManager for synchronous implementation. When loading the classes, use the following using:
 
 ```C#
 using QbSync.WebConnector;
@@ -116,11 +116,11 @@ public class AuthenticatedTicket
 
 If a user is not authenticated, make sure to return a ticket value, but set the Authenticated to `false`.
 
-### Step 2. Create a QBManager ###
-Extend the `QbSync.WebConnector.QBManager` and override only the methods that you really need. You will most likely need a database context, make sure you get it from your constructor. From your constructor, register the steps you want to execute:
+### Step 2. Create a QbManager ###
+Extend the `QbSync.WebConnector.QbManager` and override only the methods that you really need. You will most likely need a database context, make sure you get it from your constructor. From your constructor, register the steps you want to execute:
 
 ```C#
-public QBManager(ApplicationDbContext db_context, IOwinContext owinContext, IAuthenticator authenticator)
+public QbManager(ApplicationDbContext db_context, IOwinContext owinContext, IAuthenticator authenticator)
   : base(authenticator)
 {
   this.db_context = db_context;
@@ -155,9 +155,9 @@ public QBManager(ApplicationDbContext db_context, IOwinContext owinContext, IAut
 The registration allows you to create a StepManager with any dependencies that you would like. Here is an example:
 
 ```C#
-QbSync.WebConnector.QBConnector.QBManager = (QbSync.WebConnector.QBConnector qbConnectorSync) =>
+QbSync.WebConnector.QBConnector.QbManager = (QbSync.WebConnector.QBConnector qbConnectorSync) =>
 {
-  return new MyOwn.QBManager(kernel.Get<ApplicationDbContext>(), qbConnectorSync.Context.GetOwinContext());
+  return new MyOwn.QbManager(kernel.Get<ApplicationDbContext>(), qbConnectorSync.Context.GetOwinContext());
 };
 ```
 
@@ -235,7 +235,7 @@ QbXml doesn't handle Daylight Saving Time properly when it comes to DateTime.
 When the Daylight Saving Time is activated, the times returned by QuickBooks are off by the delta DST (typically 1h).
 
 To overcome this problem, if you provide a TimeZoneInfo, QbXml package will fix the times that are not properly set.
-Use the `QbXmlResponseOptions.TimeZoneBugFix` by overriding `QBManager.GetOptions()` and provide the timezone where QuickBooks Desktop is installed.
+Use the `QbXmlResponseOptions.TimeZoneBugFix` by overriding `QbManager.GetOptions()` and provide the timezone where QuickBooks Desktop is installed.
 
 ## Contributing
 
