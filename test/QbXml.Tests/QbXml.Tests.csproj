@@ -1,115 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{BBDA696E-1ACB-4D34-A79F-4DF35C62F56A}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>QbSync.QbXml.Tests</RootNamespace>
-    <AssemblyName>QbSync.QbXml.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <Title>QbXml.Tests</Title>
+    <Author>Jean-Sébastien Goupil</Author>
+    <Copyright>Copyright © Jean-Sébastien Goupil 2015</Copyright>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.core">
-      <HintPath>..\..\packages\NUnitTestAdapter.1.2\lib\nunit.core.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="nunit.core.interfaces">
-      <HintPath>..\..\packages\NUnitTestAdapter.1.2\lib\nunit.core.interfaces.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.util">
-      <HintPath>..\..\packages\NUnitTestAdapter.1.2\lib\nunit.util.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="NUnit.VisualStudio.TestAdapter">
-      <HintPath>..\..\packages\NUnitTestAdapter.1.2\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Include="NUnit" Version="3.9.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Messages\Requests\CustomerAddRequestTests.cs" />
-    <Compile Include="Messages\Requests\ItemNonInventoryAddRequestTests.cs" />
-    <Compile Include="Messages\Requests\InvoiceModRequestTests.cs" />
-    <Compile Include="Messages\Requests\InvoiceAddRequestTests.cs" />
-    <Compile Include="Messages\Requests\InvoiceQueryRequestTests.cs" />
-    <Compile Include="Messages\Requests\DataExtDefDelRequestTests.cs" />
-    <Compile Include="Messages\Requests\DataExtDefQueryRequestTests.cs" />
-    <Compile Include="Messages\Requests\DataExtDefModRequestTests.cs" />
-    <Compile Include="Messages\Requests\DataExtDefAddRequestTests.cs" />
-    <Compile Include="Messages\Requests\DataExtDelRequestTests.cs" />
-    <Compile Include="Messages\Requests\DataExtModRequestTests.cs" />
-    <Compile Include="Messages\Requests\DataExtAddRequestTests.cs" />
-    <Compile Include="Helpers\QuickbooksTestHelper.cs" />
-    <Compile Include="Messages\Requests\ItemSitesQueryRequestTests.cs" />
-    <Compile Include="Messages\Responses\EntityQueryResponseTests.cs" />
-    <Compile Include="Messages\Responses\InvoiceModResponseTests.cs" />
-    <Compile Include="Messages\Responses\InvoiceAddResponseTests.cs" />
-    <Compile Include="Messages\Responses\InvoiceQueryResponseTests.cs" />
-    <Compile Include="Messages\Responses\DataExtDefQueryResponseTests.cs" />
-    <Compile Include="Messages\Responses\DataExtDefDelResponseTests.cs" />
-    <Compile Include="Messages\Responses\DataExtDefModResponseTests.cs" />
-    <Compile Include="Messages\Responses\DataExtDefAddResponseTests.cs" />
-    <Compile Include="Messages\Responses\DataExtDelResponseErrorRecoveryTests.cs" />
-    <Compile Include="Messages\Responses\DataExtDelResponseTests.cs" />
-    <Compile Include="Messages\Responses\DataExtModResponseTests.cs" />
-    <Compile Include="Messages\Responses\DataExtAddResponseTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Messages\Responses\CustomerQueryResponseTests.cs" />
-    <Compile Include="Messages\Requests\CustomerQueryRequestTests.cs" />
-    <Compile Include="Types\DateTimeTypeTests.cs" />
+    <ProjectReference Include="..\..\src\QbXml\QbXml.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\QbXml\QbXml.csproj">
-      <Project>{90be199d-5652-46b9-9c96-dfa9229b129c}</Project>
-      <Name>QbXml</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
