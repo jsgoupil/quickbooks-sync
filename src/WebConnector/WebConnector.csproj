@@ -1,117 +1,21 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{295C6B66-72D5-42DE-9713-DB8CFD3508BD}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>QbSync.WebConnector</RootNamespace>
-    <AssemblyName>QbSync.WebConnector</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Title>QuickBooks Sync - WebConnector</Title>
+    <Description>Communicates with QuickBooks Web Connector.</Description>
+    <Author>Jean-Sébastien Goupil</Author>
+    <Copyright>Copyright © Jean-Sébastien Goupil 2015</Copyright>
+    <NuspecFile>WebConnector.nuspec</NuspecFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Nito.AsyncEx, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Nito.AsyncEx.3.0.1\lib\net45\Nito.AsyncEx.dll</HintPath>
-      <Private>True</Private>
+    <PackageReference Include="Nito.AsyncEx" Version="5.0.0-pre-05" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QbXml\QbXml.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web.Services">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7\System.Web.Services.dll</HintPath>
     </Reference>
-    <Reference Include="Nito.AsyncEx.Concurrent, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Nito.AsyncEx.3.0.1\lib\net45\Nito.AsyncEx.Concurrent.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Nito.AsyncEx.Enlightenment, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Nito.AsyncEx.3.0.1\lib\net45\Nito.AsyncEx.Enlightenment.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Web.Services" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Asynchronous\IAuthenticator.cs" />
-    <Compile Include="Asynchronous\IStepQueryResponse.cs" />
-    <Compile Include="Asynchronous\IVersionValidator.cs" />
-    <Compile Include="Asynchronous\StepQueryResponseBase.cs" />
-    <Compile Include="Asynchronous\StepQueryWithIterator.cs" />
-    <Compile Include="AuthenticatedTicket.cs" />
-    <Compile Include="Synchronous\IVersionValidator.cs" />
-    <Compile Include="IStepQueryResponseBase.cs" />
-    <Compile Include="Synchronous\IAuthenticator.cs" />
-    <Compile Include="LogDirection.cs" />
-    <Compile Include="LogMessageType.cs" />
-    <Compile Include="Synchronous\StepQueryResponseBase.cs" />
-    <Compile Include="Synchronous\StepQueryWithIterator.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QbManagerBase.cs" />
-    <Compile Include="QbSyncException.cs" />
-    <Compile Include="Asynchronous\QbWebConnectorSvc.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Services\QbConnectorAsync.asmx.cs">
-      <DependentUpon>QbConnectorAsync.asmx</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Synchronous\IStepQueryResponse.cs" />
-    <Compile Include="Asynchronous\QbManager.cs" />
-    <Compile Include="Synchronous\QbManager.cs" />
-    <Compile Include="Synchronous\QbWebConnectorSvc.cs">
-      <SubType>Component</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Services\QbConnectorAsync.asmx" />
-    <Content Include="Services\QbConnector.asmx" />
-    <Compile Include="Services\QbConnector.asmx.cs">
-      <DependentUpon>QbConnector.asmx</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="WebConnector.nuspec" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\QbXml\QbXml.csproj">
-      <Project>{90be199d-5652-46b9-9c96-dfa9229b129c}</Project>
-      <Name>QbXml</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Messages\" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

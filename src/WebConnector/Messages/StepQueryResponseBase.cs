@@ -3,7 +3,7 @@ using QbSync.QbXml.Objects;
 
 namespace QbSync.WebConnector.Messages
 {
-    public abstract class StepQueryResponseBase<T, Y> : StepQueryResponse
+    public abstract class StepQueryResponseBase<T, Y> : IStepQueryResponseBase
         where T : class, IQbRequest, new()
         where Y : class, IQbResponse, new()
     {
