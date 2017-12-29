@@ -5,5 +5,9 @@ solution: QuickbooksSync.sln
 install:
   - dotnet restore
 script:
-  - dotnet build -c Release --no-restore
+  - dotnet build -c Release --no-restore ./src/QbXml/QbXml.csproj
+  - dotnet build -c Release --no-restore ./test/QbXml.Tests/QbXml.Tests.csproj
+  - xbuild /p:Configuration=Release ./src/WebConnector/WebConnector.csproj
+  - xbuild /p:Configuration=Release ./test/WebConnector.Tests/WebConnector.Tests.csproj
+  - xbuild /p:Configuration=Release ./src/XsdGenerator/XsdGenerator.csproj
   - dotnet test -c Release --no-build
