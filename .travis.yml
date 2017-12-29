@@ -8,7 +8,7 @@ install:
 script:
   - dotnet build -c Release --no-restore ./src/QbXml/QbXml.csproj
   - dotnet build -c Release --no-restore ./test/QbXml.Tests/QbXml.Tests.csproj
-  - dotnet msbuild /p:Configuration=Release ./src/WebConnector/WebConnector.csproj
-  - dotnet msbuild /p:Configuration=Release ./test/WebConnector.Tests/WebConnector.Tests.csproj
-  - dotnet msbuild /p:Configuration=Release ./src/XsdGenerator/XsdGenerator.csproj
+  - msbuild /p:Configuration=Release ./src/WebConnector/WebConnector.csproj
+  - msbuild /p:Configuration=Release ./test/WebConnector.Tests/WebConnector.Tests.csproj
+  - msbuild /p:Configuration=Release ./src/XsdGenerator/XsdGenerator.csproj
   - dotnet test -c Release --no-build
