@@ -1,10 +1,14 @@
 language: csharp
 mono: latest
-dotnet: 2.0.3
+dotnet: 2.0.0
 solution: QuickbooksSync.sln
 install:
   - dotnet restore
 script:
-  - export FrameworkPathOverride=$(dirname $(which mono))/../lib/mono/4.5/
-  - dotnet build -c Release --no-restore 
+  - dotnet build -c Release --no-restore ./src/QbXml/QbXml.csproj
+  - dotnet build -c Release --no-restore ./test/QbXml.Tests/QbXml.Tests.csproj
+  - export FrameworkPathOverride=/usr/lib/mono/4.5/
+  - dotnet msbuild /p:Configuration=Release /restore:False ./src/WebConnector/WebConnector.csproj
+  - dotnet msbuild /p:Configuration=Release /restore:False ./test/WebConnector.Tests/WebConnector.Tests.csproj
+  - dotnet msbuild /p:Configuration=Release /restore:False ./src/XsdGenerator/XsdGenerator.csproj
   - dotnet test -c Release --no-build
