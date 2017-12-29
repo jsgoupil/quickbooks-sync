@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net471</TargetFramework>
     <Title>QuickBooks Sync - WebConnector</Title>
     <Description>Communicates with QuickBooks Web Connector.</Description>
     <Author>Jean-Sébastien Goupil</Author>
@@ -14,8 +14,6 @@
     <ProjectReference Include="..\QbXml\QbXml.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System.Web.Services">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7\System.Web.Services.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Web.Services" />
   </ItemGroup>
 </Project>

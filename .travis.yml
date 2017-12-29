@@ -1,9 +1,9 @@
 language: csharp
+mono: none
+dotnet: 2.0.0
 solution: QuickbooksSync.sln
 install:
-  - nuget restore QuickbooksSync.sln
-  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
+  - dotnet restore
 script:
-  - xbuild /p:Configuration=Release QuickbooksSync.sln
-  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./test/QbXml.Tests/bin/Release/QbSync.QbXml.Tests.dll
-  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./test/WebConnector.Tests/bin/Release/QbSync.WebConnector.Tests.dll
+  - dotnet build -c Release --no-restore
+  - dotnet test -c Release --no-build
