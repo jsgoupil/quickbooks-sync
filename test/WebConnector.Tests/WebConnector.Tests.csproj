@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net45</TargetFramework>
     <Title>QbWebConnector.Tests</Title>
     <Author>Jean-Sébastien Goupil</Author>
     <Copyright>Copyright © Jean-Sébastien Goupil 2015</Copyright>

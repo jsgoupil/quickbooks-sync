@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net45</TargetFramework>
     <Title>QuickBooks Sync - WebConnector</Title>
     <Description>Communicates with QuickBooks Web Connector.</Description>
     <Author>Jean-Sébastien Goupil</Author>
@@ -8,7 +8,7 @@
     <NuspecFile>WebConnector.nuspec</NuspecFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Nito.AsyncEx" Version="5.0.0-pre-05" />
+    <PackageReference Include="Nito.AsyncEx" Version="4.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\QbXml\QbXml.csproj" />

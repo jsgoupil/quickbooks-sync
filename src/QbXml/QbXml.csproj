@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <Title>QuickBooks Sync - QbXml</Title>
     <Description>Create requests and parse responses from QuickBooks QbXml.</Description>
     <Author>Jean-Sébastien Goupil</Author>
@@ -10,6 +10,9 @@
   <ItemGroup>
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='net45'">
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Schemas\*.xsd">
