@@ -7,10 +7,10 @@ install:
   - dotnet restore
   - nuget install NUnit.ConsoleRunner -Version 3.7.0 -OutputDirectory testrunner
 script:
-  - dotnet build -c Release --no-restore ./src/QbXml/QbXml.csproj
+  - msbuild /p:Configuration=Release ./src/QbXml/QbXml.csproj
   - dotnet build -c Release --no-restore ./test/QbXml.Tests/QbXml.Tests.csproj
   - msbuild /p:Configuration=Release ./src/WebConnector/WebConnector.csproj
   - msbuild /p:Configuration=Release ./test/WebConnector.Tests/WebConnector.Tests.csproj
   - msbuild /p:Configuration=Release ./src/XsdGenerator/XsdGenerator.csproj
   - dotnet test -c Release --no-build ./test/QbXml.Tests/QbXml.Tests.csproj
-  - mono ./testrunner/NUnit.ConsoleRunner.3.7.0/tools/nunit3-console.exe ./test/WebConnector.Tests/bin/Release/net461/WebConnector.Tests.dll
+  - mono ./testrunner/NUnit.ConsoleRunner.3.7.0/tools/nunit3-console.exe ./test/WebConnector.Tests/bin/Release/net45/WebConnector.Tests.dll
