@@ -756,7 +756,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous
 
         [Test]
         [SetupValidTicket]
-        [Platform(Exclude = "Mono", Reason = "Mono doesn't like the throw on async, so it's not handled properly.")]
+        //[Platform(Exclude = "Mono", Reason = "Mono doesn't like the throw on async, so it's not handled properly.")]
         public async Task Function_With_Exception()
         {
             var guid = Guid.NewGuid().ToString();

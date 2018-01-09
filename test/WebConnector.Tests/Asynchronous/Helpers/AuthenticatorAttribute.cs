@@ -1,6 +1,7 @@
 ﻿using Moq;
 using NUnit.Framework;
 using System.Threading.Tasks;
+using NUnit.Framework.Interfaces;
 
 namespace QbSync.WebConnector.Tests.Asynchronous.Helpers
 {
@@ -12,7 +13,7 @@ namespace QbSync.WebConnector.Tests.Asynchronous.Helpers
             set;
         }
 
-        public override void BeforeTest(TestDetails testDetails)
+        public override void BeforeTest(ITest testDetails)
         {
             var baseTests = testDetails.Fixture as QbManagerTests;
             if (baseTests != null)

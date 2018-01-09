@@ -1,110 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{90BE199D-5652-46B9-9C96-DFA9229B129C}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>QbSync.QbXml</RootNamespace>
-    <AssemblyName>QbSync.QbXml</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
+    <Title>QuickBooks Sync - QbXml</Title>
+    <Description>Create requests and parse responses from QuickBooks QbXml.</Description>
+    <Author>Jean-Sébastien Goupil</Author>
+    <Copyright>Copyright © Jean-Sébastien Goupil 2015</Copyright>
+    <NuspecFile>QbXml.nuspec</NuspecFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
+    <PackageReference Include="System.ComponentModel" Version="4.3.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='net45'">
     <Reference Include="System.Web" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\Extensions.cs" />
-    <Compile Include="Objects\ObjectItem.cs" />
-    <Compile Include="Objects\ObjectItemValue.cs" />
-    <Compile Include="Objects\ObjectItem`1.cs" />
-    <Compile Include="Objects\IQbResponse.cs" />
-    <Compile Include="Objects\IQbRequest.cs" />
-    <Compile Include="Objects\Types\PERCENTTYPE.cs" />
-    <Compile Include="Objects\Types\QUANTYPE.cs" />
-    <Compile Include="Objects\Types\PRICETYPE.cs" />
-    <Compile Include="QbXmlResponseOptions.cs" />
-    <Compile Include="QbXmlSerializer.cs" />
-    <Compile Include="Objects\ObjectItems.cs" />
-    <Compile Include="Objects\IQbIteratorRequest.cs" />
-    <Compile Include="Objects\IteratorType.cs" />
-    <Compile Include="Objects\Types\FLOATTYPE.cs" />
-    <Compile Include="Objects\IQbIteratorResponse.cs" />
-    <Compile Include="Objects\Objects.cs" />
-    <Compile Include="Objects\ObjectItems`1.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QbXmlResponse.cs" />
-    <Compile Include="QbXmlRequest.cs" />
-    <Compile Include="Objects\Types\BOOLTYPE.cs" />
-    <Compile Include="Objects\Types\DATETIMETYPE.cs" />
-    <Compile Include="Objects\Types\DATETYPE.cs" />
-    <Compile Include="Objects\Types\AMTTYPE.cs" />
-    <Compile Include="Objects\Types\GUIDTYPE.cs" />
-    <Compile Include="Objects\Types\ITypeWrapper.cs" />
-    <Compile Include="QbXmlTextWriter.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="QbXml.nuspec" />
-    <None Include="Schemas\qbxml130.xsd">
-      <SubType>Designer</SubType>
+    <None Update="Schemas\*.xsd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\qbxml130_modified.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\qbxmlops130.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\qbxmlso130.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\qbxmltypes130.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\qbxmltypes130_generate.xsd">
-      <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
