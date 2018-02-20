@@ -4,8 +4,17 @@
     <Title>QuickBooks Sync - QbXml</Title>
     <Description>Create requests and parse responses from QuickBooks QbXml.</Description>
     <Author>Jean-Sébastien Goupil</Author>
-    <Copyright>Copyright © Jean-Sébastien Goupil 2015</Copyright>
-    <NuspecFile>QbXml.nuspec</NuspecFile>
+    <Authors>Jean-Sébastien Goupil</Authors>
+    <Copyright>Copyright © Jean-Sébastien Goupil 2018</Copyright>
+    <Version>0.1.0</Version>
+    <AssemblyName>QbSync.QbXml</AssemblyName>
+    <RootNamespace>QbSync.QbXml</RootNamespace>
+    <PackageId>QbSync.QbXml</PackageId>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>quickbooks qbxml</PackageTags>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/jsgoupil/quickbooks-sync/master/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/jsgoupil/quickbooks-sync</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jsgoupil/quickbooks-sync</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />

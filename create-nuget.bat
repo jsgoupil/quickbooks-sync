@@ -5,8 +5,8 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 md .\publish
 
-tools\nuget\nuget.exe pack .\src\QbXml\QbXml.csproj -OutputDirectory .\publish -Symbols
+dotnet pack .\src\QbXml\QbXml.csproj -c Release --include-symbols --no-build -o ..\..\publish
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-tools\nuget\nuget.exe pack .\src\WebConnector\WebConnector.csproj -OutputDirectory .\publish -Symbols
+dotnet pack .\src\WebConnector\WebConnector.csproj -c Release --include-symbols --no-build -o ..\..\publish
 if %errorlevel% neq 0 exit /b %errorlevel%
