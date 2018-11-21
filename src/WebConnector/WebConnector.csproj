@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <Title>QuickBooks Sync - WebConnector</Title>
     <Description>Communicates with QuickBooks Web Connector.</Description>
     <Author>Jean-Sébastien Goupil</Author>
     <Authors>Jean-Sébastien Goupil</Authors>
     <Copyright>Copyright © Jean-Sébastien Goupil 2018</Copyright>
-    <Version>0.2.0</Version>
+    <Version>1.0.0-alpha-1</Version>
     <AssemblyName>QbSync.WebConnector</AssemblyName>
     <RootNamespace>QbSync.WebConnector</RootNamespace>
     <PackageId>QbSync.WebConnector</PackageId>
@@ -17,22 +17,9 @@
     <RepositoryUrl>https://github.com/jsgoupil/quickbooks-sync</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="Services\QbConnector.asmx">
-      <Pack>true</Pack>
-      <PackagePath>content\Services</PackagePath>
-    </Content>
-    <Content Include="Services\QbConnectorAsync.asmx">
-      <Pack>true</Pack>
-      <PackagePath>content\Services</PackagePath>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Nito.AsyncEx" Version="4.0.1" />
+    <PackageReference Include="SoapCore" Version="0.9.9" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\QbXml\QbXml.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Web.Services" />
   </ItemGroup>
 </Project>

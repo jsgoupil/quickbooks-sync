@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QbXml", "src\QbXml\QbXml.csproj", "{90BE199D-5652-46B9-9C96-DFA9229B129C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebConnector", "src\WebConnector\WebConnector.csproj", "{295C6B66-72D5-42DE-9713-DB8CFD3508BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebConnector", "src\WebConnector\WebConnector.csproj", "{295C6B66-72D5-42DE-9713-DB8CFD3508BD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QbXml.Tests", "test\QbXml.Tests\QbXml.Tests.csproj", "{BBDA696E-1ACB-4D34-A79F-4DF35C62F56A}"
 EndProject
@@ -22,6 +22,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{B22C6EA4
 		LICENSE.md = LICENSE.md
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication.Sample", "test\WebApplication.Sample\WebApplication.Sample.csproj", "{A13BCAD9-7365-41FB-9BA3-C0A338860A86}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6FA50DB9-4875-48F0-940E-E37384B183F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,9 +53,18 @@ Global
 		{0D55C4EE-9DDB-45EA-B5BF-4C8D67068494}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D55C4EE-9DDB-45EA-B5BF-4C8D67068494}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D55C4EE-9DDB-45EA-B5BF-4C8D67068494}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A13BCAD9-7365-41FB-9BA3-C0A338860A86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A13BCAD9-7365-41FB-9BA3-C0A338860A86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A13BCAD9-7365-41FB-9BA3-C0A338860A86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A13BCAD9-7365-41FB-9BA3-C0A338860A86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BBDA696E-1ACB-4D34-A79F-4DF35C62F56A} = {6FA50DB9-4875-48F0-940E-E37384B183F6}
+		{0F73DBB5-3752-4427-B8D2-DDACF3252FD8} = {6FA50DB9-4875-48F0-940E-E37384B183F6}
+		{A13BCAD9-7365-41FB-9BA3-C0A338860A86} = {6FA50DB9-4875-48F0-940E-E37384B183F6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {37D24DB0-22BD-443D-9179-B9220BFBEEF6}

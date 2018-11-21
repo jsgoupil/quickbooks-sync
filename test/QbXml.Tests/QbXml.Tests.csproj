@@ -3,12 +3,12 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <Title>QbXml.Tests</Title>
     <Author>Jean-Sébastien Goupil</Author>
-    <Copyright>Copyright © Jean-Sébastien Goupil 2015</Copyright>
+    <Copyright>Copyright © Jean-Sébastien Goupil 2018</Copyright>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
-    <PackageReference Include="NUnit" Version="3.9.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
+    <PackageReference Include="NUnit" Version="3.11.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.11.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\QbXml\QbXml.csproj" />
