@@ -1,5 +1,4 @@
 ﻿using QbSync.WebConnector.Models;
-using System.Threading.Tasks;
 
 namespace QbSync.WebConnector.Core
 {

@@ -14,7 +14,7 @@ Here is a couple of ideas how you can make some requests and parse responses.
 ```C#
 public class CustomerRequest
 {
-  public CustomerRequest() 
+  public CustomerRequest()
   {
     var request = new QbXmlRequest();
     var innerRequest = new CustomerQueryRqType();
@@ -48,7 +48,7 @@ public class CustomerResponse
 
 ## Web Connector ##
 
-Version 0.3.0 supports .NET Standard 2.0. We follow the dependency injection standard to load the services.
+Version 1.0.0 supports .NET Standard 2.0. We follow the dependency injection standard to load the services.
 We abstracted the SOAP protocol so you only have to implement necessary services in order to make your queries to QuickBooks.
 
 Thanks to the Web Connector, you can communicate with QuickBooks Desktop. Users must download it at the following address: [http://marketplace.intuit.com/webconnector/](http://marketplace.intuit.com/webconnector/ "http://marketplace.intuit.com/webconnector/")

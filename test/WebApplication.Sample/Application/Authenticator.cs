@@ -20,17 +20,22 @@ namespace WebApplication.Sample.Application
 
         public async Task<IAuthenticatedTicket> GetAuthenticationFromLoginAsync(string login, string password)
         {
+            // Log in the user via the database.
             var user = await dbContext.Users
                 .Where(m => m.UserName == login)
                 .Where(m => m.Password == password)
                 .FirstOrDefaultAsync();
 
+            var guid = Guid.NewGuid().ToString();
             if (user != null)
             {
                 return new QbTicket
                 {
                     Authenticated = true,
-                    Ticket = Guid.NewGuid().ToString(),
+                    Ticket = guid,
+
+                    // We store more information about the ticket, such as the user.
+                    // Check the extension to learn how to reach for this user.
                     User = user,
                     UserId = user.Id
                 };
@@ -38,12 +43,14 @@ namespace WebApplication.Sample.Application
 
             return new QbTicket
             {
-                Authenticated = false
+                Authenticated = false,
+                Ticket = guid
             };
         }
 
         public async Task<IAuthenticatedTicket> GetAuthenticationFromTicketAsync(string ticket)
         {
+            // Fetch the ticket based on the guid.
             var qbTicket = await dbContext.QbTickets
                 .FirstOrDefaultAsync(m => m.Ticket == ticket);
 
@@ -52,6 +59,8 @@ namespace WebApplication.Sample.Application
 
         public async Task SaveTicketAsync(IAuthenticatedTicket ticket)
         {
+            // Save the ticket to the databse.
+            // It contains the information about the current step.
             var qbTicket = await dbContext.QbTickets
                 .FirstOrDefaultAsync(m => m.Ticket == ticket.Ticket);
 

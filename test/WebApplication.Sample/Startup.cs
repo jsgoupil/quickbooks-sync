@@ -2,9 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using QbSync.WebConnector.Core;
 using QbSync.WebConnector.Extensions;
-using QbSync.WebConnector.Impl;
 using WebApplication.Sample.Application;
 using WebApplication.Sample.Application.Steps;
 using WebApplication.Sample.Db;
@@ -23,6 +21,9 @@ namespace WebApplication.Sample
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Register the web connector like this.
+            // The steps are automatically registered as Scoped.
+            // You can change the lifetime if required.
             services
                 .AddWebConnector(options =>
                 {
@@ -47,6 +48,7 @@ namespace WebApplication.Sample
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            // Indicates the path for your service to be reached.
             app
                 .UseWebConnector(options =>
                 {

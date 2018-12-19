@@ -443,7 +443,7 @@ namespace QbSync.WebConnector.Impl
         /// <param name="arguments">Other arguments to save.</param>
         protected internal virtual void LogMessage(IAuthenticatedTicket authenticatedTicket, LogMessageType messageType, LogDirection direction, string ticket, params string[] arguments)
         {
-            logger.LogDebug("Ticket: {TICKET}; Type: {TYPE}; Direction: {DIRECTION}; Arguments: {Arguments}", ticket, messageType, direction, arguments);
+            logger.LogTrace("Ticket: {TICKET}; Type: {TYPE}; Direction: {DIRECTION}; Arguments: {Arguments}", ticket, messageType, direction, arguments);
         }
 
         /// <summary>

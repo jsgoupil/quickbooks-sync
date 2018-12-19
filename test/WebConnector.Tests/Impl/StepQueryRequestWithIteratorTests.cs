@@ -9,7 +9,7 @@ using System;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace QbSync.WebConnector.Asynchronous.Tests
+namespace QbSync.WebConnector.Tests.Impl
 {
     [TestFixture]
     class StepQueryRequestWithIteratorTests
