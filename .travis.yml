@@ -13,4 +13,4 @@ script:
   - msbuild /p:Configuration=Release ./test/WebConnector.Tests/WebConnector.Tests.csproj
   - msbuild /p:Configuration=Release ./src/XsdGenerator/XsdGenerator.csproj
   - dotnet test -c Release --no-build ./test/QbXml.Tests/QbXml.Tests.csproj
-  - mono ./testrunner/NUnit.ConsoleRunner.3.7.0/tools/nunit3-console.exe ./test/WebConnector.Tests/bin/Release/net45/WebConnector.Tests.dll
+  - dotnet test -c Release --no-build ./test/WebConnector.Tests/WebConnector.Tests.csproj
