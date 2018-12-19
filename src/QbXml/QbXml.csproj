@@ -12,10 +12,13 @@
     <PackageId>QbSync.QbXml</PackageId>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>quickbooks qbxml</PackageTags>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/jsgoupil/quickbooks-sync/master/LICENSE.md</PackageLicenseUrl>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/jsgoupil/quickbooks-sync</PackageProjectUrl>
     <RepositoryUrl>https://github.com/jsgoupil/quickbooks-sync</RepositoryUrl>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\LICENSE.md" Link="LICENSE.md" Pack="true" PackagePath="$(PackageLicenseFile)" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.0" />

@@ -12,10 +12,13 @@
     <PackageId>QbSync.WebConnector</PackageId>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>quickbooks qbxml webconnector webservice service</PackageTags>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/jsgoupil/quickbooks-sync/master/LICENSE.md</PackageLicenseUrl>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/jsgoupil/quickbooks-sync</PackageProjectUrl>
     <RepositoryUrl>https://github.com/jsgoupil/quickbooks-sync</RepositoryUrl>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\LICENSE.md" Link="LICENSE.md" Pack="true" PackagePath="$(PackageLicenseFile)" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="SoapCore" Version="0.9.9" />
   </ItemGroup>
