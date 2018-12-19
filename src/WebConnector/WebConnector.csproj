@@ -6,7 +6,7 @@
     <Author>Jean-Sébastien Goupil</Author>
     <Authors>Jean-Sébastien Goupil</Authors>
     <Copyright>Copyright © Jean-Sébastien Goupil 2018</Copyright>
-    <Version>1.0.0-alpha-1</Version>
+    <Version>1.0.1</Version>
     <AssemblyName>QbSync.WebConnector</AssemblyName>
     <RootNamespace>QbSync.WebConnector</RootNamespace>
     <PackageId>QbSync.WebConnector</PackageId>

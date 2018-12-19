@@ -16,7 +16,7 @@ namespace QbSync.WebConnector.Extensions
             }
 
             services.TryAddScoped<IAuthenticator, AuthenticatorRequired>();
-            services.TryAddScoped<IVersionValidator, VersionValidatorNoop>();
+            services.TryAddScoped<IMessageValidator, MessageValidatorNoop>();
             services.TryAddScoped<IWebConnectorHandler, WebConnectorHandlerNoop>();
             services.TryAddScoped<IQbManager, QbManager>();
             services.TryAddScoped<IWebConnectorQwc, WebConnectorQwc>();

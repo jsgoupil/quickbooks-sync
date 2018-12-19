@@ -16,7 +16,7 @@ namespace QbSync.WebConnector.Tests.Impl
     class QbManagerTests
     {
         public Mock<IAuthenticator> authenticatorMock;
-        public Mock<IVersionValidator> versionValidatorMock;
+        public Mock<IMessageValidator> messageValidatorMock;
         public Mock<IWebConnectorHandler> webConnectorHandlerMock;
         public Mock<IStepQueryRequest> stepQueryRequestMock;
         public Mock<IStepQueryResponse> stepQueryResponseMock;
@@ -28,7 +28,7 @@ namespace QbSync.WebConnector.Tests.Impl
         public void Initialize()
         {
             authenticatorMock = new Mock<IAuthenticator>();
-            versionValidatorMock = new Mock<IVersionValidator>();
+            messageValidatorMock = new Mock<IMessageValidator>();
             webConnectorHandlerMock = new Mock<IWebConnectorHandler>();
             stepQueryRequestMock = new Mock<IStepQueryRequest>();
             stepQueryResponseMock = new Mock<IStepQueryResponse>();
@@ -192,7 +192,7 @@ namespace QbSync.WebConnector.Tests.Impl
 
         [Test]
         [SetupValidTicket]
-        [SetupVersionValidator]
+        [SetupMessageValidator]
         public async Task QbManager_SendRequestXML_WithValidTicket_FirstStepHasWork()
         {
             var expectedResult = "abc";
@@ -209,12 +209,12 @@ namespace QbSync.WebConnector.Tests.Impl
             var result = await service.SendRequestXMLAsync(guid, null, null, null, 13, 0);
 
             Assert.AreEqual(expectedResult, result);
-            Assert.AreEqual(null, AuthenticatedTicket.CurrentStep);
+            Assert.AreEqual("STEP1", AuthenticatedTicket.CurrentStep);
         }
 
         [Test]
         [SetupValidTicket]
-        [SetupVersionValidator(ValidVersion = false)]
+        [SetupMessageValidator(ValidMessage = false)]
         public async Task QbManager_SendRequestXML_WithValidTicket_WithOldQbXML()
         {
             var expectedResult = "abc";
@@ -236,7 +236,7 @@ namespace QbSync.WebConnector.Tests.Impl
 
         [Test]
         [SetupValidTicket]
-        [SetupVersionValidator()]
+        [SetupMessageValidator()]
         public async Task QbManager_SendRequestXML_WithValidTicket_FirstStepHasNoWork()
         {
             var expectedResult1 = (string)null;
@@ -399,7 +399,7 @@ namespace QbSync.WebConnector.Tests.Impl
 
         [Test]
         [SetupValidTicket]
-        [SetupVersionValidator]
+        [SetupMessageValidator]
         public async Task QbManager_GetLastError_WithValidTicket_ValidResponse()
         {
             var expectedResult = "abc";
@@ -420,7 +420,7 @@ namespace QbSync.WebConnector.Tests.Impl
 
         [Test]
         [SetupValidTicket]
-        [SetupVersionValidator(ValidVersion = false)]
+        [SetupMessageValidator(ValidMessage = false)]
         public async Task QbManager_GetLastError_WithValidTicket_WrongVersion()
         {
             var guid = Guid.NewGuid().ToString();
@@ -530,7 +530,7 @@ namespace QbSync.WebConnector.Tests.Impl
         {
             return new QbManager(
                 authenticatorMock.Object,
-                versionValidatorMock.Object,
+                messageValidatorMock.Object,
                 webConnectorHandlerMock.Object,
                 stepRequests,
                 stepResponses,
@@ -556,7 +556,7 @@ namespace QbSync.WebConnector.Tests.Impl
         {
             var mock = new Mock<QbManager>(
                 authenticatorMock.Object,
-                versionValidatorMock.Object,
+                messageValidatorMock.Object,
                 webConnectorHandlerMock.Object,
                 stepRequests,
                 stepResponses,

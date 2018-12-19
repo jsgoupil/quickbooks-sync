@@ -40,12 +40,12 @@ namespace QbSync.WebConnector.Core
             return this;
         }
 
-        public WebConnectorBuilder WithVersionValidator<VersionValidator>(ServiceLifetime lifetime = ServiceLifetime.Scoped)
-            where VersionValidator : IVersionValidator
+        public WebConnectorBuilder WithMessageValidator<MessageValidator>(ServiceLifetime lifetime = ServiceLifetime.Scoped)
+            where MessageValidator : IMessageValidator
         {
-            var versionValidatorDescriptor = new ServiceDescriptor(typeof(IVersionValidator), typeof(VersionValidator), lifetime);
+            var messageValidatorDescriptor = new ServiceDescriptor(typeof(IMessageValidator), typeof(MessageValidator), lifetime);
 
-            Services.Add(versionValidatorDescriptor);
+            Services.Add(messageValidatorDescriptor);
 
             return this;
         }

@@ -15,9 +15,9 @@ namespace WebApplication.Sample.Extensions
             if (authenticatedTicket != null)
             {
                 var qbTicket = authenticatedTicket as QbTicket;
-                if (qbTicket != null)
+                if (qbTicket != null && qbTicket.UserId.HasValue)
                 {
-                    return qbTicket.UserId;
+                    return qbTicket.UserId.Value;
                 }
             }
 

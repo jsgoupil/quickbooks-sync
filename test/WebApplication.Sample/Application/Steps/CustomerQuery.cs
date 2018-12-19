@@ -83,6 +83,7 @@ namespace WebApplication.Sample.Application.Steps
                 {
                     state = new QbKvpState
                     {
+                        CurrentStep = ticket.CurrentStep,
                         Ticket = ticket.Ticket,
                         Key = key
                     };

@@ -14,7 +14,7 @@ namespace QbSync.WebConnector.Impl
         internal const string FINISHED_STEP = "##FINISHED##";
 
         protected readonly IAuthenticator authenticator;
-        protected readonly IVersionValidator versionValidator;
+        protected readonly IMessageValidator messageValidator;
         protected readonly IWebConnectorHandler webConnectorHandler;
         protected readonly IEnumerable<IStepQueryRequest> stepRequest;
         protected readonly IEnumerable<IStepQueryResponse> stepResponse;
@@ -22,7 +22,7 @@ namespace QbSync.WebConnector.Impl
 
         public QbManager(
             IAuthenticator authenticator,
-            IVersionValidator versionValidator,
+            IMessageValidator messageValidator,
             IWebConnectorHandler webConnectorHandler,
             IEnumerable<IStepQueryRequest> stepRequest,
             IEnumerable<IStepQueryResponse> stepResponse,
@@ -30,7 +30,7 @@ namespace QbSync.WebConnector.Impl
         )
         {
             this.authenticator = authenticator;
-            this.versionValidator = versionValidator;
+            this.messageValidator = messageValidator;
             this.webConnectorHandler = webConnectorHandler;
             this.stepRequest = stepRequest;
             this.stepResponse = stepResponse;
@@ -142,17 +142,22 @@ namespace QbSync.WebConnector.Impl
                     if (authenticatedTicket != null)
                     {
                         // Check the version, if we can't have the minimum version, we must fail.
-                        if (versionValidator != null && !(await versionValidator.ValidateVersionAsync(authenticatedTicket.Ticket, qbXMLCountry, qbXMLMajorVers, qbXMLMinorVers)))
+                        if (messageValidator != null && !(await messageValidator.ValidateMessageAsync(authenticatedTicket.Ticket, strCompanyFileName, qbXMLCountry, qbXMLMajorVers, qbXMLMinorVers)))
                         {
                             result = string.Empty;
                         }
                         else
                         {
-                            IStepQueryRequest stepQueryResponse = null;
-                            while ((stepQueryResponse = FindStepRequest(authenticatedTicket.CurrentStep)) != null)
+                            IStepQueryRequest stepQueryRequest = null;
+                            while ((stepQueryRequest = FindStepRequest(authenticatedTicket.CurrentStep)) != null)
                             {
-                                await stepQueryResponse.SetOptionsAsync(await GetOptionsAsync(authenticatedTicket));
-                                result = await stepQueryResponse.SendXMLAsync(authenticatedTicket);
+                                if (string.IsNullOrEmpty(authenticatedTicket.CurrentStep))
+                                {
+                                    authenticatedTicket.CurrentStep = stepQueryRequest.Name;
+                                }
+
+                                await stepQueryRequest.SetOptionsAsync(await GetOptionsAsync(authenticatedTicket));
+                                result = await stepQueryRequest.SendXMLAsync(authenticatedTicket);
 
                                 if (result == null)
                                 {
@@ -286,7 +291,7 @@ namespace QbSync.WebConnector.Impl
 
                     if (authenticatedTicket != null)
                     {
-                        if (versionValidator != null && !(await versionValidator.IsValidTicketAsync(authenticatedTicket.Ticket)))
+                        if (messageValidator != null && !(await messageValidator.IsValidTicketAsync(authenticatedTicket.Ticket)))
                         {
                             result = string.Format("The server requires QbXml version {0}.{1} or higher. Please upgrade QuickBooks.", QbXmlRequest.VERSION.Major, QbXmlRequest.VERSION.Minor);
                         }

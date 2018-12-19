@@ -24,7 +24,7 @@ namespace QbSync.WebConnector.Tests.Extensions
         }
 
         [TestCase(typeof(IAuthenticator), typeof(AuthenticatorRequired))]
-        [TestCase(typeof(IVersionValidator), typeof(VersionValidatorNoop))]
+        [TestCase(typeof(IMessageValidator), typeof(MessageValidatorNoop))]
         [TestCase(typeof(IWebConnectorHandler), typeof(WebConnectorHandlerNoop))]
         [TestCase(typeof(IQbManager), typeof(QbManager))]
         [TestCase(typeof(IWebConnectorQwc), typeof(WebConnectorQwc))]

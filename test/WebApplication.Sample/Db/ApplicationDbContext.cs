@@ -21,7 +21,6 @@ namespace WebApplication.Sample.Db
 
             modelBuilder.Entity<User>().HasData(new User { Id = 1, UserName = "jsgoupil", Password = "password" });
 
-
             modelBuilder.Entity<QbKvpState>()
                 .HasKey(c => new { c.Ticket, c.Key, c.CurrentStep });
         }
@@ -51,7 +50,7 @@ namespace WebApplication.Sample.Db
 
         public bool Authenticated { get; set; }
 
-        public int UserId { get; set; }
+        public int? UserId { get; set; }
         public virtual User User { get; set; }
     }
 }

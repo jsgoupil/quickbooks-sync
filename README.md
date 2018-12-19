@@ -60,7 +60,14 @@ With the nature of SOAP in mind, there are no protocols keeping the connection s
 Once the Web Connector downloaded, your user must get a QWC file that will connect the Web Connector to your website. To generate a QWC file, load the appropriate service then pass in your model:
 
 ```C#
-var data = webConnectorQwc.GetQWCFile(new QbSync.WebConnector.Models.WebConnectorQWCModel
+public MyController(IWebConnectorQwc webConnectorQwc)
+{
+    this.webConnectorQwc = webConnectorQwc;
+}
+
+// ...
+
+var data = webConnectorQwc.GetQwcFile(new QbSync.WebConnector.Models.WebConnectorQwcModel
 {
     AppName = "My App",
     AppDescription = "Sync QuickBooks with My Website",
@@ -87,7 +94,7 @@ public void ConfigureServices(IServiceCollection services)
             options
                 .AddAuthenticator<Authenticator>()
 
-                //.WithVersionValidator<MyVersionValidator>()
+                //.WithMessageValidator<MyMessageValidator>()
                 //.WithWebConnectorHandler<MyWebConnectorHandler>()
 
                 // Register steps; the order matters.
@@ -116,7 +123,7 @@ An authenticator will keep the state in your database of what is happening with 
 ```C#
 public interface IAuthenticator
 {
-	Task<IAuthenticatedTicket> GetAuthenticationFromLoginAsync(string login, string password);
+    Task<IAuthenticatedTicket> GetAuthenticationFromLoginAsync(string login, string password);
     Task<IAuthenticatedTicket> GetAuthenticationFromTicketAsync(string ticket);
     Task SaveTicketAsync(IAuthenticatedTicket ticket);
 }
@@ -186,6 +193,7 @@ public class CustomerQuery
         }
     }
 }
+```
 
 The 2 classes CustomerQueryRqType/CustomerQueryRsType are provided by the QbXml NuGet package. You associate the request and the response. They implement `QbRequest` and `QbResponse`.
 To find the correct request and response pair, visit https://developer-static.intuit.com/qbSDK-current/Common/newOSR/index.html
@@ -222,14 +230,15 @@ public interface IStepQueryResponse
     Task<string> GotoStepAsync();
     Task<bool> GotoNextStepAsync();
 }
+```
 
 1. `GotoStepAsync` - Indicates the exact step name you would like to go. If you return null, the `GotoNextStep` will be called.
 2. `GotoNextStepAsync` - Indicates if you should go to the next step or not. If you return `false`, the same exact step will be executed.
 
 
-### Implement a VersionValidator ###
+### Implement a MessageValidator ###
 
-QuickBooks supports multiple versions. However, this package supports only version 13.0 and above. In order to validate a request, you must provide a `IVersionValidator`.
+QuickBooks supports multiple versions. However, this package supports only version 13.0 and above. In order to validate a request, you must provide a `IMessageValidator`.
 The reason this package cannot validate the version is because of the nature of the Web Connector: it takes 2 calls from the WebConnector to validate the version then warn the user.
 
 1. The first call sends a version to your server. You can validate the version and must save the ticket for reference in the second call.
@@ -238,8 +247,9 @@ The reason this package cannot validate the version is because of the nature of 
 Since this is done with two requests, the first request must persist that the version is wrong based on the ticket.
 With `IsValidTicket`, simply check if the ticket has been saved in your database (as invalid). If you find the ticket in your database, you can safely remove it from it as this method will not be called again with the same ticket.
 
-This step is optional. If you don't impplement a VersionValidator, we assume that the version is valid.
+This step is optional. If you don't implement a MessageValidator, we assume that the version is valid.
 
+The MessageValidator can also be used to get the company file path that QuickBooks sends you.
 
 ### Implement a WebConnectorHandler ###
 
