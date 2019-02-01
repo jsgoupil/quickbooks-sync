@@ -92,7 +92,7 @@ namespace QbSync.QbXml.Objects
             // QuickBooks doesn't support Z format.
             if (k == "Z")
             {
-                k = string.Empty;
+                k = "+00:00";
             }
 
             return value.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture) + k;

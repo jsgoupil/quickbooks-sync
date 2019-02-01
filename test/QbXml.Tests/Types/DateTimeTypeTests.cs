@@ -2,9 +2,6 @@
 using QbSync.QbXml.Objects;
 using QbSync.QbXml.Tests.Helpers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace QbSync.QbXml.Tests.Types
 {
@@ -43,6 +40,28 @@ namespace QbSync.QbXml.Tests.Types
             var dt = new DATETIMETYPE("0000-00-00", QuickBooksTestHelper.GetPacificStandardTimeZoneInfo());
 
             Assert.AreEqual(DateTime.MinValue, dt.ToDateTime());
+        }
+
+        [Test]
+        public void DateTimeLocalToString()
+        {
+            var utcDateTime = new DateTime(2015, 4, 3, 10, 6, 17, DateTimeKind.Utc);
+            var timeZoneInfo = QuickBooksTestHelper.GetPacificStandardTimeZoneInfo();
+            var localDateTime = TimeZoneInfo.ConvertTime(utcDateTime, timeZoneInfo);
+            localDateTime = DateTime.SpecifyKind(localDateTime, DateTimeKind.Local);
+
+            var dt = new DATETIMETYPE(localDateTime);
+
+            Assert.AreEqual("2015-04-03T03:06:17-07:00", dt.ToString());
+        }
+
+        [Test]
+        public void DateTimeUtcToString()
+        {
+            var utcDateTime = new DateTime(2015, 4, 3, 10, 6, 17, DateTimeKind.Utc);
+            var dt = new DATETIMETYPE(utcDateTime);
+
+            Assert.AreEqual("2015-04-03T10:06:17+00:00", dt.ToString());
         }
     }
 }

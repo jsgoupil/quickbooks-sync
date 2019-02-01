@@ -5,8 +5,8 @@
     <Description>Create requests and parse responses from QuickBooks QbXml.</Description>
     <Author>Jean-Sébastien Goupil</Author>
     <Authors>Jean-Sébastien Goupil</Authors>
-    <Copyright>Copyright © Jean-Sébastien Goupil 2018</Copyright>
-    <Version>0.1.0</Version>
+    <Copyright>Copyright © Jean-Sébastien Goupil 2015-2019</Copyright>
+    <Version>0.1.1</Version>
     <AssemblyName>QbSync.QbXml</AssemblyName>
     <RootNamespace>QbSync.QbXml</RootNamespace>
     <PackageId>QbSync.QbXml</PackageId>
