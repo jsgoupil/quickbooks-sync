@@ -3,7 +3,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <Title>QbWebConnector.Tests</Title>
     <Author>Jean-Sébastien Goupil</Author>
-    <Copyright>Copyright © Jean-Sébastien Goupil 2015</Copyright>
+    <Copyright>Copyright © Jean-Sébastien Goupil 2015-2019</Copyright>
     <AssemblyName>QbSync.WebConnector.Tests</AssemblyName>
     <RootNamespace>QbSync.WebConnector.Tests</RootNamespace>
   </PropertyGroup>

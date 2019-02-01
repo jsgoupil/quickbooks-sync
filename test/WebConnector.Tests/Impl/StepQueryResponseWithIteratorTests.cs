@@ -14,7 +14,6 @@ namespace QbSync.WebConnector.Tests.Impl
     [TestFixture]
     class StepQueryResponseWithIteratorTests
     {
-
         [Test]
         public async Task StepQueryResponseWithIterator_CustomerQueryWithResponseWithNoIterators()
         {

@@ -2,6 +2,7 @@
 using QbSync.QbXml.Objects;
 using QbSync.WebConnector.Core;
 using QbSync.WebConnector.Impl;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApplication.Sample.Db;
@@ -29,6 +30,7 @@ namespace WebApplication.Sample.Application.Steps
             {
                 // By default, we return 100, let's do 5 here.
                 request.MaxReturned = "5";
+                request.FromModifiedDate = new DATETIMETYPE(new DateTime(2019, 4, 28, 0, 55, 40, DateTimeKind.Utc));
 
                 return base.ExecuteRequestAsync(authenticatedTicket, request);
             }
@@ -64,7 +66,7 @@ namespace WebApplication.Sample.Application.Steps
                 {
                     foreach (var customer in response.CustomerRet)
                     {
-                        // save these custoemr.
+                        // save these customers.
                     }
                 }
 

@@ -220,6 +220,95 @@ By default, if you derive from the iterator, the query is batched with 100 objec
 The requests and responses that support an iterator implements `QbIteratorRequest` and `QbIteratorResponse`.
 
 
+### Implement a step with multiple requests ###
+
+If you wish to send more than one request at once to QuickBooks, inherit from `GroupStepQueryRequestBase` and `GroupStepQueryResponseBase` and send as many objects you want to QuickBooks. Keep in mind that you should keep the final result
+under a certain size to allow your server to be able to parse it.
+
+Look at this example which make a CustomerAdd and a CustomerQuery in one step.
+
+```C#
+public class CustomerGroupAddQuery
+{
+    public const string NAME = "CustomerGroupAddQuery";
+
+    public class Request : GroupStepQueryRequestBase
+    {
+        public override string Name => NAME;
+
+        private readonly ApplicationDbContext dbContext;
+
+        public Request(
+            ApplicationDbContext dbContext
+        )
+        {
+            this.dbContext = dbContext;
+        }
+
+        protected override Task<IEnumerable<IQbRequest>> ExecuteRequestAsync(IAuthenticatedTicket authenticatedTicket)
+        {
+            var list = new List<IQbRequest>
+            {
+                new CustomerAddRqType
+                {
+                    CustomerAdd = new QbSync.QbXml.Objects.CustomerAdd
+                    {
+                        Name = "Unique Name" + Guid.NewGuid().ToString("D"),
+                        FirstName = "User " + authenticatedTicket.GetUserId().ToString()
+                    }
+                },
+                new CustomerQueryRqType
+                {
+                    ActiveStatus = ActiveStatus.All
+                }
+            };
+
+            return Task.FromResult(list as IEnumerable<IQbRequest>);
+        }
+
+        protected override Task<QBXMLMsgsRqOnError> GetOnErrorAttributeAsync(IAuthenticatedTicket authenticatedTicket)
+        {
+            // This is the default behavior, use this overriden method to change it to stopOnError
+            // QuickBooks does not support rollbackOnError
+            return Task.FromResult(QBXMLMsgsRqOnError.continueOnError);
+        }
+    }
+
+    public class Response : GroupStepQueryResponseBase
+    {
+        public override string Name => NAME;
+
+        private readonly ApplicationDbContext dbContext;
+
+        public Response(
+            ApplicationDbContext dbContext
+        )
+        {
+            this.dbContext = dbContext;
+        }
+
+        protected override Task ExecuteResponseAsync(IAuthenticatedTicket authenticatedTicket, IEnumerable<IQbResponse> responses)
+        {
+            foreach (var item in responses)
+            {
+                switch (item)
+                {
+                    case CustomerQueryRsType customerQueryRsType:
+                        // Do something with the CustomerQuery data
+                        break;
+                    case CustomerAddRsType customerAddRsType:
+                        // Do something with the CustomerAdd data
+                        break;
+                }
+            }
+
+            return base.ExecuteResponseAsync(authenticatedTicket, responses);
+        }
+    }
+}
+```
+
+
 ### Changing the step order at runtime ###
 
 If you want to change the step order at runtime, you may implement the following methods:
@@ -251,6 +340,7 @@ This step is optional. If you don't implement a MessageValidator, we assume that
 
 The MessageValidator can also be used to get the company file path that QuickBooks sends you.
 
+
 ### Implement a WebConnectorHandler ###
 
 This step is optional but highly recommended, will receive some calls from the Web Connector that you can take further actions.
@@ -271,7 +361,7 @@ public interface IWebConnectorHandler
     Task OnExceptionAsync(IAuthenticatedTicket authenticatedTicket, Exception exception);
     Task<int> GetWaitTimeAsync(IAuthenticatedTicket authenticatedTicket);
     Task<string> GetCompanyFileAsync(IAuthenticatedTicket authenticatedTicket);
-	Task  CloseConnectionAsync(IAuthenticatedTicket authenticatedTicket);
+    Task CloseConnectionAsync(IAuthenticatedTicket authenticatedTicket);
 }
 ```
 
@@ -281,6 +371,7 @@ public interface IWebConnectorHandler
 4. `GetWaitTimeAsync` - Tells the Web Connector to come back later after X seconds. Returning 0 means to do the work immediately.
 5. `GetCompanyFileAsync`- Uses the company file path. Return an empty string to use the file that is currently opened.
 6. `CloseConnectionAsync` - The connection is closing, the Web Connector will not come back with this ticket.
+
 
 ## Internally how it works ##
 
@@ -324,6 +415,7 @@ Contributions are welcome. Code or documentation!
 2. Create a feature/bug fix branch
 3. Push your branch up to your fork
 4. Submit a pull request
+
 
 ## License
 

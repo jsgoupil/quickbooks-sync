@@ -5,8 +5,8 @@
     <Description>Communicates with QuickBooks Web Connector.</Description>
     <Author>Jean-Sébastien Goupil</Author>
     <Authors>Jean-Sébastien Goupil</Authors>
-    <Copyright>Copyright © Jean-Sébastien Goupil 2018</Copyright>
-    <Version>1.0.1</Version>
+    <Copyright>Copyright © Jean-Sébastien Goupil 2015-2019</Copyright>
+    <Version>1.1.0</Version>
     <AssemblyName>QbSync.WebConnector</AssemblyName>
     <RootNamespace>QbSync.WebConnector</RootNamespace>
     <PackageId>QbSync.WebConnector</PackageId>

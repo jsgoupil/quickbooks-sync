@@ -30,6 +30,7 @@ namespace WebApplication.Sample
                     options
                         .AddAuthenticator<Authenticator>()
                         .WithWebConnectorHandler<WebConnectorHandler>()
+                        .WithStep<CustomerGroupAddQuery.Request, CustomerGroupAddQuery.Response>()
                         .WithStep<CustomerQuery.Request, CustomerQuery.Response>()
                         .WithStep<InvoiceQuery.Request, InvoiceQuery.Response>()
                         .WithStep<CustomerAdd.Request, CustomerAdd.Response>();
