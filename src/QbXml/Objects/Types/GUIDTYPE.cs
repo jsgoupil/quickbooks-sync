@@ -7,6 +7,7 @@ namespace QbSync.QbXml.Objects
     public partial class GUIDTYPE : ITypeWrapper, IComparable<GUIDTYPE>, IXmlSerializable
     {
         protected Guid value;
+        private bool _isZero;
 
         public GUIDTYPE()
         {
@@ -14,8 +15,9 @@ namespace QbSync.QbXml.Objects
         }
 
         public GUIDTYPE(string value)
-            : this(Parse(value))
         {
+            this.value = Parse(value);
+            if (value == "0") _isZero = true;
         }
 
         public GUIDTYPE(Guid value)
@@ -25,6 +27,11 @@ namespace QbSync.QbXml.Objects
 
         public override string ToString()
         {
+            if (_isZero && value == Guid.Empty)
+            {
+                return "0";
+            }
+
             return value.ToString("B", CultureInfo.InvariantCulture);
         }
 
@@ -123,7 +130,10 @@ namespace QbSync.QbXml.Objects
             reader.ReadStartElement();
             if (!isEmptyElement)
             {
-                value = Parse(reader.ReadContentAsString());
+                var str = reader.ReadContentAsString();
+                _isZero = str == "0";
+                value = Parse(str);
+
                 reader.ReadEndElement();
             }
         }
