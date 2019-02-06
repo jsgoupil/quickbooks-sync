@@ -2,5 +2,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net45</TargetFrameworks>
+    <AssemblyName>QbSync.XsdGenerator</AssemblyName>
+    <Version>0.3.0</Version>
   </PropertyGroup>
 </Project>

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "XsdGenerator": {
+      "commandName": "Project",
+      "commandLineArgs": "..\\..\\..\\..\\QbXml\\Schemas\\qbxml130_modified.xsd ..\\..\\..\\..\\QbXml\\Schemas\\qbxmltypes130_generate.xsd ..\\..\\..\\..\\QbXml\\Schemas\\qbxmlops130.xsd ..\\..\\..\\..\\QbXml\\Schemas\\qbxmlso130.xsd /o:..\\..\\..\\..\\QbXml\\Objects\\Objects.cs"
+    }
+  }
+}

@@ -33,7 +33,11 @@ namespace WebApplication.Sample
                         .WithStep<CustomerGroupAddQuery.Request, CustomerGroupAddQuery.Response>()
                         .WithStep<CustomerQuery.Request, CustomerQuery.Response>()
                         .WithStep<InvoiceQuery.Request, InvoiceQuery.Response>()
-                        .WithStep<CustomerAdd.Request, CustomerAdd.Response>();
+                        .WithStep<CustomerAdd.Request, CustomerAdd.Response>()
+
+                        // You need to do some work in this InvoiceAdd class before you can activate it.
+                        ////.WithStep<InvoiceAdd.Request, InvoiceAdd.Response>()
+                    ;
                 });
 
             services

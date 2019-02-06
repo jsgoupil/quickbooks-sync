@@ -17,6 +17,7 @@ namespace QbSync.XsdGenerator
         private IEnumerable<CodeMemberProperty> codeMemberProperties;
         private CodeAttributeDeclaration ignoreAttribute = new CodeAttributeDeclaration("System.Xml.Serialization.XmlIgnoreAttribute");
         private CodeAttributeDeclaration editorBrowsableStateNever = new CodeAttributeDeclaration("System.ComponentModel.EditorBrowsable", new CodeAttributeArgument(new CodeSnippetExpression("System.ComponentModel.EditorBrowsableState.Never")));
+        private CodeAttributeDeclaration obsoleteAttribute = new CodeAttributeDeclaration("System.ObsoleteAttribute", new CodeAttributeArgument(new CodePrimitiveExpression("Marked as obsolete by Intuit.")));
 
         public MemberEnhancer(CodeTypeDeclaration codeType, CodeNamespace codeNamespace, XmlSchemas xsds)
         {
@@ -124,13 +125,13 @@ namespace QbSync.XsdGenerator
             var maxReturned = codeMemberProperties.FirstOrDefault(m => m.Name == "MaxReturned");
             if (iteratorID != null && maxReturned != null)
             {
-                codeType.BaseTypes.Add("QbIteratorRequest");
+                codeType.BaseTypes.Add("IQbIteratorRequest");
             }
 
             var iteratorRemainingCount = codeMemberProperties.FirstOrDefault(m => m.Name == "iteratorRemainingCount");
             if (iteratorID != null && iteratorRemainingCount != null)
             {
-                codeType.BaseTypes.Add("QbIteratorResponse");
+                codeType.BaseTypes.Add("IQbIteratorResponse");
             }
         }
 
@@ -311,20 +312,35 @@ namespace QbSync.XsdGenerator
             return null;
         }
 
+        private string[] GetStringAppInfos(XmlSchemaElement xmlSchemaElement)
+        {
+            if (xmlSchemaElement.Annotation != null)
+            {
+                var xmlSchemaSimpleType = xmlSchemaElement.Annotation.Items.OfType<XmlSchemaAppInfo>();
+                return xmlSchemaSimpleType
+                    .Select(m => m.Markup.OfType<XmlText>().FirstOrDefault())
+                    .Where(m => m != null)
+                    .Select(m => m.Value)
+                    .ToArray();
+            }
+
+            return null;
+        }
+
         private XmlSchemaElement GetSchemaElement(XmlSchemaComplexType xmlSchemaComplexType, string name)
         {
             var xmlSchemaSequence = xmlSchemaComplexType.ContentTypeParticle as XmlSchemaSequence;
             if (xmlSchemaSequence != null)
             {
                 var xmlSchemaElementFound = xmlSchemaSequence.Items.OfType<XmlSchemaElement>()
-                    .FirstOrDefault(m => m.Name == name);
+                    .FirstOrDefault(m => m.QualifiedName?.Name == name);
 
                 // Let's try to search in the choices.
                 if (xmlSchemaElementFound == null)
                 {
                     foreach (var choice in xmlSchemaSequence.Items.OfType<XmlSchemaChoice>())
                     {
-                        xmlSchemaElementFound = choice.Items.OfType<XmlSchemaElement>().FirstOrDefault(m => m.Name == name);
+                        xmlSchemaElementFound = choice.Items.OfType<XmlSchemaElement>().FirstOrDefault(m => m.QualifiedName?.Name == name);
                         if (xmlSchemaElementFound != null)
                         {
                             break;
@@ -371,10 +387,10 @@ namespace QbSync.XsdGenerator
             {
                 foreach (var codeMember in codeMemberProperties)
                 {
-                    if (codeMember.Type.BaseType == "System.String" && codeMember.Type.ArrayRank == 0)
+                    var schemaElement = GetSchemaElement(xmlSchemaComplexType, codeMember.Name);
+                    if (schemaElement != null)
                     {
-                        var schemaElement = GetSchemaElement(xmlSchemaComplexType, codeMember.Name);
-                        if (schemaElement != null)
+                        if (codeMember.Type.BaseType == "System.String" && codeMember.Type.ArrayRank == 0)
                         {
                             var restriction = GetStringRestriction(schemaElement);
                             if (restriction != null)
@@ -386,6 +402,12 @@ namespace QbSync.XsdGenerator
                                 var tempVariable = AddSubstringSetStatement(codeMember.SetStatements, intValue);
                                 codeMember.SetStatements.Add(new CodeAssignStatement(originalLeftStatement, tempVariable));
                             }
+                        }
+
+                        var appInfos = GetStringAppInfos(schemaElement);
+                        if (appInfos != null && appInfos.Contains("DEPRECATED"))
+                        {
+                            codeMember.CustomAttributes.Add(obsoleteAttribute);
                         }
                     }
                 }

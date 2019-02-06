@@ -42,11 +42,11 @@ namespace QbSync.XsdGenerator
 
                 if (requestList.Contains(codeType.Name))
                 {
-                    codeType.BaseTypes.Add("QbRequest");
+                    codeType.BaseTypes.Add("IQbRequest");
                 }
                 else if (responseList.Contains(codeType.Name))
                 {
-                    codeType.BaseTypes.Add("QbResponse");
+                    codeType.BaseTypes.Add("IQbResponse");
                 }
             }
         }

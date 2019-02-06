@@ -15,6 +15,8 @@
 <!-- ============================================================================= -->
 <!-- Modified: jsgoupil 2015/17/04                                                 -->
 <!-- PreferredDeliveryMethod should return None/Mail/Email                         -->
+<!-- Modified: jsgoupil 2019/02/06                                                 -->
+<!-- Adding some DEPRECATED annotations                                            -->
 <!-- ============================================================================= -->
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
@@ -3139,6 +3141,9 @@
 			</xsd:simpleType>
 		</xsd:element>
 		<xsd:element name="Mobile" minOccurs="0">
+			<xsd:annotation>
+				<xsd:appinfo>DEPRECATED</xsd:appinfo>
+			</xsd:annotation>
 			<xsd:simpleType>
 				<xsd:restriction base="STRTYPE">
 					<xsd:maxLength value="21"/>
@@ -12550,7 +12555,11 @@
 			</xsd:choice>
 			<xsd:element ref="ServiceDate" minOccurs="0"/>
 			<xsd:element ref="SalesTaxCodeRef" minOccurs="0"/>
-			<xsd:element ref="IsTaxable" minOccurs="0"/>
+			<xsd:element ref="IsTaxable" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>DEPRECATED</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
 			<xsd:element name="Other1" minOccurs="0">
 				<xsd:simpleType>
 					<xsd:restriction base="STRTYPE">
@@ -12609,7 +12618,11 @@
 			</xsd:choice>
 			<xsd:element ref="ServiceDate" minOccurs="0"/>
 			<xsd:element ref="SalesTaxCodeRef" minOccurs="0"/>
-			<xsd:element ref="IsTaxable" minOccurs="0"/>
+			<xsd:element ref="IsTaxable" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>DEPRECATED</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
 			<xsd:element ref="OverrideItemAccountRef" minOccurs="0"/>
 			<xsd:element name="Other1" minOccurs="0">
 				<xsd:simpleType>
@@ -12858,9 +12871,21 @@
 				<xsd:element ref="InvoiceLineAdd"/>
 				<xsd:element ref="InvoiceLineGroupAdd"/>
 			</xsd:choice>
-			<xsd:element ref="DiscountLineAdd" minOccurs="0"/>
-			<xsd:element ref="SalesTaxLineAdd" minOccurs="0"/>
-			<xsd:element ref="ShippingLineAdd" minOccurs="0"/>
+			<xsd:element ref="DiscountLineAdd" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>DEPRECATED</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="SalesTaxLineAdd" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>DEPRECATED</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="ShippingLineAdd" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>DEPRECATED</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
 		</xsd:sequence>
 		<xsd:attribute name="defMacro" type="MACROTYPE"/>
 	</xsd:complexType>
@@ -13569,7 +13594,11 @@
 			</xsd:choice>
 			<xsd:element ref="ServiceDate" minOccurs="0"/>
 			<xsd:element ref="SalesTaxCodeRef" minOccurs="0"/>
-			<xsd:element ref="IsTaxable" minOccurs="0"/>
+			<xsd:element ref="IsTaxable" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>DEPRECATED</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
 			<xsd:element name="Other1" minOccurs="0">
 				<xsd:simpleType>
 					<xsd:restriction base="STRTYPE">
@@ -13615,7 +13644,11 @@
 			</xsd:choice>
 			<xsd:element ref="ServiceDate" minOccurs="0"/>
 			<xsd:element ref="SalesTaxCodeRef" minOccurs="0"/>
-			<xsd:element ref="IsTaxable" minOccurs="0"/>
+			<xsd:element ref="IsTaxable" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>DEPRECATED</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
 			<xsd:element ref="OverrideItemAccountRef" minOccurs="0"/>
 			<xsd:element name="Other1" minOccurs="0">
 				<xsd:simpleType>
@@ -13887,9 +13920,21 @@
 				<xsd:element ref="SalesReceiptLineAdd"/>
 				<xsd:element ref="SalesReceiptLineGroupAdd"/>
 			</xsd:choice>
-			<xsd:element ref="DiscountLineAdd" minOccurs="0"/>
-			<xsd:element ref="SalesTaxLineAdd" minOccurs="0"/>
-			<xsd:element ref="ShippingLineAdd" minOccurs="0"/>
+			<xsd:element ref="DiscountLineAdd" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>DEPRECATED</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="SalesTaxLineAdd" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>DEPRECATED</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="ShippingLineAdd" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>DEPRECATED</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
 		</xsd:sequence>
 		<xsd:attribute name="defMacro" type="MACROTYPE"/>
 	</xsd:complexType>
@@ -14002,7 +14047,11 @@
 			</xsd:choice>
 			<xsd:element ref="ServiceDate" minOccurs="0"/>
 			<xsd:element ref="SalesTaxCodeRef" minOccurs="0"/>
-			<xsd:element ref="IsTaxable" minOccurs="0"/>
+			<xsd:element ref="IsTaxable" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>DEPRECATED</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
 			<xsd:element name="Other1" minOccurs="0">
 				<xsd:simpleType>
 					<xsd:restriction base="STRTYPE">
@@ -14047,7 +14096,11 @@
 			</xsd:choice>
 			<xsd:element ref="ServiceDate" minOccurs="0"/>
 			<xsd:element ref="SalesTaxCodeRef" minOccurs="0"/>
-			<xsd:element ref="IsTaxable" minOccurs="0"/>
+			<xsd:element ref="IsTaxable" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>DEPRECATED</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
 			<xsd:element ref="OverrideItemAccountRef" minOccurs="0"/>
 			<xsd:element name="Other1" minOccurs="0">
 				<xsd:simpleType>
@@ -14293,9 +14346,21 @@
 				<xsd:element ref="CreditMemoLineAdd"/>
 				<xsd:element ref="CreditMemoLineGroupAdd"/>
 			</xsd:choice>
-			<xsd:element ref="DiscountLineAdd" minOccurs="0"/>
-			<xsd:element ref="SalesTaxLineAdd" minOccurs="0"/>
-			<xsd:element ref="ShippingLineAdd" minOccurs="0"/>
+			<xsd:element ref="DiscountLineAdd" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>DEPRECATED</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="SalesTaxLineAdd" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>DEPRECATED</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="ShippingLineAdd" minOccurs="0">
+				<xsd:annotation>
+					<xsd:appinfo>DEPRECATED</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:element>
 		</xsd:sequence>
 		<xsd:attribute name="defMacro" type="MACROTYPE"/>
 	</xsd:complexType>

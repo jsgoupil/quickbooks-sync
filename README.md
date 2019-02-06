@@ -407,6 +407,15 @@ The QbManager can be overriden in order to handle the communication at a lower l
 15. `GetCompanyFile` - Indicates which company file to use on the client. By default, it uses the one currently opened.
 
 
+### XSD Generator ###
+The XSD generator that Microsoft provides does not embed enough information in the resulting C#.
+For this reason, this project has its own code generator which enhanced a lot of types.
+For instance, we order properly the items in the XML. We add some length restriction. We add some interfaces.
+
+We marked some properties as deprecated as we found out QuickBooks was emitting a warning when using them. If you find more properties, let us know.
+
+We use a modified version of the XSD provided from QuickBooks; after working on this project, we found that the XSD are not up to date with the latest information.
+
 ## Contributing
 
 Contributions are welcome. Code or documentation!
