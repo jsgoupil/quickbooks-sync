@@ -17,7 +17,10 @@ namespace QbSync.QbXml.Objects
         public GUIDTYPE(string value)
         {
             this.value = Parse(value);
-            if (value == "0") _isZero = true;
+            if (value == "0")
+            {
+                _isZero = true;
+            }
         }
 
         public GUIDTYPE(Guid value)
