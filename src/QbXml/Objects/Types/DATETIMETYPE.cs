@@ -14,7 +14,7 @@ namespace QbSync.QbXml.Objects
         private bool _canReadXml;
         private readonly bool _isLocal;
 
-        //Private constructor as only xml deserialization should be using this
+        // Private constructor as only xml deserialization should be using this
         private DATETIMETYPE()
         {
             _canReadXml = true;
@@ -46,7 +46,7 @@ namespace QbSync.QbXml.Objects
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DATETIMETYPE"/> class using the specified <see cref="DateTime"/>.
-        /// IMPORTANT NOTE: The <see cref="DateTime.Kind"/> property of the <see cref="value"/> will be used to determine 
+        /// NOTE: The <see cref="DateTime.Kind"/> property of the <see cref="value"/> will be used to determine 
         /// if and what offset should be used when sending the value to QuickBooks. 
         /// <see cref="DateTimeKind"/>.<see cref="DateTimeKind.Utc"/> will use "+00:00".
         /// <see cref="DateTimeKind"/>.<see cref="DateTimeKind.Local"/> will use the offset as determined by the timezone of the machine this application is running on.

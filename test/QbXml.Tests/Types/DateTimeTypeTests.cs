@@ -53,7 +53,7 @@ namespace QbSync.QbXml.Tests.Types
         {
             var date = new DateTime(2019, 2, 6, 17, 24, 0, DateTimeKind.Local);
 
-            //Note, this will be +00:00, not Z on a UTC machine, because of DateTimeKind.Local
+            // Note, this will be +00:00, not Z on a UTC machine, because of DateTimeKind.Local
             var offset = date.ToString(" K").Trim(); 
 
             var dt = new DATETIMETYPE(date);
@@ -114,10 +114,10 @@ namespace QbSync.QbXml.Tests.Types
         [Test]
         public void CompareAccountsForOffset()
         {
-            //A's instant (moment in time globally) is later, but its DateTime is earlier
+            // A's instant (moment in time globally) is later, but its DateTime is earlier
             var a = new DATETIMETYPE(new DateTimeOffset(2019, 1, 1, 6, 0, 0, 0, TimeSpan.FromHours(-3)));
 
-            //B's instant is earlier, but its DateTime is later
+            // B's instant is earlier, but its DateTime is later
             var b = new DATETIMETYPE(new DateTimeOffset(2019, 1, 1, 8, 0, 0, 0, TimeSpan.Zero));
 
             Assert.AreEqual(1, a.CompareTo(b));
@@ -189,7 +189,7 @@ namespace QbSync.QbXml.Tests.Types
         [Test]
         public void EqualsSameInstantDifferentOffsets()
         {
-            //Even though these are two different offsets, they represent the same moment in time and both have offsets supplied, so should be equal
+            // Even though these are two different offsets, they represent the same moment in time and both have offsets supplied, so should be equal
 
             var a = new DATETIMETYPE(2019, 1, 1, 12, 0, 0, TimeSpan.FromHours(-1));
             var b = new DATETIMETYPE(2019, 1, 1, 11, 0, 0, TimeSpan.FromHours(-2));
@@ -201,7 +201,7 @@ namespace QbSync.QbXml.Tests.Types
         [Test]
         public void EqualsOperatorSameInstantDifferentOffsets()
         {
-            //Even though these are two different offsets, they represent the same moment in time and both have offsets supplied, so should be equal
+            // Even though these are two different offsets, they represent the same moment in time and both have offsets supplied, so should be equal
 
             var a = new DATETIMETYPE(2019, 1, 1, 12, 0, 0, TimeSpan.FromHours(-1));
             var b = new DATETIMETYPE(2019, 1, 1, 11, 0, 0, TimeSpan.FromHours(-2));
@@ -213,7 +213,7 @@ namespace QbSync.QbXml.Tests.Types
         [Test]
         public void EqualsOperatorSameTimeOneMissingOffset()
         {
-            //While these will compare the same, they should not be considered equal
+            // While these will compare the same, they should not be considered equal
 
             var a = new DATETIMETYPE(new DateTimeOffset(2019, 1, 1, 8, 0, 0, 0, TimeSpan.Zero));
             var b = new DATETIMETYPE(new DateTime(2019, 1, 1, 8, 0, 0, 0, DateTimeKind.Unspecified));
@@ -260,8 +260,8 @@ namespace QbSync.QbXml.Tests.Types
         [Test]
         public void ToDateTimeIsLocalKindWhenConstructedFromLocalDateTime()
         {
-            //This situation only covers when a consumer of this library is converting back to DateTime after initializing from DateTime
-            //No QuickBooks parsed DATETIMETYPE will ever have a Local kind
+            // This situation only covers when a consumer of this library is converting back to DateTime after initializing from DateTime
+            // No QuickBooks parsed DATETIMETYPE will ever have a Local kind
 
             var dt = new DATETIMETYPE(new DateTime(2019, 1, 1, 8, 0, 0, 0, DateTimeKind.Local));
             Assert.AreEqual(DateTimeKind.Local, dt.ToDateTime().Kind);
@@ -456,7 +456,7 @@ namespace QbSync.QbXml.Tests.Types
 
         private static DATETIMETYPE[] ReadXmlThrowsInputs()
         {
-            //Return one DATETIMETYPE for each construction method
+            // Return one DATETIMETYPE for each construction method
 
             return new[]
             {
@@ -470,14 +470,16 @@ namespace QbSync.QbXml.Tests.Types
         [Test, TestCaseSource(nameof(ReadXmlThrowsInputs))]
         public void ReadXmlThrows(DATETIMETYPE date)
         {
-            //IXmlSerializable requires ReadXML, which makes the class difficult to make immutable
-            //To ensure as much immutability as possible, only let the deserializer use ReadXML
+            // IXmlSerializable requires ReadXML, which makes the class difficult to make immutable
+            // To ensure as much immutability as possible, only let the deserializer use ReadXML
 
             var reader = XmlReader.Create(new MemoryStream());
 
             Assert.Throws<InvalidOperationException>(() =>
             {
+#pragma warning disable 612
                 date.ReadXml(reader);
+#pragma warning restore 612
             });
         }
 
@@ -500,7 +502,7 @@ namespace QbSync.QbXml.Tests.Types
         [Test]
         public void OffsetIsIgnoreWhenXmlParsed()
         {
-            //This tests the QuickBooks fix that simply ignores the returned offset portion of the date [when no fix applied]
+            // This tests the QuickBooks fix that simply ignores the returned offset portion of the date [when no fix applied]
 
             var time = "2015-04-03T10:06:17-07:00";
 
@@ -555,7 +557,7 @@ namespace QbSync.QbXml.Tests.Types
         [Test]
         public void OffsetIsIgnoredWhenXmlParsedAndTimeZoneFixBaseOffsetDoesNotMatchInput()
         {
-            //A protection against misconfiguration if the time zone is set completely wrong
+            // A protection against misconfiguration if the time zone is set completely wrong
 
             var time = "2015-04-03T10:06:17-10:00";
 
@@ -567,7 +569,7 @@ namespace QbSync.QbXml.Tests.Types
         [Test]
         public void DefaultDateTimeUsedWhenXmlParsedWithInvalidDate()
         {
-            //Dates have been seen with 0000-00-00. Need to use default date instead of throwing
+            // Dates have been seen with 0000-00-00. Need to use default date instead of throwing
 
             var time = "0000-00-00";
 
