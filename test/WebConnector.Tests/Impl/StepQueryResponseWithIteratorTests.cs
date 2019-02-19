@@ -117,7 +117,7 @@ namespace QbSync.WebConnector.Tests.Impl
             var ret = await stepQueryResponseWithIteratorMock.Object.ReceiveXMLAsync(authenticatedTicket, xml, string.Empty, string.Empty);
             Assert.AreEqual(0, ret);
 
-            //The time zone fix should leave the time as is, and correct the offset according to the provided zone
+            // The time zone fix should leave the time as is, and correct the offset according to the provided zone
             var expectedHour = 10;
             var expectedOffset = TimeSpan.FromHours(-7);
 
@@ -166,7 +166,7 @@ namespace QbSync.WebConnector.Tests.Impl
             Assert.AreEqual(0, ret);
 
 
-            //When there is no time zone fix, the time should be left alone, and the offset should be ignored
+            // When there is no time zone fix, the time should be left alone, and the offset should be ignored
 
             var expectedHour = 10;
             stepQueryResponseWithIteratorMock

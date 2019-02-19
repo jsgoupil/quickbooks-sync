@@ -122,7 +122,10 @@ namespace QbSync.QbXml.Objects
         /// <param name="offset">The optional offset from UTC. If no offset is defined, QuickBooks will interpret the date as the local time of the QuickBooks host computer.</param>
         public DATETIMETYPE(int year, int month, int day, int hour = 0, int minute = 0, int second = 0, TimeSpan? offset = null)
         {
-            if (year > 2037 || year < 1970) throw new ArgumentOutOfRangeException(nameof(year), year, "Year must be between 1970 and 2037, inclusive");
+            if (year > 2037 || year < 1970)
+            {
+                throw new ArgumentOutOfRangeException(nameof(year), year, "Year must be between 1970 and 2037, inclusive");
+            }
 
             _value = new DateTimeOffset(year, month, day, hour, minute, second, offset ?? TimeSpan.Zero);
             _ignoreOffset = offset == null;
@@ -248,14 +251,14 @@ namespace QbSync.QbXml.Objects
             return !(a == b);
         }
 
-        //TODO: Remove support for implicit casting from system types, as they may throw exceptions
+        // TODO: Remove support for implicit casting from system types, as they may throw exceptions
         [Obsolete("Implicit operators will be no longer supported")]
         public static implicit operator DATETIMETYPE(DateTime value)
         {
             return new DATETIMETYPE(value);
         }
 
-        //TODO: Remove support for implicit casting to system types. User should make a explicit choice to lose data to convert to DateTime
+        // TODO: Remove support for implicit casting to system types. User should make a explicit choice to lose data to convert to DateTime
         [Obsolete("Implicit operators will be no longer supported")]
         public static implicit operator DateTime(DATETIMETYPE type)
         {
@@ -280,7 +283,10 @@ namespace QbSync.QbXml.Objects
 
         public int CompareTo(DATETIMETYPE other)
         {
-            if (other == null) return 1;
+            if (other == null)
+            {
+                return 1;
+            }
 
             if (_ignoreOffset || other._ignoreOffset)
             {
@@ -300,12 +306,12 @@ namespace QbSync.QbXml.Objects
         {
             if (!_canReadXml)
             {
-                //This class needs to be immutable as possible
-                //Only allow this when constructed using the empty constructor to only be used by deserialization
+                // This class needs to be immutable as possible
+                // Only allow this when constructed using the empty constructor to only be used by deserialization
                 throw new InvalidOperationException("This method not to be used by user code");
             }
 
-            //Only allow ReadXML once to prevent user code from calling this method after deserialized
+            // Only allow ReadXML once to prevent user code from calling this method after deserialized
             _canReadXml = false;
 
             reader.MoveToContent();
@@ -324,9 +330,9 @@ namespace QbSync.QbXml.Objects
 
             if (timeZone == null && str != null && str.Length > 19)
             {
-                //QuickBooks has inaccurate offset values
-                //The DateTime is otherwise accurate (follows DST), but the offset does not follow DST
-                //To accomodate for this, simply ignore the offset portion of the string, but only when parsing from XML
+                // QuickBooks has inaccurate offset values
+                // The DateTime is otherwise accurate (follows DST), but the offset does not follow DST
+                // To accomodate for this, simply ignore the offset portion of the string, but only when parsing from XML
                 str = str.Substring(0, 19);
             }
 
@@ -336,11 +342,11 @@ namespace QbSync.QbXml.Objects
 
                 if (timeZone != null && timeZone.SupportsDaylightSavingTime)
                 {
-                    //QuickBooks always returns the BaseUTC offset
-                    //Verify this matches the returned value so we know the fix is configured correctly
+                    // QuickBooks always returns the BaseUTC offset
+                    // Verify this matches the returned value so we know the fix is configured correctly
                     if (timeZone.BaseUtcOffset == _value.Offset)
                     {
-                        //A time zone was specified, so we can correct the values supplied by QB
+                        // A time zone was specified, so we can correct the values supplied by QB
                         var correctedOffset = timeZone.GetUtcOffset(_value.DateTime);
                         _value = new DateTimeOffset(_value.DateTime, correctedOffset);
                     }
@@ -355,10 +361,8 @@ namespace QbSync.QbXml.Objects
                 _value = new DateTimeOffset(1970, 1, 1, 0, 0, 0, 0, TimeSpan.Zero);
                 _ignoreOffset = true;
             }
-            finally
-            {
-               reader.ReadEndElement();
-            }
+
+            reader.ReadEndElement();
         }
 
         public void WriteXml(System.Xml.XmlWriter writer)
@@ -373,11 +377,11 @@ namespace QbSync.QbXml.Objects
                 throw new ArgumentNullException(nameof(value));
             }
 
-            //Check if the offset is supplied at the end of supplied value
+            // Check if the offset is supplied at the end of supplied value
             isMissingOffset = !Regex.IsMatch(value, "(?:Z|[+-](?:2[0-3]|[01][0-9]):[0-5][0-9])$");
 
-            //According to MSDN: If <Offset> is missing, its default value is the offset of the local time zone.
-            //We assume universal below instead so offset is 0 when not supplied to the time does not get adjusted
+            // According to MSDN: If <Offset> is missing, its default value is the offset of the local time zone.
+            // We assume universal below instead so offset is 0 when not supplied to the time does not get adjusted
             
             return DateTimeOffset.Parse(value, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AssumeUniversal);
         }
