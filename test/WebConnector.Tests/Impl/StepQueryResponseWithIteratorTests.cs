@@ -116,10 +116,14 @@ namespace QbSync.WebConnector.Tests.Impl
 
             var ret = await stepQueryResponseWithIteratorMock.Object.ReceiveXMLAsync(authenticatedTicket, xml, string.Empty, string.Empty);
             Assert.AreEqual(0, ret);
-            var expectedHour = 17;
+
+            //The time zone fix should leave the time as is, and correct the offset according to the provided zone
+            var expectedHour = 10;
+            var expectedOffset = TimeSpan.FromHours(-7);
+
             stepQueryResponseWithIteratorMock
                 .Protected()
-                .Verify("ExecuteResponseAsync", Times.Once(), ItExpr.IsAny<AuthenticatedTicket>(), ItExpr.Is<CustomerQueryRsType>(m => m.CustomerRet[0].TimeModified.ToDateTime().ToUniversalTime().Hour == expectedHour));
+                .Verify("ExecuteResponseAsync", Times.Once(), ItExpr.IsAny<AuthenticatedTicket>(), ItExpr.Is<CustomerQueryRsType>(m => m.CustomerRet[0].TimeModified.GetDateTimeOffset().Hour == expectedHour && m.CustomerRet[0].TimeModified.GetDateTimeOffset().Offset == expectedOffset));
         }
 
         [Test]
@@ -160,10 +164,18 @@ namespace QbSync.WebConnector.Tests.Impl
 
             var ret = await stepQueryResponseWithIteratorMock.Object.ReceiveXMLAsync(authenticatedTicket, xml, string.Empty, string.Empty);
             Assert.AreEqual(0, ret);
-            var expectedHour = 18;
+
+
+            //When there is no time zone fix, the time should be left alone, and the offset should be ignored
+
+            var expectedHour = 10;
             stepQueryResponseWithIteratorMock
                 .Protected()
-                .Verify("ExecuteResponseAsync", Times.Once(), ItExpr.IsAny<AuthenticatedTicket>(), ItExpr.Is<CustomerQueryRsType>(m => m.CustomerRet[0].TimeModified.ToDateTime().ToUniversalTime().Hour == expectedHour));
+                .Verify("ExecuteResponseAsync", Times.Once(), ItExpr.IsAny<AuthenticatedTicket>(), ItExpr.Is<CustomerQueryRsType>(m => m.CustomerRet[0].TimeModified.ToDateTime().Hour == expectedHour));
+
+            stepQueryResponseWithIteratorMock
+                .Protected()
+                .Verify("ExecuteResponseAsync", Times.Once(), ItExpr.IsAny<AuthenticatedTicket>(), ItExpr.Is<CustomerQueryRsType>(m => m.CustomerRet[0].TimeModified.HasOffset() == false));
         }
     }
 }
