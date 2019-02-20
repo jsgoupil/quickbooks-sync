@@ -251,26 +251,6 @@ namespace QbSync.QbXml.Objects
             return !(a == b);
         }
 
-        // TODO: Remove support for implicit casting from system types, as they may throw exceptions
-        [Obsolete("Implicit operators will be no longer supported")]
-        public static implicit operator DATETIMETYPE(DateTime value)
-        {
-            return new DATETIMETYPE(value);
-        }
-
-        // TODO: Remove support for implicit casting to system types. User should make a explicit choice to lose data to convert to DateTime
-        [Obsolete("Implicit operators will be no longer supported")]
-        public static implicit operator DateTime(DATETIMETYPE type)
-        {
-            if (type != null)
-            {
-                return type.ToDateTime();
-            }
-
-            return default(DateTime);
-        }
-
-
         public static bool operator <(DATETIMETYPE a, DATETIMETYPE b)
         {
             return a.CompareTo(b) < 0;
