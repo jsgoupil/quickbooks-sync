@@ -165,22 +165,6 @@ namespace QbSync.QbXml.Tests.Types
             Assert.AreEqual("2019-02-06T17:24:00", dt.ToString());
         }
 
-#pragma warning disable 618
-        [Test]
-        public void ObsoleteImplicitCastFromDateTime()
-        {
-            DATETIMETYPE dt = new DateTime(2019, 2, 6, 17, 24, 0, DateTimeKind.Unspecified);
-            Assert.AreEqual("2019-02-06T17:24:00", dt.ToString());
-        }
-
-        [Test]
-        public void ObsoleteExplicitCastFromDateTime()
-        {
-            var dt = (DATETIMETYPE)new DateTime(2019, 2, 6, 17, 24, 0, DateTimeKind.Unspecified);
-            Assert.AreEqual("2019-02-06T17:24:00", dt.ToString());
-        }
-#pragma warning restore 618
-
         [Test]
         public void CompareAccountsForOffset()
         {
