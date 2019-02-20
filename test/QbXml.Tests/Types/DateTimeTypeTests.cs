@@ -31,6 +31,76 @@ namespace QbSync.QbXml.Tests.Types
         }
 
         [Test]
+        public void RoundTripsAsExpectedWithoutTimeZoneFix()
+        {
+            // Simulated value returned from QuickBooks, that we want to be sent the exact same way to future queries
+            var str = "2019-02-20T10:36:51";
+            var date = DATETIMETYPE.Parse(str);
+
+            // DATETIMETYPE > string
+            Assert.AreEqual(str, date.ToString());
+
+            // DATETIMETYPE > string > DATETIMETYPE > string
+            Assert.AreEqual(str, DATETIMETYPE.Parse(date.ToString()).ToString());
+
+            // DATETIMETYPE > DateTime > DATETIMETYPE > string
+            Assert.AreEqual(str, new DATETIMETYPE(date.ToDateTime()).ToString());
+
+            // DATETIMETYPE > DateTime > string > DATETIMETYPE > string
+            Assert.AreEqual(str, DATETIMETYPE.Parse(date.ToDateTime().ToString()).ToString());
+
+            // DATETIMETYPE > DateTime > string > DateTime > DATETIMETYPE > string
+            Assert.AreEqual(str, new DATETIMETYPE(DateTime.Parse(date.ToDateTime().ToString())).ToString());
+        }
+
+        [Test]
+        public void RoundTripsAsExpectedWithTimeZoneFix()
+        {
+            // Simulated value returned from QuickBooks, that we want to be sent the exact same way to future queries
+            var date = DATETIMETYPE.Parse("2019-02-20T10:36:51-08:00");
+
+            // DATETIMETYPE > string
+            Assert.AreEqual("2019-02-20T10:36:51-08:00", date.ToString());
+
+            // DATETIMETYPE > string > DATETIMETYPE > string
+            Assert.AreEqual("2019-02-20T10:36:51-08:00", DATETIMETYPE.Parse(date.ToString()).ToString());
+
+
+            // *********************************************************************************
+            // NOTE:
+            // These next tests make use of DateTimeOffset, which is only available for
+            // QuickBooks parsed values if a time zone fix is in place.
+            // Offset is kept throughout in these cases
+            // *********************************************************************************
+
+            // DATETIMETYPE > DateTimeOffset > DATETIMETYPE > string
+            Assert.AreEqual("2019-02-20T10:36:51-08:00", new DATETIMETYPE(date.GetDateTimeOffset()).ToString());
+
+            // DATETIMETYPE > DateTimeOffset > string > DATETIMETYPE > string
+            Assert.AreEqual("2019-02-20T10:36:51-08:00", DATETIMETYPE.Parse(date.GetDateTimeOffset().ToString()).ToString());
+
+            // DATETIMETYPE > DateTimeOffset > string > DateTimeOffset > DATETIMETYPE > string
+            Assert.AreEqual("2019-02-20T10:36:51-08:00", new DATETIMETYPE(DateTimeOffset.Parse(date.GetDateTimeOffset().ToString())).ToString());
+
+
+            // *********************************************************************************
+            // NOTE:
+            // The rest of these tests convert to DateTime. We'll lose offset information.
+            // That is OK as long as the time component does not change
+            // *********************************************************************************
+
+            // DATETIMETYPE > DateTime > DATETIMETYPE > string
+            Assert.AreEqual("2019-02-20T10:36:51", new DATETIMETYPE(date.ToDateTime()).ToString());
+
+            // DATETIMETYPE > DateTime > string > DATETIMETYPE > string
+            Assert.AreEqual("2019-02-20T10:36:51", DATETIMETYPE.Parse(date.ToDateTime().ToString()).ToString());
+
+            // DATETIMETYPE > DateTime > string > DateTime > DATETIMETYPE > string
+            Assert.AreEqual("2019-02-20T10:36:51", new DATETIMETYPE(DateTime.Parse(date.ToDateTime().ToString())).ToString());
+        }
+
+
+        [Test]
         public void ToStringDoesNotIncludeOffsetWhenConstructedFromUnspecifiedDateTime()
         {
             var date = new DateTime(2019, 2, 6, 17, 24, 0, DateTimeKind.Unspecified);
