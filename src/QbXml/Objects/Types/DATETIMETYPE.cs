@@ -37,13 +37,6 @@ namespace QbSync.QbXml.Objects
             }
         }
 
-        [Obsolete("TimeZoneInfo is no longer used. Use static DATETIMETYPE.Parse")]
-        public DATETIMETYPE(string value, TimeZoneInfo timeZoneInfo) 
-            : this(value)
-        {
-        }
-
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DATETIMETYPE"/> class using the specified <see cref="DateTime"/>.
         /// NOTE: The <see cref="DateTime.Kind"/> property of the <see cref="value"/> will be used to determine 
@@ -82,14 +75,6 @@ namespace QbSync.QbXml.Objects
                 throw new ArgumentOutOfRangeException(nameof(value), value, "The supplied value is less than the minimum allowed date of 1970-01-01");
             }
         }
-
-
-        [Obsolete("TimeZoneInfo is no longer used. Use overload without timeZoneInfo")]
-        public DATETIMETYPE(DateTime value, TimeZoneInfo timeZoneInfo)
-            : this (value)
-        {
-        }
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DATETIMETYPE"/> class using the specified <see cref="DateTimeOffset"/>.
