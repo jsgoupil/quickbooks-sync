@@ -10,7 +10,7 @@ namespace QbSync.QbXml.Objects
     {
         private DateTimeOffset _value;
 
-        private bool _ignoreOffset;
+        private bool _hasOffset;
         private bool _canReadXml;
         private readonly bool _isLocal;
 
@@ -24,7 +24,7 @@ namespace QbSync.QbXml.Objects
         [Obsolete("Use static DATETIMETYPE.Parse")]
         public DATETIMETYPE(string value)
         {
-            _value = ParseValue(value, out _ignoreOffset);
+            _value = ParseValue(value, out _hasOffset);
 
             if (this > MaxValue)
             {
@@ -58,15 +58,17 @@ namespace QbSync.QbXml.Objects
             if (value.Kind == DateTimeKind.Utc)
             {
                 _value = new DateTimeOffset(value, TimeSpan.Zero);
+                _hasOffset = true;
             }
             else if (value.Kind == DateTimeKind.Local)
             {
                 _value = new DateTimeOffset(value);
+                _hasOffset = true;
                 _isLocal = true;
             }
             else
             {
-                _ignoreOffset = true;
+                _hasOffset = false;
                 _value = new DateTimeOffset(value, TimeSpan.Zero);
             }
 
@@ -97,6 +99,7 @@ namespace QbSync.QbXml.Objects
         public DATETIMETYPE(DateTimeOffset value)
         {
             _value = value;
+            _hasOffset = true;
 
             if (this > MaxValue)
             {
@@ -128,7 +131,7 @@ namespace QbSync.QbXml.Objects
             }
 
             _value = new DateTimeOffset(year, month, day, hour, minute, second, offset ?? TimeSpan.Zero);
-            _ignoreOffset = offset == null;
+            _hasOffset = offset != null;
         }
 
 
@@ -138,17 +141,19 @@ namespace QbSync.QbXml.Objects
         /// </summary>
         public override string ToString()
         {
-            return _ignoreOffset
-                ? _value.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
-                : _value.ToString("yyyy-MM-ddTHH:mm:ssK", CultureInfo.InvariantCulture);
+            return _hasOffset
+                ? _value.ToString("yyyy-MM-ddTHH:mm:ssK", CultureInfo.InvariantCulture)
+                : _value.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
         }
 
         /// <summary>
         /// Gets a <see cref="DateTime"/> value of this date.
+        /// NOTE: In most cases this will have an <see cref="DateTimeKind.Unspecified"/> <see cref="DateTimeKind"/>.
+        /// Do not use <see cref="DateTime.ToUniversalTime"/> or <see cref="DateTime.ToLocalTime"/> on the returned value. 
         /// </summary>
         public DateTime ToDateTime()
         {
-            if (_ignoreOffset)
+            if (!_hasOffset)
             {
                 return _value.DateTime;
             }
@@ -174,7 +179,7 @@ namespace QbSync.QbXml.Objects
         /// </summary>
         public bool HasOffset()
         {
-            return !_ignoreOffset;
+            return _hasOffset;
         }
 
         /// <summary>
@@ -184,7 +189,7 @@ namespace QbSync.QbXml.Objects
         /// <exception cref="InvalidOperationException">Throws if an offset is not specified</exception>
         public DateTimeOffset GetDateTimeOffset()
         {
-            if (_ignoreOffset)
+            if (!_hasOffset)
             {
                 throw new InvalidOperationException("An offset is not available");
             }
@@ -202,9 +207,9 @@ namespace QbSync.QbXml.Objects
         /// </remarks>
         public bool TryGetDateTimeOffset(out DateTimeOffset value)
         {
-            if (_ignoreOffset)
+            if (!_hasOffset)
             {
-                value = DateTimeOffset.MinValue;
+                value = default(DateTimeOffset);
                 return false;
             }
 
@@ -214,11 +219,10 @@ namespace QbSync.QbXml.Objects
 
         public override bool Equals(object obj)
         {
-            var objType = obj as DATETIMETYPE;
-            if (objType != null)
+            if (obj is DATETIMETYPE other)
             {
-                return _value == objType._value && 
-                       _ignoreOffset == objType._ignoreOffset;
+                return _value == other._value && 
+                       _hasOffset == other._hasOffset;
             }
 
             return base.Equals(obj);
@@ -268,7 +272,7 @@ namespace QbSync.QbXml.Objects
                 return 1;
             }
 
-            if (_ignoreOffset || other._ignoreOffset)
+            if (!_hasOffset || !other._hasOffset)
             {
                 return _value.DateTime.CompareTo(other._value.DateTime);
             }
@@ -300,8 +304,8 @@ namespace QbSync.QbXml.Objects
 
             if (isEmptyElement)
             {
-                _value = new DateTimeOffset(1970, 1, 1, 0, 0, 0, 0, TimeSpan.Zero);
-                _ignoreOffset = true;
+                _value = MinValue._value;
+                _hasOffset = false;
                 return;
             }
 
@@ -318,7 +322,7 @@ namespace QbSync.QbXml.Objects
 
             try
             {
-                _value = ParseValue(str, out _ignoreOffset);
+                _value = ParseValue(str, out _hasOffset);
 
                 if (timeZone != null && timeZone.SupportsDaylightSavingTime)
                 {
@@ -329,17 +333,18 @@ namespace QbSync.QbXml.Objects
                         // A time zone was specified, so we can correct the values supplied by QB
                         var correctedOffset = timeZone.GetUtcOffset(_value.DateTime);
                         _value = new DateTimeOffset(_value.DateTime, correctedOffset);
+                        _hasOffset = true;
                     }
                     else
                     {
-                        _ignoreOffset = true;
+                        _hasOffset = false;
                     }
                 }
             }
             catch (Exception)
             {
-                _value = new DateTimeOffset(1970, 1, 1, 0, 0, 0, 0, TimeSpan.Zero);
-                _ignoreOffset = true;
+                _value = MinValue._value;
+                _hasOffset = false;
             }
 
             reader.ReadEndElement();
@@ -350,7 +355,7 @@ namespace QbSync.QbXml.Objects
             writer.WriteString(ToString());
         }
 
-        private static DateTimeOffset ParseValue(string value, out bool isMissingOffset)
+        private static DateTimeOffset ParseValue(string value, out bool hasOffset)
         {
             if (value == null)
             {
@@ -358,7 +363,7 @@ namespace QbSync.QbXml.Objects
             }
 
             // Check if the offset is supplied at the end of supplied value
-            isMissingOffset = !Regex.IsMatch(value, "(?:Z|[+-](?:2[0-3]|[01][0-9]):[0-5][0-9])$");
+            hasOffset = Regex.IsMatch(value, "(?:Z|[+-](?:2[0-3]|[01][0-9]):[0-5][0-9])$");
 
             // According to MSDN: If <Offset> is missing, its default value is the offset of the local time zone.
             // We assume universal below instead so offset is 0 when not supplied to the time does not get adjusted
@@ -382,12 +387,11 @@ namespace QbSync.QbXml.Objects
                 throw new ArgumentNullException(nameof(value));
             }
 
-            bool ignoreOffset;
-            var date = ParseValue(value, out ignoreOffset);
+            var date = ParseValue(value, out var hasOffset);
 
             return new DATETIMETYPE(date)
             {
-                _ignoreOffset = ignoreOffset
+                _hasOffset = hasOffset
             };
         }
 
@@ -398,7 +402,7 @@ namespace QbSync.QbXml.Objects
         public static readonly DATETIMETYPE MaxValue = new DATETIMETYPE
         {
             _value = new DateTimeOffset(2038, 1, 19, 3, 14, 7, 0, TimeSpan.Zero),
-            _ignoreOffset = false,
+            _hasOffset = true,
             _canReadXml = false
         };
 
@@ -408,7 +412,7 @@ namespace QbSync.QbXml.Objects
         public static readonly DATETIMETYPE MinValue = new DATETIMETYPE
         {
             _value = new DateTimeOffset(1970, 1, 1, 0, 0, 0, 0, TimeSpan.Zero),
-            _ignoreOffset = true,
+            _hasOffset = false,
             _canReadXml = false
         };
 
