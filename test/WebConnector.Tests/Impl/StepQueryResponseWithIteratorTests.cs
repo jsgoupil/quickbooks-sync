@@ -103,7 +103,7 @@ namespace QbSync.WebConnector.Tests.Impl
 
             var qbXmlResponseOptions = new QbXmlResponseOptions
             {
-                TimeZoneBugFix = QuickBooksTestHelper.GetPacificStandardTimeZoneInfo()
+                QuickBooksDesktopTimeZone = QuickBooksTestHelper.GetPacificStandardTimeZoneInfo()
             };
 
             var stepQueryResponseWithIteratorMock = new Mock<StepQueryResponseBase<CustomerQueryRsType>>();
@@ -175,7 +175,7 @@ namespace QbSync.WebConnector.Tests.Impl
 
             stepQueryResponseWithIteratorMock
                 .Protected()
-                .Verify("ExecuteResponseAsync", Times.Once(), ItExpr.IsAny<AuthenticatedTicket>(), ItExpr.Is<CustomerQueryRsType>(m => m.CustomerRet[0].TimeModified.HasOffset() == false));
+                .Verify("ExecuteResponseAsync", Times.Once(), ItExpr.IsAny<AuthenticatedTicket>(), ItExpr.Is<CustomerQueryRsType>(m => m.CustomerRet[0].TimeModified.Offset == null));
         }
     }
 }

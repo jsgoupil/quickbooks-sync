@@ -51,6 +51,9 @@ namespace QbSync.QbXml.Tests.Types
 
             // DATETIMETYPE > DateTime > string > DateTime > DATETIMETYPE > string
             Assert.AreEqual(str, new DATETIMETYPE(DateTime.Parse(date.ToDateTime().ToString())).ToString());
+
+            // DATETIMETYPE > DateTime > Ticks > DateTime > DATETIMETYPE > string
+            Assert.AreEqual(str, new DATETIMETYPE(new DateTime(date.ToDateTime().Ticks)).ToString());
         }
 
         [Test]
@@ -98,7 +101,6 @@ namespace QbSync.QbXml.Tests.Types
             // DATETIMETYPE > DateTime > string > DateTime > DATETIMETYPE > string
             Assert.AreEqual("2019-02-20T10:36:51", new DATETIMETYPE(DateTime.Parse(date.ToDateTime().ToString())).ToString());
         }
-
 
         [Test]
         public void ToStringDoesNotIncludeOffsetWhenConstructedFromUnspecifiedDateTime()
@@ -158,9 +160,9 @@ namespace QbSync.QbXml.Tests.Types
         }
 
         [Test]
-        public void UsesNoOffsetWhenConstructedFromDateComponentsWithNullOffset()
+        public void UsesNoOffsetWhenConstructedFromDateComponentsWithoutOffset()
         {
-            var dt = new DATETIMETYPE(2019, 2, 6, 17, 24, 0, null);
+            var dt = new DATETIMETYPE(2019, 2, 6, 17, 24, 0);
 
             Assert.AreEqual("2019-02-06T17:24:00", dt.ToString());
         }
@@ -416,11 +418,11 @@ namespace QbSync.QbXml.Tests.Types
         }
 
         [Test]
-        public void ThrowsWhenConstructedWithYearOn2038()
+        public void ThrowsWhenConstructedWithComponentsOneSecondLaterThanEpoch()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() =>
             {
-                var date = new DATETIMETYPE(2038, 1, 1);
+                var date = new DATETIMETYPE(2038, 1, 19, 3, 14, 8, TimeSpan.Zero);
             });
         }
 
@@ -499,7 +501,7 @@ namespace QbSync.QbXml.Tests.Types
         }
 
         [Test]
-        public void ThrowsExceptionWhenNullStringIsParsed()
+        public void ThrowsArgumentNullExceptionWhenNullStringIsParsed()
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
@@ -507,35 +509,6 @@ namespace QbSync.QbXml.Tests.Types
             });
         }
 
-
-        private static DATETIMETYPE[] ReadXmlThrowsInputs()
-        {
-            // Return one DATETIMETYPE for each construction method
-
-            return new[]
-            {
-                new DATETIMETYPE(2019, 1, 1),
-                new DATETIMETYPE(new DateTime(2019, 1, 2)),
-                new DATETIMETYPE(new DateTimeOffset(2019, 1, 3, 0, 0, 0, TimeSpan.Zero)),
-                DATETIMETYPE.Parse("2019-01-04T00:00:00")
-            };
-        }
-
-        [Test, TestCaseSource(nameof(ReadXmlThrowsInputs))]
-        public void ReadXmlThrows(DATETIMETYPE date)
-        {
-            // IXmlSerializable requires ReadXML, which makes the class difficult to make immutable
-            // To ensure as much immutability as possible, only let the deserializer use ReadXML
-
-            var reader = XmlReader.Create(new MemoryStream());
-
-            Assert.Throws<InvalidOperationException>(() =>
-            {
-#pragma warning disable 612
-                date.ReadXml(reader);
-#pragma warning restore 612
-            });
-        }
 
 
         #region QuickBooks parsing and fixes
@@ -546,7 +519,7 @@ namespace QbSync.QbXml.Tests.Types
 
             var response = new QbXmlResponse(new QbXmlResponseOptions
             {
-                TimeZoneBugFix = quickBooksTimeZone
+                QuickBooksDesktopTimeZone = quickBooksTimeZone
             });
             var rs = response.GetSingleItemFromResponse<CustomerQueryRsType>(QuickBooksTestHelper.CreateQbXmlWithEnvelope(ret, "CustomerQueryRs"));
             return rs.CustomerRet[0];
@@ -611,7 +584,7 @@ namespace QbSync.QbXml.Tests.Types
         [Test]
         public void OffsetIsIgnoredWhenXmlParsedAndTimeZoneFixBaseOffsetDoesNotMatchInput()
         {
-            // A protection against misconfiguration if the time zone is set completely wrong
+            // A protection against misconfiguration of the time zone fix to the wrong time zone
 
             var time = "2015-04-03T10:06:17-10:00";
 
@@ -621,7 +594,7 @@ namespace QbSync.QbXml.Tests.Types
         }
 
         [Test]
-        public void DefaultDateTimeUsedWhenXmlParsedWithInvalidDate()
+        public void MinValueUsedWhenXmlParsedWithInvalidDate()
         {
             // Dates have been seen with 0000-00-00. Need to use default date instead of throwing
 
@@ -633,12 +606,13 @@ namespace QbSync.QbXml.Tests.Types
         }
 
         [Test]
-        public void DefaultDateTimeUsedWhenXmlParsedWithEmptyDate()
+        public void MinValueUsedWhenXmlParsedWithEmptyDate()
         {
             var time = "";
 
             var customer = CreateAndParseCustomerQueryXml(time, time);
 
+            // TODO: Consider if Min Value should actually be used in this situation. Return empty string instead?
             Assert.AreEqual("1970-01-01T00:00:00", customer.TimeModified.ToString());
         }
 

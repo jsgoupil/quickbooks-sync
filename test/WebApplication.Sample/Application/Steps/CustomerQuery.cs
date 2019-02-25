@@ -30,7 +30,7 @@ namespace WebApplication.Sample.Application.Steps
             {
                 // By default, we return 100, let's do 5 here.
                 request.MaxReturned = "5";
-                request.FromModifiedDate = new DATETIMETYPE(new DateTime(2019, 4, 28, 0, 55, 40, DateTimeKind.Utc));
+                request.FromModifiedDate = new DATETIMETYPE(2019, 4, 28, 0, 55, 40);
 
                 return base.ExecuteRequestAsync(authenticatedTicket, request);
             }

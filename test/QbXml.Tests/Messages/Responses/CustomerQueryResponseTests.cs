@@ -79,7 +79,7 @@ namespace QbSync.QbXml.Tests.QbXml
 
             var response = new QbXmlResponse(new QbXmlResponseOptions
             {
-                TimeZoneBugFix = QuickBooksTestHelper.GetPacificStandardTimeZoneInfo()
+                QuickBooksDesktopTimeZone = QuickBooksTestHelper.GetPacificStandardTimeZoneInfo()
             });
             var rs = response.GetSingleItemFromResponse<CustomerQueryRsType>(QuickBooksTestHelper.CreateQbXmlWithEnvelope(ret, "CustomerQueryRs"));
             var customers = rs.CustomerRet;
