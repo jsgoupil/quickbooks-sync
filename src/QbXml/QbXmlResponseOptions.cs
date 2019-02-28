@@ -26,7 +26,7 @@ namespace QbSync.QbXml
         ///
         /// However, because offsets are optional in QuickBooks date range queries, we can use the values as returned from QuickBooks
         /// with the offset component removed, and subsequent requests to QuickBooks with this value will work as expected
-        /// because QuickBooks will interpret the date & time as in the local time it's host computer.
+        /// because QuickBooks will interpret the date & time as being in the local zone of its host computer.
         /// </remarks>
         public TimeZoneInfo QuickBooksDesktopTimeZone { get; set; }
 
