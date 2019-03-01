@@ -79,13 +79,15 @@ namespace QbSync.QbXml.Tests.QbXml
 
             var response = new QbXmlResponse(new QbXmlResponseOptions
             {
-                TimeZoneBugFix = QuickBooksTestHelper.GetPacificStandardTimeZoneInfo()
+                QuickBooksDesktopTimeZone = QuickBooksTestHelper.GetPacificStandardTimeZoneInfo()
             });
             var rs = response.GetSingleItemFromResponse<CustomerQueryRsType>(QuickBooksTestHelper.CreateQbXmlWithEnvelope(ret, "CustomerQueryRs"));
             var customers = rs.CustomerRet;
             var customer = customers[0];
 
-            Assert.AreEqual(17, customer.TimeModified.ToDateTime().ToUniversalTime().Hour);
+            Assert.AreEqual(10, customer.TimeModified.ToDateTime().Hour);
+            Assert.AreEqual(10, customer.TimeModified.GetDateTimeOffset().Hour);
+            Assert.AreEqual(-7, customer.TimeModified.GetDateTimeOffset().Offset.Hours);
         }
 
         [Test]
