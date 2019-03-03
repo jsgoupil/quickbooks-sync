@@ -10,6 +10,9 @@ namespace QbSync.XsdGenerator
 {
     class MemberEnhancer
     {
+        private const string xmlElementAttributeString = "System.Xml.Serialization.XmlElementAttribute";
+        private const string xmlArrayAttributeString = "System.Xml.Serialization.XmlArrayAttribute";
+
         private CodeTypeDeclaration codeType;
         private XmlSchemas xsds;
         private IEnumerable<CodeTypeDeclaration> codeNamespaceTypes;
@@ -18,6 +21,7 @@ namespace QbSync.XsdGenerator
         private CodeAttributeDeclaration ignoreAttribute = new CodeAttributeDeclaration("System.Xml.Serialization.XmlIgnoreAttribute");
         private CodeAttributeDeclaration editorBrowsableStateNever = new CodeAttributeDeclaration("System.ComponentModel.EditorBrowsable", new CodeAttributeArgument(new CodeSnippetExpression("System.ComponentModel.EditorBrowsableState.Never")));
         private CodeAttributeDeclaration obsoleteAttribute = new CodeAttributeDeclaration("System.ObsoleteAttribute", new CodeAttributeArgument(new CodePrimitiveExpression("Marked as obsolete by Intuit.")));
+        private Func<CodeMemberProperty, bool> itemLambda = m => m.Name == "Items" || m.Name == "Item" || m.Name == "Item1" || m.Name == "Items1";
 
         public MemberEnhancer(CodeTypeDeclaration codeType, CodeNamespace codeNamespace, XmlSchemas xsds)
         {
@@ -37,6 +41,7 @@ namespace QbSync.XsdGenerator
             var stringToIntFields = new string[] { "iteratorRemainingCountField" };
             AddRestriction();
             AddItemsProperties();
+            AddOrder();
             RemoveProperties(removeProperties);
             RemoveFields(removeFields);
 
@@ -114,9 +119,9 @@ namespace QbSync.XsdGenerator
             return list;
         }
 
-        private static IEnumerable<string> GetXmlSchemaElementNames(IEnumerable<XmlSchemaElement> xmlSchemaElements)
+        private static IList<string> GetXmlSchemaElementNames(IEnumerable<XmlSchemaElement> xmlSchemaElements)
         {
-            return xmlSchemaElements.Select(m => m.QualifiedName.Name);
+            return xmlSchemaElements.Select(m => m.QualifiedName.Name).ToList();
         }
 
         private void InsertInterface()
@@ -360,6 +365,30 @@ namespace QbSync.XsdGenerator
             codeMemberProperty.CustomAttributes.Add(stringLengthAttribute);
         }
 
+        private void AddOrderAttribute(CodeMemberProperty codeMemberProperty, int order)
+        {
+            // Get the XmlElementAttribute or create one
+            var xmlAttributeOrder = codeMemberProperty.CustomAttributes.OfType<CodeAttributeDeclaration>().FirstOrDefault(m => m.Name == xmlElementAttributeString || m.Name == xmlArrayAttributeString);
+            if (xmlAttributeOrder == null)
+            {
+                var xmlAttributeString = xmlElementAttributeString;
+                if (codeMemberProperty.Type.ArrayRank > 0)
+                {
+                    xmlAttributeString = xmlArrayAttributeString;
+                }
+
+                xmlAttributeOrder = new CodeAttributeDeclaration(xmlAttributeString);
+                codeMemberProperty.CustomAttributes.Insert(0, xmlAttributeOrder);
+            }
+
+            AddOrderArgument(xmlAttributeOrder, order);
+        }
+
+        private void AddOrderArgument(CodeAttributeDeclaration xmlElementAttribute, int order)
+        {
+            xmlElementAttribute.Arguments.Add(new CodeAttributeArgument("Order", new CodePrimitiveExpression(order)));
+        }
+
         private CodeVariableReferenceExpression AddSubstringSetStatement(CodeStatementCollection setStatement, int maxLength)
         {
             // var temp = QbNormalizer.NormalizeString(value, maxLength);
@@ -439,10 +468,10 @@ namespace QbSync.XsdGenerator
                 choices = FindTopLevelSchemaChoices(xmlSchemaComplexType.ContentTypeParticle).Cast<XmlSchemaObject>().ToList();
             }
 
-            var codeMembers = codeMemberProperties.Where(m => m.Name == "Items" || m.Name == "Item" || m.Name == "Item1").ToList();
+            var codeMembers = codeMemberProperties.Where(itemLambda).ToList();
             foreach (var codeMember in codeMembers)
             {
-                IEnumerable<string> nameOrder = null;
+                IList<string> nameOrder = null;
                 if (choices != null && i < choices.Count) // ValueAdjustment has minOccurs=0 & maxOccurs=0 which will trigger a bogus choice count.
                 {
                     nameOrder = GetXmlSchemaElementNames(WalkElement(choices[i]));
@@ -466,13 +495,73 @@ namespace QbSync.XsdGenerator
             }
         }
 
-        private void AddAppropriateProperties(CodeMemberProperty codeMemberProperty, IEnumerable<string> nameOrder, XmlSchemaComplexType xmlSchemaComplexType)
+        private void AddOrder()
+        {
+            var xmlSchemaComplexType = GetXmlSchemaComplexType();
+            if (xmlSchemaComplexType != null)
+            {
+                var allSchemaElements = GetAllSchemaElements(xmlSchemaComplexType.ContentTypeParticle);
+                if (allSchemaElements != null)
+                {
+                    var nameOrder = allSchemaElements.Select(m => m.QualifiedName.Name).ToList();
+                    if (nameOrder.Count > 0)
+                    {
+                        foreach (var codeMemberProperty in codeMemberProperties)
+                        {
+                            // If we have an ignore, we don't add an order.
+                            if (codeMemberProperty.CustomAttributes.Cast<CodeAttributeDeclaration>().Any(m => m.Name == ignoreAttribute.Name))
+                            {
+                                continue;
+                            }
+
+                            if (itemLambda(codeMemberProperty))
+                            {
+                                // We assign only 1 order to the entire list.
+                                // We get the first order and we will assign that order.
+                                var xmlElementAttributes = codeMemberProperty.CustomAttributes
+                                    .OfType<CodeAttributeDeclaration>()
+                                    .Where(m => m.Name == xmlElementAttributeString);
+                                var itemNameAndOrder = xmlElementAttributes
+                                    .Select(m => m.Arguments[0].Value)
+                                    .Cast<CodePrimitiveExpression>()
+                                    .Select(m => new
+                                    {
+                                        Name = m.Value as string,
+                                        Order = nameOrder.IndexOf(m.Value as string)
+                                    })
+                                    .Where(m => m.Order >= 0)
+                                    .OrderBy(m => m.Order)
+                                    .FirstOrDefault();
+
+                                if (itemNameAndOrder != null && !string.IsNullOrEmpty(itemNameAndOrder.Name) && itemNameAndOrder.Order >= 0)
+                                {
+                                    foreach (var xmlElementAttribute in xmlElementAttributes)
+                                    {
+                                        AddOrderArgument(xmlElementAttribute, itemNameAndOrder.Order);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                var index = nameOrder.IndexOf(codeMemberProperty.Name);
+                                if (index >= 0)
+                                {
+                                    AddOrderAttribute(codeMemberProperty, index);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void AddAppropriateProperties(CodeMemberProperty codeMemberProperty, IList<string> nameOrder, XmlSchemaComplexType xmlSchemaComplexType)
         {
             var newMembers = new List<EnhancedProperty>();
             string withEnumChoiceName = null;
             foreach (CodeAttributeDeclaration attribute in codeMemberProperty.CustomAttributes)
             {
-                if (attribute.Name == "System.Xml.Serialization.XmlElementAttribute")
+                if (attribute.Name == xmlElementAttributeString)
                 {
                     var enhancedProperty = GetEnhancedPropertyFromAttributeAndUpdateAttribute(attribute);
                     newMembers.Add(enhancedProperty);
@@ -499,14 +588,14 @@ namespace QbSync.XsdGenerator
             foreach (var enhancedProperty in newMembers)
             {
                 var isArray = CheckIfPropertyIsArray(codeType.Name, enhancedProperty.Name);
-                CodeMemberProperty property = CreateAppropriateProperty(withEnumChoiceType, enhancedProperty, isArray, codeMemberProperty.Name, xmlSchemaComplexType);
+                CodeMemberProperty property = CreateAppropriateProperty(withEnumChoiceType, enhancedProperty, isArray, codeMemberProperty.Name, xmlSchemaComplexType, nameOrder);
                 codeType.Members.Add(property);
             }
 
             AddObjectItems(codeType, withEnumChoiceType, !codeMemberProperty.Name.StartsWith("Items"), codeMemberProperty, nameOrder);
         }
 
-        private CodeMemberProperty CreateAppropriateProperty(string withEnumChoice, EnhancedProperty enhancedProperty, bool isArray, string codeTypeMemberName, XmlSchemaComplexType xmlSchemaComplexType)
+        private CodeMemberProperty CreateAppropriateProperty(string withEnumChoice, EnhancedProperty enhancedProperty, bool isArray, string codeTypeMemberName, XmlSchemaComplexType xmlSchemaComplexType, IList<string> nameOrder)
         {
             CodeMemberProperty property = null;
             if (string.IsNullOrEmpty(withEnumChoice))
@@ -862,7 +951,7 @@ namespace QbSync.XsdGenerator
         }
         #endregion
 
-        private void AddObjectItems(CodeTypeDeclaration codeType, string withEnumChoice, bool useSingular, CodeMemberProperty codeTypeMember, IEnumerable<string> nameOrder)
+        private void AddObjectItems(CodeTypeDeclaration codeType, string withEnumChoice, bool useSingular, CodeMemberProperty codeTypeMember, IList<string> nameOrder)
         {
             var propertyName = "Object" + codeTypeMember.Name;
             var fieldName = "object" + codeTypeMember.Name;
@@ -895,7 +984,7 @@ namespace QbSync.XsdGenerator
                 // We need to add a type mapping since we have not access to a choice name.
                 foreach (var customAttribute in codeTypeMember.CustomAttributes.OfType<CodeAttributeDeclaration>())
                 {
-                    if (customAttribute.Name == "System.Xml.Serialization.XmlElementAttribute")
+                    if (customAttribute.Name == xmlElementAttributeString)
                     {
                         var name = ((CodePrimitiveExpression)customAttribute.Arguments[0].Value).Value;
                         var type = ((CodeTypeOfExpression)customAttribute.Arguments[1].Value).Type.BaseType;

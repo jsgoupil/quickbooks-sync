@@ -17,6 +17,8 @@
 <!-- PreferredDeliveryMethod should return None/Mail/Email                         -->
 <!-- Modified: jsgoupil 2019/02/06                                                 -->
 <!-- Adding some DEPRECATED annotations                                            -->
+<!-- Modified: jsgoupil 2019/03/02                                                 -->
+<!-- Fix minOccurs/maxOccurs both being 0                                          -->
 <!-- ============================================================================= -->
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
@@ -15989,8 +15991,8 @@
 				<xsd:element ref="NewQuantity" minOccurs="0"/>
 				<xsd:element ref="QuantityDifference"/>
 			</xsd:choice>
-			<xsd:choice minOccurs="0" maxOccurs="0">
-				<xsd:element ref="NewValue"/>
+			<xsd:choice>
+				<xsd:element ref="NewValue" minOccurs="0"/>
 				<xsd:element ref="ValueDifference"/>
 			</xsd:choice>
 		</xsd:sequence>
