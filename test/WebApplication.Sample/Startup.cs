@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using QbSync.WebConnector.Extensions;
@@ -41,7 +42,8 @@ namespace WebApplication.Sample
                 });
 
             services
-                .AddMvc();
+                .AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services
                 .AddScoped<ApplicationDbContext>();
@@ -62,7 +64,6 @@ namespace WebApplication.Sample
 
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
             }
             else
