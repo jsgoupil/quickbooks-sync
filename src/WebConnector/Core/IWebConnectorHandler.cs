@@ -15,14 +15,6 @@ namespace QbSync.WebConnector.Core
         Task ProcessClientInformationAsync(IAuthenticatedTicket authenticatedTicket, string response);
 
         /// <summary>
-        /// Returns the options to configure QbXml. Useful to fix the timezone QbXml bug.
-        /// The timezone info must be based off the user who is connecting to your server. Match it with their ticket.
-        /// </summary>
-        /// <param name="authenticatedTicket">The ticket.</param>
-        /// <returns>The QbXml options.</returns>
-        Task<QbXmlResponseOptions> GetOptionsAsync(IAuthenticatedTicket authenticatedTicket);
-
-        /// <summary>
         /// Called when any types of exception occur on the server.
         /// </summary>
         /// <param name="authenticatedTicket">The ticket.</param>

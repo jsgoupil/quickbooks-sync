@@ -312,7 +312,7 @@ namespace QbSync.QbXml.Objects
                 return;
             }
 
-            var timeZone = QbXmlResponse.qbXmlResponseOptionsStatic?.QuickBooksDesktopTimeZone;
+            var timeZone = (TimeZoneInfo)null;
 
             if (timeZone == null && str.Length > 19)
             {

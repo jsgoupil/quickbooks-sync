@@ -73,24 +73,6 @@ namespace QbSync.QbXml.Tests.QbXml
         }
 
         [Test]
-        public void TimeZoneBugFixTests()
-        {
-            var ret = "<CustomerRet><ListID>80000001-1422671082</ListID><TimeCreated>2015-04-03T10:06:17-08:00</TimeCreated><TimeModified>2015-04-03T10:06:17-08:00</TimeModified><EditSequence>1422671082</EditSequence><Name>Jean-S&#233;bastien Goupil</Name><FullName>Jean-S&#233;bastien Goupil</FullName><IsActive>true</IsActive></CustomerRet>";
-
-            var response = new QbXmlResponse(new QbXmlResponseOptions
-            {
-                QuickBooksDesktopTimeZone = QuickBooksTestHelper.GetPacificStandardTimeZoneInfo()
-            });
-            var rs = response.GetSingleItemFromResponse<CustomerQueryRsType>(QuickBooksTestHelper.CreateQbXmlWithEnvelope(ret, "CustomerQueryRs"));
-            var customers = rs.CustomerRet;
-            var customer = customers[0];
-
-            Assert.AreEqual(10, customer.TimeModified.ToDateTime().Hour);
-            Assert.AreEqual(10, customer.TimeModified.GetDateTimeOffset().Hour);
-            Assert.AreEqual(-7, customer.TimeModified.GetDateTimeOffset().Offset.Hours);
-        }
-
-        [Test]
         public void PreferredDeliveryMethod_Mail_ShouldBeValid()
         {
             var ret = "<CustomerRet><ListID>80000001-1422671082</ListID><TimeCreated>2015-04-03T10:06:17-08:00</TimeCreated><TimeModified>2015-04-03T10:06:17-08:00</TimeModified><EditSequence>1422671082</EditSequence><Name>Jean-S&#233;bastien Goupil</Name><FullName>Jean-S&#233;bastien Goupil</FullName><IsActive>true</IsActive><PreferredDeliveryMethod>Mail</PreferredDeliveryMethod></CustomerRet>";

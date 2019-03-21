@@ -9,8 +9,6 @@ namespace QbSync.WebConnector.Impl
 {
     public abstract class GroupStepQueryRequestBase : IStepQueryRequest
     {
-        protected QbXmlResponseOptions qbXmlResponseOptions;
-
         public GroupStepQueryRequestBase()
         {
         }
@@ -41,13 +39,6 @@ namespace QbSync.WebConnector.Impl
             }
 
             return null;
-        }
-
-        public Task SetOptionsAsync(QbXmlResponseOptions qbXmlResponseOptions)
-        {
-            this.qbXmlResponseOptions = qbXmlResponseOptions;
-
-            return Task.FromResult<object>(null);
         }
 
         protected internal virtual Task<IEnumerable<IQbRequest>> ExecuteRequestAsync(IAuthenticatedTicket authenticatedTicket)

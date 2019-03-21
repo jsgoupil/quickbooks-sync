@@ -17,11 +17,6 @@ namespace QbSync.WebConnector.Impl
             return Task.FromResult(string.Empty);
         }
 
-        public virtual Task<QbXmlResponseOptions> GetOptionsAsync(IAuthenticatedTicket authenticatedTicket)
-        {
-            return Task.FromResult((QbXmlResponseOptions)null);
-        }
-
         public virtual Task<int> GetWaitTimeAsync(IAuthenticatedTicket authenticatedTicket)
         {
             return Task.FromResult(0);

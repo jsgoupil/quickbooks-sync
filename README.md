@@ -373,6 +373,49 @@ public interface IWebConnectorHandler
 6. `CloseConnectionAsync` - The connection is closing, the Web Connector will not come back with this ticket.
 
 
+### Handling Dates ###
+
+As mentioned above, QuickBooks does not handle timezones properly. The `DATETIMETYPE` class in this library is aware of this issue and
+will convert the value coming from QuickBooks by removing the offset values.
+
+Internally, QuickBooks returns an incorrect date time offset during DST. Consequently, QuickBooks expects that you send the 
+date time with the same incorrect offset OR a date time with no offset in the computer's timezone where QuickBooks is installed.
+
+In order to get correct dates from a `DATETIMETYPE`, you can do the following:
+
+```C#
+request.FromModifiedDate.ToString();
+// -> 2019-03-21T11:37:00 ; this value is the local time when the object has been modified
+```
+
+```C#
+request.FromModifiedDate.ToDateTime();
+// -> An unspecified `DateTime` representing the local time when the object has been modified
+```
+
+To re-create a `DATETIMETYPE`, you may use one of the following methods:
+
+```C#
+request.FromModifiedDate = DATETIMETYPE.Parse(savedToString);
+```
+
+or
+
+```C#
+request.FromModifiedDate = new DATETIMETYPE(savedToDateTime);
+```
+
+Because the `request.FromModifiedDate` is inclusive, a common practice is to add one second to the previous date before making the query:
+
+```C#
+request.FromModifiedDate = new DATETIMETYPE(savedDateTime.AddSeconds(1));
+```
+
+If you need to display the dates, you may want to convert it to UTC first, however you must keep in mind that this value should be used for display only.
+You cannot use the converted date time to request data from QuickBooks.
+
+>> Give an example with NodaTime
+
 ## Internally how it works ##
 
 If you are not contributing to this project, you most likely don't need to read this section.

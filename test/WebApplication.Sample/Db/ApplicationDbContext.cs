@@ -9,6 +9,7 @@ namespace WebApplication.Sample.Db
         public DbSet<User> Users { get; set; }
         public DbSet<QbTicket> QbTickets { get; set; }
         public DbSet<QbKvpState> QbKvpStates { get; set; }
+        public DbSet<QbSetting> QbSettings { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -23,6 +24,9 @@ namespace WebApplication.Sample.Db
 
             modelBuilder.Entity<QbKvpState>()
                 .HasKey(c => new { c.Ticket, c.Key, c.CurrentStep });
+
+            modelBuilder.Entity<QbSetting>()
+                .HasAlternateKey(c => c.Name);
         }
     }
 
@@ -52,5 +56,12 @@ namespace WebApplication.Sample.Db
 
         public int? UserId { get; set; }
         public virtual User User { get; set; }
+    }
+
+    public class QbSetting
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Value { get; set; }
     }
 }

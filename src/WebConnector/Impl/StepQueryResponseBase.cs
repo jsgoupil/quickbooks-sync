@@ -8,8 +8,6 @@ namespace QbSync.WebConnector.Impl
     public abstract class StepQueryResponseBase<QbResponse> : IStepQueryResponse
         where QbResponse : class, IQbResponse, new()
     {
-        protected QbXmlResponseOptions qbXmlResponseOptions;
-
         public StepQueryResponseBase()
         {
         }
@@ -18,7 +16,7 @@ namespace QbSync.WebConnector.Impl
 
         public virtual async Task<int> ReceiveXMLAsync(IAuthenticatedTicket authenticatedTicket, string response, string hresult, string message)
         {
-            var responseObject = new QbXmlResponse(qbXmlResponseOptions);
+            var responseObject = new QbXmlResponse();
 
             if (!string.IsNullOrEmpty(response))
             {
@@ -44,13 +42,6 @@ namespace QbSync.WebConnector.Impl
         public virtual Task<string> LastErrorAsync(IAuthenticatedTicket authenticatedTicket)
         {
             return Task.FromResult(string.Empty);
-        }
-
-        public Task SetOptionsAsync(QbXmlResponseOptions qbXmlResponseOptions)
-        {
-            this.qbXmlResponseOptions = qbXmlResponseOptions;
-
-            return Task.FromResult<object>(null);
         }
         
         protected virtual Task ExecuteResponseAsync(IAuthenticatedTicket authenticatedTicket, QbResponse response)

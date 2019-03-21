@@ -18,11 +18,5 @@ namespace QbSync.WebConnector.Core
         /// <param name="authenticatedTicket">The authenticated ticket.</param>
         /// <returns>QbXml or null to execute the next step.</returns>
         Task<string> SendXMLAsync(IAuthenticatedTicket authenticatedTicket);
-
-        /// <summary>
-        /// Sets the options to be attached with the step.
-        /// </summary>
-        /// <param name="qbXmlResponseOptions">Options.</param>
-        Task SetOptionsAsync(QbXmlResponseOptions qbXmlResponseOptions);
     }
 }

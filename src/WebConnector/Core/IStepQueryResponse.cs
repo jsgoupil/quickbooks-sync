@@ -43,11 +43,5 @@ namespace QbSync.WebConnector.Core
         /// </summary>
         /// <returns>Step name to go to. Null to continue.</returns>
         Task<string> GotoStepAsync();
-
-        /// <summary>
-        /// Sets the options to be attached with the step.
-        /// </summary>
-        /// <param name="qbXmlResponseOptions">Options.</param>
-        Task SetOptionsAsync(QbXmlResponseOptions qbXmlResponseOptions);
     }
 }
