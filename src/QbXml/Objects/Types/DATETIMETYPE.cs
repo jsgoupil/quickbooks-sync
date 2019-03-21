@@ -10,28 +10,11 @@ namespace QbSync.QbXml.Objects
     {
         private DateTimeOffset _value;
         private bool _hasOffset;
-        private readonly bool _isLocal;
+        private bool _isLocal;
 
         // Private constructor as only xml deserialization should be using this
         private DATETIMETYPE()
         {
-        }
-
-        
-        [Obsolete("Use static DATETIMETYPE.Parse")]
-        public DATETIMETYPE(string value)
-        {
-            _value = ParseValue(value, out _hasOffset);
-
-            if (this > MaxValue)
-            {
-                throw new ArgumentOutOfRangeException(nameof(value), value, "The supplied value is greater than the QuickBooks epoch of 2038-01-19T03:14:07+00:00");
-            }
-
-            if (this < MinValue)
-            {
-                throw new ArgumentOutOfRangeException(nameof(value), value, "The supplied value is less than the minimum allowed date of 1970-01-01");
-            }
         }
 
         /// <summary>
@@ -72,29 +55,7 @@ namespace QbSync.QbXml.Objects
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DATETIMETYPE"/> class using the specified <see cref="DateTimeOffset"/>.
-        /// <see cref="DateTimeOffset.Offset"/> will be included with requests to QuickBooks.
-        /// </summary>
-        /// <param name="value">The <see cref="DateTimeOffset"/> value</param>
-        public DATETIMETYPE(DateTimeOffset value)
-        {
-            if (value > MaxValue._value)
-            {
-                throw new ArgumentOutOfRangeException(nameof(value), value, "The supplied value is greater than the QuickBooks epoch of 2038-01-19T03:14:07+00:00");
-            }
-
-            if (value < MinValue._value)
-            {
-                throw new ArgumentOutOfRangeException(nameof(value), value, "The supplied value is less than the minimum allowed date of 1970-01-01");
-            }
-
-            _value = value;
-            _hasOffset = true;
-        }
-
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DATETIMETYPE"/> class using the specified year, month, day, hour, minute, second, and offset.
+        /// Initializes a new instance of the <see cref="DATETIMETYPE"/> class using the specified year, month, day, hour, minute, second
         /// </summary>
         /// <param name="year">The year (1970 - 2037)</param>
         /// <param name="month">The month of year (1 - 12)</param>
@@ -102,30 +63,45 @@ namespace QbSync.QbXml.Objects
         /// <param name="hour">The hour of day (0 - 23)</param>
         /// <param name="minute">The minute of the hour (0-59)</param>
         /// <param name="second">The second of the minute (0-59)</param>
-        /// <param name="offset">The offset from UTC. If no offset is defined, QuickBooks will interpret the date as the local time of the QuickBooks host computer.</param>
-        public DATETIMETYPE(int year, int month, int day, int hour = 0, int minute = 0, int second = 0, TimeSpan? offset = null)
+        public DATETIMETYPE(int year, int month, int day, int hour = 0, int minute = 0, int second = 0)
         {
             if (year < 1970)
             {
                 throw new ArgumentOutOfRangeException(nameof(year), year, "Year is less than minimum allowed value of 1970");
             }
 
-            _value = new DateTimeOffset(year, month, day, hour, minute, second, offset ?? TimeSpan.Zero);
+            _value = new DateTimeOffset(year, month, day, hour, minute, second, TimeSpan.Zero);
+            _hasOffset = false;
 
             if (_value > MaxValue._value)
             {
                 throw new ArgumentOutOfRangeException(message: "The created date is greater than the QuickBooks epoch of 2038-01-19T03:14:07+00:00", innerException: null);
             }
-
-            _hasOffset = offset != null;
         }
 
+        /// <summary>
+        /// Get's the original uncorrected raw string value parsed from QuickBooks, including
+        /// the potentially incorrect offset value. Will be null if not deserialized from XML.
+        /// </summary>
+        public string QuickBooksRawString { get; private set; }
 
         /// <summary>
-        /// Get's the time offset from Coordinated Universal Time (UTC), if available
+        /// Gets the uncorrected <see cref="DateTimeOffset"/> value, as parsed from QuickBooks.
+        /// During DST, this will appear an hour off (or whatever the DST correction is in the QuickBooks host time zone)
         /// </summary>
-        public TimeSpan? Offset => _hasOffset ? _value.Offset : (TimeSpan?)null;
+        public DateTimeOffset? UncorrectedDate
+        {
+            get
+            {
+                if (!_hasOffset)
+                {
+                    return null;
+                }
 
+                return _value;
+            }
+        }
+        
         /// <summary>
         /// Gets the number of ticks for the date
         /// </summary>
@@ -161,22 +137,32 @@ namespace QbSync.QbXml.Objects
         /// </summary>
         public int Second => _value.Second;
 
-
         /// <summary>
-        /// Returns the date in "yyyy-MM-ddTHH:mm:ss[K]" format (The 'K' offset will only be appended if <see cref="Offset"/> is available)
+        /// Returns a local date formatted string "yyyy-MM-ddTHH:mm:ss" (no offset)
         /// </summary>
         public override string ToString()
         {
-            return _hasOffset
+            // QuickBooks has inaccurate offset values
+            // The DateTime is otherwise accurate (follows DST), but the offset does not follow DST
+            // To accomodate for this, simply ignore the offset portion of the string, but only when parsing from XML
+
+            return _value.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Returns a date formatted in either yyyy-MM-ddTHH:mm:ss or yyyy-MM-ddTHH:mm:ssK format (offset included if requested and available)
+        /// </summary>
+        /// <param name="includeUncorrectedOffset">If the uncorrected offset should be included</param>
+        public string ToString(bool includeUncorrectedOffset)
+        {
+            return includeUncorrectedOffset && _hasOffset
                 ? _value.ToString("yyyy-MM-ddTHH:mm:ssK", CultureInfo.InvariantCulture)
                 : _value.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
         }
-
-
+        
         /// <summary>
-        /// Gets a <see cref="DateTime"/> value of this date.
-        /// NOTE: In most cases this will have an <see cref="DateTimeKind.Unspecified"/> <see cref="DateTimeKind"/>.
-        /// Use of <see cref="DateTime.ToUniversalTime"/> or <see cref="DateTime.ToLocalTime"/> on the returned value is not recommended. 
+        /// Gets a <see cref="DateTime"/> value of this date. Will always have an <see cref="DateTimeKind.Unspecified"/> <see cref="DateTimeKind"/>
+        /// for instances returned from QuickBooks. <see cref="DateTime.Kind"/> will match input value if constructed from a <see cref="DateTime"/>
         /// </summary>
         public DateTime ToDateTime()
         {
@@ -199,38 +185,17 @@ namespace QbSync.QbXml.Objects
         }
 
         /// <summary>
-        /// Gets a <see cref="DateTimeOffset"/> value for this date, if <see cref="Offset"/> is available. Will throw a <see cref="InvalidOperationException"/> otherwise.
-        /// Alternatively use <see cref="TryGetDateTimeOffset"/>, which will not throw.
+        /// Returns a new <see cref="DATETIMETYPE"/> that adds the value of the specified <see cref="TimeSpan"/> to this instance
         /// </summary>
-        /// <exception cref="InvalidOperationException">Throws if <see cref="Offset"/> is null</exception>
-        public DateTimeOffset GetDateTimeOffset()
+        /// <param name="value">A positive or negative time interval</param>
+        public DATETIMETYPE Add(TimeSpan value)
         {
-            if (!_hasOffset)
+            return new DATETIMETYPE
             {
-                throw new InvalidOperationException("An offset is not available");
-            }
-
-            return _value;
-        }
-
-        /// <summary>
-        /// Attempts to return a <see cref="DateTimeOffset"/> value for this date.
-        /// </summary>
-        /// <returns>False if <see cref="Offset"/> is not available, and an accurate <see cref="DateTimeOffset"/> cannot be returned</returns> 
-        /// <remarks>
-        /// Offsets are optional when communicating with QuickBooks, and in the case of responses, are often incorrect.
-        /// Because of this, sometimes <see cref="DATETIMETYPE"/> needs to be treated as a <see cref="DateTime"/> and others as a <see cref="DateTimeOffset"/>.
-        /// </remarks>
-        public bool TryGetDateTimeOffset(out DateTimeOffset value)
-        {
-            if (!_hasOffset)
-            {
-                value = default(DateTimeOffset);
-                return false;
-            }
-
-            value = _value;
-            return true;
+                _value = _value.Add(value),
+                _hasOffset = _hasOffset,
+                _isLocal = _isLocal
+            };
         }
 
         public override bool Equals(object obj)
@@ -304,7 +269,8 @@ namespace QbSync.QbXml.Objects
         public void ReadXml(System.Xml.XmlReader reader)
         {
             var str = reader.ReadElementContentAsString();
-            
+            QuickBooksRawString = str;
+
             if (string.IsNullOrWhiteSpace(str))
             {
                 _value = MinValue._value;
@@ -312,36 +278,9 @@ namespace QbSync.QbXml.Objects
                 return;
             }
 
-            var timeZone = (TimeZoneInfo)null;
-
-            if (timeZone == null && str.Length > 19)
-            {
-                // QuickBooks has inaccurate offset values
-                // The DateTime is otherwise accurate (follows DST), but the offset does not follow DST
-                // To accomodate for this, simply ignore the offset portion of the string, but only when parsing from XML
-                str = str.Substring(0, 19);
-            }
-
             try
             {
                 _value = ParseValue(str, out _hasOffset);
-
-                if (timeZone != null && timeZone.SupportsDaylightSavingTime)
-                {
-                    // QuickBooks always returns the BaseUTC offset
-                    // Verify this matches the returned value so we know the fix is configured correctly
-                    if (timeZone.BaseUtcOffset == _value.Offset)
-                    {
-                        // A time zone was specified, so we can correct the values supplied by QB
-                        var correctedOffset = timeZone.GetUtcOffset(_value.DateTime);
-                        _value = new DateTimeOffset(_value.DateTime, correctedOffset);
-                        _hasOffset = true;
-                    }
-                    else
-                    {
-                        _hasOffset = false;
-                    }
-                }
             }
             catch (Exception)
             {
@@ -388,10 +327,9 @@ namespace QbSync.QbXml.Objects
 
             var date = ParseValue(value, out var hasOffset);
 
-            return new DATETIMETYPE(date)
-            {
-                _hasOffset = hasOffset
-            };
+            return !hasOffset 
+                ? new DATETIMETYPE(date.DateTime) 
+                : FromUncorrectedDate(date);
         }
 
 
@@ -411,6 +349,8 @@ namespace QbSync.QbXml.Objects
 
             return defaultValue;
         }
+
+        
 
 
         /// <summary>
@@ -432,6 +372,31 @@ namespace QbSync.QbXml.Objects
                 date = null;
                 return false;
             }
+        }
+
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="DATETIMETYPE"/> class using an uncorrected <see cref="DateTimeOffset"/>.
+        /// </summary>
+        /// <param name="uncorrectedDate">The uncorrected <see cref="DateTimeOffset"/> value</param>
+        public static DATETIMETYPE FromUncorrectedDate(DateTimeOffset uncorrectedDate)
+        {
+            if (uncorrectedDate > MaxValue._value)
+            {
+                throw new ArgumentOutOfRangeException(nameof(uncorrectedDate), uncorrectedDate, "The supplied value is greater than the QuickBooks epoch of 2038-01-19T03:14:07+00:00");
+            }
+
+            if (uncorrectedDate < MinValue._value)
+            {
+                throw new ArgumentOutOfRangeException(nameof(uncorrectedDate), uncorrectedDate, "The supplied value is less than the minimum allowed date of 1970-01-01");
+            }
+
+            return new DATETIMETYPE
+            {
+                _value = uncorrectedDate,
+                _hasOffset = true,
+                _isLocal = false
+            };
         }
 
 
