@@ -80,7 +80,7 @@ namespace QbSync.QbXml.Objects
         }
 
         /// <summary>
-        /// Get's the original uncorrected raw string value parsed from QuickBooks, including
+        /// Gets the original uncorrected raw string value parsed from QuickBooks, including
         /// the potentially incorrect offset value. Will be null if not deserialized from XML.
         /// </summary>
         public string QuickBooksRawString { get; private set; }
