@@ -8,8 +8,6 @@ namespace QbSync.WebConnector.Impl
     public abstract class StepQueryRequestBase<QbRequest> : IStepQueryRequest
         where QbRequest : class, IQbRequest, new()
     {
-        protected QbXmlResponseOptions qbXmlResponseOptions;
-
         public StepQueryRequestBase()
         {
         }
@@ -31,13 +29,6 @@ namespace QbSync.WebConnector.Impl
             }
 
             return null;
-        }
-
-        public Task SetOptionsAsync(QbXmlResponseOptions qbXmlResponseOptions)
-        {
-            this.qbXmlResponseOptions = qbXmlResponseOptions;
-
-            return Task.FromResult<object>(null);
         }
 
         protected virtual Task<QbRequest> CreateRequestAsync(IAuthenticatedTicket authenticatedTicket)

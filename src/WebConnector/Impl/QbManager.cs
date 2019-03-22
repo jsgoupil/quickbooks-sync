@@ -156,7 +156,6 @@ namespace QbSync.WebConnector.Impl
                                     authenticatedTicket.CurrentStep = stepQueryRequest.Name;
                                 }
 
-                                await stepQueryRequest.SetOptionsAsync(await GetOptionsAsync(authenticatedTicket));
                                 result = await stepQueryRequest.SendXMLAsync(authenticatedTicket);
 
                                 if (result == null)
@@ -227,7 +226,6 @@ namespace QbSync.WebConnector.Impl
                         var stepQueryResponse = FindStepResponse(authenticatedTicket.CurrentStep);
                         if (stepQueryResponse != null)
                         {
-                            await stepQueryResponse.SetOptionsAsync(await GetOptionsAsync(authenticatedTicket));
                             result = await stepQueryResponse.ReceiveXMLAsync(authenticatedTicket, response, hresult, message);
 
                             if (result >= 0)
@@ -467,16 +465,6 @@ namespace QbSync.WebConnector.Impl
         protected virtual Task ProcessClientInformationAsync(IAuthenticatedTicket authenticatedTicket, string response)
         {
             return webConnectorHandler.ProcessClientInformationAsync(authenticatedTicket, response);
-        }
-
-        /// <summary>
-        /// Gets the options for the SyncManager.
-        /// </summary>
-        /// <param name="authenticatedTicket">The ticket.</param>
-        /// <returns>Options.</returns>
-        protected internal virtual Task<QbXmlResponseOptions> GetOptionsAsync(IAuthenticatedTicket authenticatedTicket)
-        {
-            return webConnectorHandler.GetOptionsAsync(authenticatedTicket);
         }
         
         protected internal async Task<string[]> AuthenticateInternalAsync(IAuthenticatedTicket authenticatedTicket)

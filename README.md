@@ -343,13 +343,7 @@ The MessageValidator can also be used to get the company file path that QuickBoo
 
 ### Implement a WebConnectorHandler ###
 
-This step is optional but highly recommended, will receive some calls from the Web Connector that you can take further actions.
-One particular action that you should handle is the QuickBooks TimeZone bug.
-
-QbXml doesn't handle Daylight Saving Time properly when it comes to DateTime.
-When the Daylight Saving Time is activated, the times returned by QuickBooks are off by the delta DST (typically 1h).
-
-To overcome this problem, if you provide a TimeZoneInfo to the `GetOptionsAsync`, QbXml package will fix the times that are not properly set.
+This step is optional, the handler allows you to receive some calls from the Web Connector that you can take further actions.
 
 If you do not wish to implement all the methods, you can override `WebConnectorHandlerNoop`.
 
@@ -357,7 +351,6 @@ If you do not wish to implement all the methods, you can override `WebConnectorH
 public interface IWebConnectorHandler
 {
     Task ProcessClientInformationAsync(IAuthenticatedTicket authenticatedTicket, string response);
-    Task<QbXmlResponseOptions> GetOptionsAsync(IAuthenticatedTicket authenticatedTicket);
     Task OnExceptionAsync(IAuthenticatedTicket authenticatedTicket, Exception exception);
     Task<int> GetWaitTimeAsync(IAuthenticatedTicket authenticatedTicket);
     Task<string> GetCompanyFileAsync(IAuthenticatedTicket authenticatedTicket);
@@ -366,12 +359,93 @@ public interface IWebConnectorHandler
 ```
 
 1. `ProcessClientInformationAsync` - Returns the configuration QuickBooks is in. This method is called once per session.
-2. `GetOptionsAsync` - Returns the options to configure QbXml. Useful to fix the timezone QbXml bug. The timezone info must be based off the user who is connecting to your server. Match it with their ticket.
-3. `OnExceptionAsync` - Called when any types of exception occur on the server.
-4. `GetWaitTimeAsync` - Tells the Web Connector to come back later after X seconds. Returning 0 means to do the work immediately.
-5. `GetCompanyFileAsync`- Uses the company file path. Return an empty string to use the file that is currently opened.
-6. `CloseConnectionAsync` - The connection is closing, the Web Connector will not come back with this ticket.
+2. `OnExceptionAsync` - Called when any types of exception occur on the server.
+3. `GetWaitTimeAsync` - Tells the Web Connector to come back later after X seconds. Returning 0 means to do the work immediately.
+4. `GetCompanyFileAsync`- Uses the company file path. Return an empty string to use the file that is currently opened.
+5. `CloseConnectionAsync` - The connection is closing; the Web Connector will not come back with this ticket.
 
+
+### Handling Timestamps ###
+
+QuickBooks does not handle Daylight Saving Time (DST) properly. The `DATETIMETYPE` class in this library is aware of 
+this issue and will correct timestamps coming from QuickBooks by removing the offset values in the common use cases.
+
+Internally, QuickBooks returns an incorrect date time offset during DST. Consequently, QuickBooks expects that you send the 
+date time with the same incorrect offset **OR** a date time, without an offset, in the computer's time zone where QuickBooks is installed.
+
+
+In order to get correct dates from a `DATETIMETYPE`, you can do the following:
+
+```C#
+var savedString = request.FromModifiedDate.ToString();
+// -> 2019-03-21T11:37:00 ; this value is the local time when the object has been modified
+```
+
+```C#
+var savedDateTime = request.FromModifiedDate.ToDateTime();
+// -> An unspecified `DateTime` representing the local time when the object has been modified
+```
+
+To re-create a `DATETIMETYPE` to use in a subsequent query, you may use one of the following methods:
+
+```C#
+request.FromModifiedDate = DATETIMETYPE.Parse(savedString);
+```
+
+or
+
+```C#
+request.FromModifiedDate = new DATETIMETYPE(savedDateTime);
+```
+
+Because the `request.FromModifiedDate` is inclusive, a common practice is to add one second to the previous date before making the query:
+
+```C#
+request.FromModifiedDate = new DATETIMETYPE(savedDateTime.AddSeconds(1));
+```
+```C#
+request.FromModifiedDate = DATETIMETYPE.Parse(savedString).Add(TimeSpan.FromSeconds(1));
+```
+
+---
+
+The above methods are the recommended approach, which will be the least likely to give you query issues due to QuickBooks DST issues. 
+
+If you truly need the original _uncorrected_ value returned from QuickBooks that has a potentially incorrect offset, you can use:
+
+```C#
+request.FromModifiedDate.QuickBooksRawString;
+// -> 2019-03-21T11:37:00-08:00 ; the original string returned from QuickBooks
+```
+```C#
+request.FromModifiedDate.UncorrectedDate;
+// -> A nullable `DateTimeOffset` parsed value of the QuickBooksRawString
+```
+
+*Note: The `UncorrectedDate` while nullable, will never be null if the `DATETIMETYPE` was generated from a QuickBooks response*
+
+To re-create a `DATETIMETYPE` for a query in this situation:
+```C#
+request.FromModifiedDate = DATETIMETYPE.Parse(rawString);
+```
+```C#
+request.FromModifiedDate = DATETIMETYPE.FromUncorrectedDate(uncorrectedDate);
+```
+
+A use case for this method is if you are required to persist a `DateTimeOffset`, or any other UTC-based method,
+so that you can accurately use the value to do a future query.
+
+These methods should _not_ be used to show the value to an end-user since it may appear to be an hour off during DST.
+
+---
+If you need to display the date to the user, you can get the DateTimeOffset by providing the correct TimeZoneInfo as such:
+
+```C#
+var quickBooksTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+var dateTime = customerRet.TimeModified.ToDateTime();
+var correctedOffset = quickBooksTimeZone.GetUtcOffset(dateTime);
+var correctedDateTimeOffset = new DateTimeOffset(dateTime, correctedOffset);
+```
 
 ## Internally how it works ##
 
@@ -389,25 +463,26 @@ The Web Connector executes the following tasks:
 ### QbManager ###
 
 The QbManager can be overriden in order to handle the communication at a lower level. You most likely don't need to do this.
+Use the `WebConnectorHandler`.
 
-1. `SaveChanges` - Called before returning any data to the Web Connector. It's time to save data to your database.
+1. `SaveChangesAsync` - Called before returning any data to the Web Connector. It's time to save data to your database.
 2. `LogMessage` - Data going in or out goes through this method, you can save it to a database in order to better debug.
-3. `GetWaitTime` - Tells the Web Connector to come back in X seconds.
-4. `Authenticate` - Verifies if the login/password is correct. Returns appropriate message to the Web Connector in order to continue further communication.
+3. `GetWaitTimeAsync` - Tells the Web Connector to come back in X seconds.
+4. `AuthenticateAsync` - Verifies if the login/password is correct. Returns appropriate message to the Web Connector in order to continue further communication.
 5. `ServerVersion` - Returns the server version.
 6. `ClientVersion` - Indicates which version is the Web Connector. Returns W:<message> to return a warning; E:<message> to return an error. Empty string if everything is fine.
-7. `SendRequestXML` - The Web Connector is asking what has to be done to its database. Return an QbXml command.
-8. `ReceiveRequestXML` - Response from the Web Connector based on the previous command sent.
-9. `GetLastError` - Gets the last error that happened. This method is called only if an error is found.
-10. `ConnectionError` - An error happened with the Web Connector.
-11. `CloseConnection` - Closing the connection. Return a string to show to the user in the Web Connector.
-12. `OnException` - Called if any of your steps throw an exception. It would be a great time to log this exception for future debugging.
-13. `ProcessClientInformation` - Called when the WebConnector first connect to the service. It contains the information about the QuickBooks database.
-14. `GetOptions` - Returns QbXml options. Used for TimeZone bug. See below.
-15. `GetCompanyFile` - Indicates which company file to use on the client. By default, it uses the one currently opened.
+7. `SendRequestXMLAsync` - The Web Connector is asking what has to be done to its database. Return an QbXml command.
+8. `ReceiveRequestXMLAsync` - Response from the Web Connector based on the previous command sent.
+9. `GetLastErrorAsync` - Gets the last error that happened. This method is called only if an error is found.
+10. `ConnectionErrorAsync` - An error happened with the Web Connector.
+11. `CloseConnectionAsync` - Closing the connection. Return a string to show to the user in the Web Connector.
+12. `OnExceptionAsync` - Called if any of your steps throw an exception. It would be a great time to log this exception for future debugging.
+13. `ProcessClientInformationAsync` - Called when the WebConnector first connect to the service. It contains the information about the QuickBooks database.
+14. `GetCompanyFileAsync` - Indicates which company file to use on the client. By default, it uses the one currently opened.
 
 
 ### XSD Generator ###
+
 The XSD generator that Microsoft provides does not embed enough information in the resulting C#.
 For this reason, this project has its own code generator which enhanced a lot of types.
 For instance, we order properly the items in the XML. We add some length restriction. We add some interfaces.

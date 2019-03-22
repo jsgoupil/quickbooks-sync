@@ -19,17 +19,6 @@ namespace WebApplication.Sample.Application
             this.dbContext = dbContext;
         }
 
-        public override Task<QbXmlResponseOptions> GetOptionsAsync(IAuthenticatedTicket authenticatedTicket)
-        {
-            // If you want to have UTC offsets included in timestamps returned from QuickBooks
-            // you should return a TimeZoneInfo based on the authenticated ticket.
-            // The timezone where the user is running their QuickBooks.
-            return Task.FromResult(new QbXmlResponseOptions
-            {
-                QuickBooksDesktopTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time")
-            });
-        }
-
         public override async Task CloseConnectionAsync(IAuthenticatedTicket authenticatedTicket)
         {
             // We do some clean up.

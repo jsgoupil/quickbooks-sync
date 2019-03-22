@@ -10,8 +10,6 @@ namespace QbSync.WebConnector.Impl
 {
     public abstract class GroupStepQueryResponseBase : IStepQueryResponse
     {
-        protected QbXmlResponseOptions qbXmlResponseOptions;
-
         public GroupStepQueryResponseBase()
         {
         }
@@ -20,7 +18,7 @@ namespace QbSync.WebConnector.Impl
 
         public virtual async Task<int> ReceiveXMLAsync(IAuthenticatedTicket authenticatedTicket, string response, string hresult, string message)
         {
-            var responseObject = new QbXmlResponse(qbXmlResponseOptions);
+            var responseObject = new QbXmlResponse();
 
             if (!string.IsNullOrEmpty(response))
             {
@@ -47,13 +45,6 @@ namespace QbSync.WebConnector.Impl
         public virtual Task<string> LastErrorAsync(IAuthenticatedTicket authenticatedTicket)
         {
             return Task.FromResult(string.Empty);
-        }
-
-        public Task SetOptionsAsync(QbXmlResponseOptions qbXmlResponseOptions)
-        {
-            this.qbXmlResponseOptions = qbXmlResponseOptions;
-
-            return Task.FromResult<object>(null);
         }
         
         protected internal virtual Task ExecuteResponseAsync(IAuthenticatedTicket authenticatedTicket, IEnumerable<IQbResponse> responses)

@@ -8,27 +8,14 @@ namespace QbSync.QbXml
 {
     public class QbXmlResponse
     {
-        protected QbXmlResponseOptions qbXmlResponseOptions;
-
-        [ThreadStatic]
-        internal static QbXmlResponseOptions qbXmlResponseOptionsStatic;
-
         public QbXmlResponse()
-            : this(null)
         {
-        }
-
-        public QbXmlResponse(QbXmlResponseOptions qbXmlResponseOptions)
-        {
-            this.qbXmlResponseOptions = qbXmlResponseOptions;
         }
 
         public QBXML ParseResponseRaw(string response)
         {
             var reader = new StringReader(response);
-            qbXmlResponseOptionsStatic = qbXmlResponseOptions;
             var ret = QbXmlSerializer.Instance.XmlSerializer.Deserialize(reader) as QBXML;
-            qbXmlResponseOptionsStatic = null;
             return ret;
         }
 
