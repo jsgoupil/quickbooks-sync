@@ -432,8 +432,8 @@ request.FromModifiedDate = DATETIMETYPE.Parse(rawString);
 request.FromModifiedDate = DATETIMETYPE.FromUncorrectedDate(uncorrectedDate);
 ```
 
-A use case for this method is if you are required to persist a `DateTimeOffset`, or if any other UTC-based method, so that you can accurately
-use the value to do a future query.
+A use case for this method is if you are required to persist a `DateTimeOffset`, or any other UTC-based method,
+so that you can accurately use the value to do a future query.
 
 These methods should _not_ be used to show the value to an end-user since it may appear to be an hour off during DST.
 
