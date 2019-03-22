@@ -9,17 +9,29 @@ using System.Threading.Tasks;
 
 namespace QbSync.WebConnector.AspNetCore
 {
+    /// <summary>
+    /// Main class handling the communication between the WebConnector and your server.
+    /// </summary>
     public class QbManager : IQbManager
     {
         internal const string FINISHED_STEP = "##FINISHED##";
 
-        protected readonly IAuthenticator authenticator;
-        protected readonly IMessageValidator messageValidator;
-        protected readonly IWebConnectorHandler webConnectorHandler;
-        protected readonly IEnumerable<IStepQueryRequest> stepRequest;
-        protected readonly IEnumerable<IStepQueryResponse> stepResponse;
-        protected readonly ILogger<QbManager> logger;
+        internal readonly IAuthenticator authenticator;
+        internal readonly IMessageValidator messageValidator;
+        internal readonly IWebConnectorHandler webConnectorHandler;
+        internal readonly IEnumerable<IStepQueryRequest> stepRequest;
+        internal readonly IEnumerable<IStepQueryResponse> stepResponse;
+        internal readonly ILogger<QbManager> logger;
 
+        /// <summary>
+        /// Creates a QbManager. The main program which handles all the WebConnector interations.
+        /// </summary>
+        /// <param name="authenticator">An authenticator.</param>
+        /// <param name="messageValidator">A message validator.</param>
+        /// <param name="webConnectorHandler">A WebConnectorHandler.</param>
+        /// <param name="stepRequest">A list of step requests.</param>
+        /// <param name="stepResponse">A list of step responses.</param>
+        /// <param name="logger">Logger.</param>
         public QbManager(
             IAuthenticator authenticator,
             IMessageValidator messageValidator,
@@ -38,7 +50,7 @@ namespace QbSync.WebConnector.AspNetCore
         }
 
         /// <summary>
-        /// Authenticate a login/password and return important information regarding if more requests
+        /// Authenticates a login/password and return important information regarding if more requests
         /// should be executed immediately.
         /// </summary>
         /// <param name="login">Login.</param>
@@ -122,7 +134,7 @@ namespace QbSync.WebConnector.AspNetCore
         /// <param name="qbXMLCountry">Country code.</param>
         /// <param name="qbXMLMajorVers">QbXml Major Version.</param>
         /// <param name="qbXMLMinorVers">QbXml Minor Version.</param>
-        /// <returns></returns>
+        /// <returns>XML command.</returns>
         public virtual async Task<string> SendRequestXMLAsync(string ticket, string strHCPResponse, string strCompanyFileName, string qbXMLCountry, int qbXMLMajorVers, int qbXMLMinorVers)
         {
             try
@@ -208,7 +220,7 @@ namespace QbSync.WebConnector.AspNetCore
         /// <param name="response">The XML response.</param>
         /// <param name="hresult">Code in case of an error.</param>
         /// <param name="message">Human message in case of an error.</param>
-        /// <returns></returns>
+        /// <returns>Message to be returned to the Web Connector.</returns>
         public virtual async Task<int> ReceiveRequestXMLAsync(string ticket, string response, string hresult, string message)
         {
             try
@@ -443,6 +455,7 @@ namespace QbSync.WebConnector.AspNetCore
         /// <param name="authenticatedTicket">The ticket which has the ticket string. The ticket could also be not authenticated if an error happened.</param>
         /// <param name="messageType">Type of message.</param>
         /// <param name="direction">Direction of the message (In the WebService, or Out the WebService).</param>
+        /// <param name="ticket">The ticket.</param>
         /// <param name="arguments">Other arguments to save.</param>
         protected internal virtual void LogMessage(IAuthenticatedTicket authenticatedTicket, LogMessageType messageType, LogDirection direction, string ticket, params string[] arguments)
         {
@@ -467,6 +480,11 @@ namespace QbSync.WebConnector.AspNetCore
             return webConnectorHandler.ProcessClientInformationAsync(authenticatedTicket, response);
         }
         
+        /// <summary>
+        /// Handles the authentication.
+        /// </summary>
+        /// <param name="authenticatedTicket">The ticket.</param>
+        /// <returns>WebConnector Codes.</returns>
         protected internal async Task<string[]> AuthenticateInternalAsync(IAuthenticatedTicket authenticatedTicket)
         {
             var ret = new string[4];
@@ -526,6 +544,11 @@ namespace QbSync.WebConnector.AspNetCore
             return webConnectorHandler.GetCompanyFileAsync(authenticatedTicket);
         }
 
+        /// <summary>
+        /// Finds a request step based on its name.
+        /// </summary>
+        /// <param name="step">Step name.</param>
+        /// <returns>A IStepQueryRequest.</returns>
         protected internal IStepQueryRequest FindStepRequest(string step)
         {
             if (string.IsNullOrEmpty(step))
@@ -535,7 +558,12 @@ namespace QbSync.WebConnector.AspNetCore
 
             return stepRequest.FirstOrDefault(s => s.Name == step);
         }
-        
+
+        /// <summary>
+        /// Finds a response step based on its name.
+        /// </summary>
+        /// <param name="step">Step name.</param>
+        /// <returns>A IStepQueryResponse.</returns>
         protected internal IStepQueryResponse FindStepResponse(string step)
         {
             if (string.IsNullOrEmpty(step))

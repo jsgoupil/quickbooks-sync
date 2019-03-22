@@ -2,6 +2,9 @@
 
 namespace QbSync.WebConnector.Core
 {
+    /// <summary>
+    /// An object which will keep the state of what is happening with the Web Connector session.
+    /// </summary>
     public interface IAuthenticatedTicket
     {
         /// <summary>

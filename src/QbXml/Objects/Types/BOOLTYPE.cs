@@ -4,50 +4,90 @@ using System.Xml.Serialization;
 
 namespace QbSync.QbXml.Objects
 {
+    /// <summary>
+    /// Represents a boolean.
+    /// </summary>
     public partial class BOOLTYPE : ITypeWrapper, IComparable<BOOLTYPE>, IXmlSerializable
     {
-        protected bool value;
+        /// <summary>
+        /// The inner value.
+        /// </summary>
+        protected bool _value;
 
+        /// <summary>
+        /// Creates a BOOLTYPE class.
+        /// </summary>
         public BOOLTYPE()
         {
         }
 
+        /// <summary>
+        /// Creates an BOOLTYPE class and parse the value as a boolean.
+        /// </summary>
+        /// <param name="value">A boolean.</param>
         public BOOLTYPE(string value)
             : this(Parse(value))
         {
         }
 
+        /// <summary>
+        /// Creates an BOOLTYPE class with a value as a boolean.
+        /// </summary>
+        /// <param name="value">A boolean.</param>
         public BOOLTYPE(bool value)
         {
-            this.value = value;
+            this._value = value;
         }
 
+        /// <summary>
+        /// Returns the string representation of the boolean, lowercase.
+        /// </summary>
+        /// <returns>true or false as a string.</returns>
         public override string ToString()
         {
-            return value.ToString(CultureInfo.InvariantCulture).ToLowerInvariant();
+            return _value.ToString(CultureInfo.InvariantCulture).ToLowerInvariant();
         }
 
+        /// <summary>
+        /// Gets the boolean.
+        /// </summary>
+        /// <returns>Boolean.</returns>
         public bool ToBoolean()
         {
-            return value;
+            return _value;
         }
 
+        /// <summary>
+        /// Compares two BOOLTYPEs.
+        /// </summary>
+        /// <param name="obj">A BOOLTYPE.</param>
+        /// <returns>True on equality.</returns>
         public override bool Equals(object obj)
         {
             var objType = obj as BOOLTYPE;
             if (objType != null)
             {
-                return value == objType.value;
+                return _value == objType._value;
             }
 
             return base.Equals(obj);
         }
 
+        /// <summary>
+        /// Gets the HashCode.
+        /// </summary>
+        /// <returns>HashCode.</returns>
         public override int GetHashCode()
         {
-            return value.GetHashCode();
+            return _value.GetHashCode();
         }
 
+        /// <summary>
+        /// Compares two BOOLTYPEs.
+        /// </summary>
+        /// <param name="a">Operand 1.</param>
+        /// <param name="b">Operand 2.</param>
+        /// <returns>True on equality.</returns>
         public static bool operator ==(BOOLTYPE a, BOOLTYPE b)
         {
             // If both are null, or both are same instance, return true.
@@ -57,7 +97,7 @@ namespace QbSync.QbXml.Objects
             }
 
             // If one is null, but not both, return false.
-            if (((object)a == null) ^ ((object)b == null))
+            if ((a is null) ^ (b is null))
             {
                 return false;
             }
@@ -65,36 +105,63 @@ namespace QbSync.QbXml.Objects
             return a.Equals(b);
         }
 
+        /// <summary>
+        /// Compares two BOOLTYPEs.
+        /// </summary>
+        /// <param name="a">Operand 1.</param>
+        /// <param name="b">Operand 2.</param>
+        /// <returns>True on equality.</returns>
         public static bool operator !=(BOOLTYPE a, BOOLTYPE b)
         {
             return !(a == b);
         }
 
+        /// <summary>
+        /// Converts a boolean to BOOLTYPE automatically.
+        /// </summary>
+        /// <param name="value">A BOOLTYPE.</param>
         public static implicit operator BOOLTYPE(bool value)
         {
             return new BOOLTYPE(value);
         }
 
-        public static implicit operator bool(BOOLTYPE type)
+        /// <summary>
+        /// Converts a BOOLTYPE to boolean automatically.
+        /// </summary>
+        /// <param name="value">A boolean.</param>
+        public static implicit operator bool(BOOLTYPE value)
         {
-            if (type != null)
+            if (value != null)
             {
-                return type.ToBoolean();
+                return value.ToBoolean();
             }
 
             return default(bool);
         }
 
+        /// <summary>
+        /// Compares to another BOOLTYPE.
+        /// </summary>
+        /// <param name="other">Another BOOLTYPE.</param>
+        /// <returns>True if equals.</returns>
         public int CompareTo(BOOLTYPE other)
         {
-            return this.value.CompareTo(other.value);
+            return _value.CompareTo(other._value);
         }
 
+        /// <summary>
+        /// Returns null.
+        /// </summary>
+        /// <returns>Null.</returns>
         public System.Xml.Schema.XmlSchema GetSchema()
         {
             return null;
         }
 
+        /// <summary>
+        /// Reads the XML and populate the inner value.
+        /// </summary>
+        /// <param name="reader">XmlReader.</param>
         public void ReadXml(System.Xml.XmlReader reader)
         {
             reader.MoveToContent();
@@ -102,11 +169,15 @@ namespace QbSync.QbXml.Objects
             reader.ReadStartElement();
             if (!isEmptyElement)
             {
-                value = Parse(reader.ReadContentAsString());
+                _value = Parse(reader.ReadContentAsString());
                 reader.ReadEndElement();
             }
         }
 
+        /// <summary>
+        /// Writes the XML from the inner value.
+        /// </summary>
+        /// <param name="writer">XmlWriter.</param>
         public void WriteXml(System.Xml.XmlWriter writer)
         {
             writer.WriteString(ToString());
@@ -114,8 +185,7 @@ namespace QbSync.QbXml.Objects
 
         private static bool Parse(string value)
         {
-            bool output;
-            if (bool.TryParse(value, out output))
+            if (bool.TryParse(value, out bool output))
             {
                 return output;
             }

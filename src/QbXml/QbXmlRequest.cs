@@ -9,21 +9,39 @@ using System.Xml.Serialization;
 
 namespace QbSync.QbXml
 {
+    /// <summary>
+    /// Base XML object which holds the request.
+    /// </summary>
     public class QbXmlRequest
     {
+        /// <summary>
+        /// Version used by QBXML.
+        /// </summary>
         public static readonly Version VERSION = new Version(13, 0);
+
         private List<QBXMLMsgsRq> qbxmlMsgsRqList;
 
+        /// <summary>
+        /// Creates a QbXmlRequest.
+        /// </summary>
         public QbXmlRequest()
         {
             qbxmlMsgsRqList = new List<QBXMLMsgsRq>();
         }
 
+        /// <summary>
+        /// Adds a message.
+        /// </summary>
+        /// <param name="messages">The message.</param>
         public void Add(params QBXMLMsgsRq[] messages)
         {
             qbxmlMsgsRqList.AddRange(messages);
         }
 
+        /// <summary>
+        /// Adds requests to a single message.
+        /// </summary>
+        /// <param name="requests">The requests.</param>
         public void AddToSingle(params object[] requests)
         {
             var list = new List<object>(requests.Count());
@@ -37,7 +55,11 @@ namespace QbSync.QbXml
                 Items = list.ToArray()
             });
         }
-
+        
+        /// <summary>
+        /// Gets the XML request.
+        /// </summary>
+        /// <returns>XML.</returns>
         public string GetRequest()
         {
             var qbXml = new QBXML

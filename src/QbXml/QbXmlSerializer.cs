@@ -3,16 +3,25 @@ using System.Xml.Serialization;
 
 namespace QbSync.QbXml
 {
+    /// <summary>
+    /// Serializer.
+    /// </summary>
     public sealed class QbXmlSerializer
     {
         private static volatile QbXmlSerializer instance;
         private static object syncRoot = new System.Object();
 
+        /// <summary>
+        /// Creates a serializer.
+        /// </summary>
         public QbXmlSerializer()
         {
             Initialize();
         }
 
+        /// <summary>
+        /// Gets the serializer.
+        /// </summary>
         public static QbXmlSerializer Instance
         {
             get
@@ -32,6 +41,9 @@ namespace QbSync.QbXml
             }
         }
 
+        /// <summary>
+        /// Gets the XmlSerializer.
+        /// </summary>
         public XmlSerializer XmlSerializer
         {
             get;

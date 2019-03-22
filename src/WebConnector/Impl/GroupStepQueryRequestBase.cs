@@ -7,14 +7,30 @@ using System.Linq;
 
 namespace QbSync.WebConnector.Impl
 {
+    /// <summary>
+    /// Helper to send more than one request to the WebConnector.
+    /// </summary>
     public abstract class GroupStepQueryRequestBase : IStepQueryRequest
     {
+        /// <summary>
+        /// Constructs a GroupStepQueryRequestBase.
+        /// </summary>
         public GroupStepQueryRequestBase()
         {
         }
 
+        /// <summary>
+        /// Returns the step name.
+        /// </summary>
+        /// <returns>Step name.</returns>
         public abstract string Name { get; }
 
+        /// <summary>
+        /// Returns the string that has to be sent to the Web Connector.
+        /// Return null if your step has nothing to do this time. The next step will be executed immediately.
+        /// </summary>
+        /// <param name="authenticatedTicket">The authenticated ticket.</param>
+        /// <returns>QbXml or null to execute the next step.</returns>
         public virtual async Task<string> SendXMLAsync(IAuthenticatedTicket authenticatedTicket)
         {
             var requestObject = await ExecuteRequestAsync(authenticatedTicket);
@@ -41,11 +57,21 @@ namespace QbSync.WebConnector.Impl
             return null;
         }
 
+        /// <summary>
+        /// Gets the holder for all QbRequests.
+        /// </summary>
+        /// <param name="authenticatedTicket">The authenticated ticket.</param>
+        /// <returns>List holding the QbRequests.</returns>
         protected internal virtual Task<IEnumerable<IQbRequest>> ExecuteRequestAsync(IAuthenticatedTicket authenticatedTicket)
         {
             return Task.FromResult(Enumerable.Empty<IQbRequest>());
         }
 
+        /// <summary>
+        /// Indicates which error mode to use.
+        /// </summary>
+        /// <param name="authenticatedTicket">The authenticated ticket.</param>
+        /// <returns>Error Mode.</returns>
         protected internal virtual Task<QBXMLMsgsRqOnError> GetOnErrorAttributeAsync(IAuthenticatedTicket authenticatedTicket)
         {
             return Task.FromResult(QBXMLMsgsRqOnError.continueOnError);

@@ -6,6 +6,9 @@ using System.Xml.Serialization;
 
 namespace QbSync.QbXml.Objects
 {
+    /// <summary>
+    /// Represents a datetime.
+    /// </summary>
     public partial class DATETIMETYPE : ITypeWrapper, IComparable<DATETIMETYPE>, IXmlSerializable
     {
         private DateTimeOffset _value;
@@ -19,7 +22,7 @@ namespace QbSync.QbXml.Objects
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DATETIMETYPE"/> class using the specified <see cref="DateTime"/>.
-        /// NOTE: The offset from UTC, if any, that will be sent to QuickBooks along with this date depends on the <see cref="DateTime.Kind"/> of the specified <see cref="value"/>.
+        /// NOTE: The offset from UTC, if any, that will be sent to QuickBooks along with this date depends on the <see cref="DateTime.Kind"/> of the specified <paramref name="value"/>.
         /// <see cref="DateTimeKind"/>.<see cref="DateTimeKind.Utc"/> will send "+00:00".
         /// <see cref="DateTimeKind"/>.<see cref="DateTimeKind.Local"/> will send an offset as determined by the time zone of the machine this application is running on.
         /// <see cref="DateTimeKind"/>.<see cref="DateTimeKind.Unspecified"/> will send no offset, which QuickBooks will interpret to mean the local time of the QuickBooks host computer.
@@ -59,7 +62,7 @@ namespace QbSync.QbXml.Objects
         /// </summary>
         /// <param name="year">The year (1970 - 2037)</param>
         /// <param name="month">The month of year (1 - 12)</param>
-        /// <param name="day">The day of month (1 - number of days in <see cref="month"/>)</param>
+        /// <param name="day">The day of month (1 - number of days in month)</param>
         /// <param name="hour">The hour of day (0 - 23)</param>
         /// <param name="minute">The minute of the hour (0-59)</param>
         /// <param name="second">The second of the minute (0-59)</param>
@@ -198,6 +201,11 @@ namespace QbSync.QbXml.Objects
             };
         }
 
+        /// <summary>
+        /// Compares two DATETIMETYPEs.
+        /// </summary>
+        /// <param name="obj">A DATETIMETYPE.</param>
+        /// <returns>True on equality.</returns>
         public override bool Equals(object obj)
         {
             if (obj is DATETIMETYPE other)
@@ -209,11 +217,21 @@ namespace QbSync.QbXml.Objects
             return base.Equals(obj);
         }
 
+        /// <summary>
+        /// Gets the HashCode.
+        /// </summary>
+        /// <returns>HashCode.</returns>
         public override int GetHashCode()
         {
             return _value.GetHashCode();
         }
 
+        /// <summary>
+        /// Compares two BOOLTYPEs.
+        /// </summary>
+        /// <param name="a">Operand 1.</param>
+        /// <param name="b">Operand 2.</param>
+        /// <returns>True on equality.</returns>
         public static bool operator ==(DATETIMETYPE a, DATETIMETYPE b)
         {
             // If both are null, or both are same instance, return true.
@@ -223,7 +241,7 @@ namespace QbSync.QbXml.Objects
             }
 
             // If one is null, but not both, return false.
-            if (((object)a == null) ^ ((object)b == null))
+            if ((a is null) ^ (b is null))
             {
                 return false;
             }
@@ -231,21 +249,44 @@ namespace QbSync.QbXml.Objects
             return a.Equals(b);
         }
 
+        /// <summary>
+        /// Compares two BOOLTYPEs.
+        /// </summary>
+        /// <param name="a">Operand 1.</param>
+        /// <param name="b">Operand 2.</param>
+        /// <returns>True on equality.</returns>
         public static bool operator !=(DATETIMETYPE a, DATETIMETYPE b)
         {
             return !(a == b);
         }
 
+        /// <summary>
+        /// Compares if the operand 1 is smaller than the operand 2.
+        /// </summary>
+        /// <param name="a">Operand 1.</param>
+        /// <param name="b">Operand 2.</param>
+        /// <returns>True on equality.</returns>
         public static bool operator <(DATETIMETYPE a, DATETIMETYPE b)
         {
             return a.CompareTo(b) < 0;
         }
 
+        /// <summary>
+        /// Compares if the operand 1 is bigger than the operand 2.
+        /// </summary>
+        /// <param name="a">Operand 1.</param>
+        /// <param name="b">Operand 2.</param>
+        /// <returns>True on equality.</returns>
         public static bool operator >(DATETIMETYPE a, DATETIMETYPE b)
         {
             return a.CompareTo(b) > 0;
         }
 
+        /// <summary>
+        /// Compares to another DATETIMETYPE.
+        /// </summary>
+        /// <param name="other">Another DATETIMETYPE.</param>
+        /// <returns>True if equals.</returns>
         public int CompareTo(DATETIMETYPE other)
         {
             if (other == null)
@@ -261,11 +302,19 @@ namespace QbSync.QbXml.Objects
             return _value.CompareTo(other._value);
         }
 
+        /// <summary>
+        /// Returns null.
+        /// </summary>
+        /// <returns>Null.</returns>
         public System.Xml.Schema.XmlSchema GetSchema()
         {
             return null;
         }
 
+        /// <summary>
+        /// Reads the XML and populate the inner value.
+        /// </summary>
+        /// <param name="reader">XmlReader.</param>
         public void ReadXml(System.Xml.XmlReader reader)
         {
             var str = reader.ReadElementContentAsString();
@@ -289,6 +338,10 @@ namespace QbSync.QbXml.Objects
             }
         }
 
+        /// <summary>
+        /// Writes the XML from the inner value.
+        /// </summary>
+        /// <param name="writer">XmlWriter.</param>
         public void WriteXml(System.Xml.XmlWriter writer)
         {
             writer.WriteString(ToString());
@@ -316,8 +369,8 @@ namespace QbSync.QbXml.Objects
         /// </summary>
         /// <param name="value">Date string in yyyy-mm-dd[Thh][:mm][:ss][K] format (though other standard formats will work as well). K is the offset from UTC (ie "Z", "-08:00", "+00:00", etc)</param>
         /// <returns>A new instance of the <see cref="DATETIMETYPE"/> class</returns>
-        /// <exception cref="ArgumentNullException">If <see cref="value"/> is null</exception>
-        /// <exception cref="FormatException">If <see cref="value"/> is in an unsupported format</exception>
+        /// <exception cref="ArgumentNullException">If <paramref name="value"/> is null</exception>
+        /// <exception cref="FormatException">If <paramref name="value"/> is in an unsupported format</exception>
         public static DATETIMETYPE Parse(string value)
         {
             if (value == null)
@@ -332,14 +385,13 @@ namespace QbSync.QbXml.Objects
                 : FromUncorrectedDate(date);
         }
 
-
         /// <summary>
-        /// Parses from a string value. If the <see cref="value"/> cannot be parsed, the provided <see cref="defaultValue"/> will be returned.
+        /// Parses from a string value. If the <paramref name="value"/> cannot be parsed, the provided <paramref name="defaultValue"/> will be returned.
         /// If an offset from Coordinated Universal Time (UTC) is missing, QuickBooks will interpret the date as the local time of the QuickBooks host computer.
         /// </summary>
         /// <param name="value">Date string in yyyy-mm-dd[Thh][:mm][:ss][K] format (though other standard formats will work as well). K is the offset from UTC (ie "Z", "-08:00", "+00:00", etc)</param>
         /// <param name="defaultValue">The default value to use if parsing is unsuccessful</param>
-        /// <returns>A new instance of <see cref="DATETIMETYPE"/>, or <see cref="defaultValue"/></returns>
+        /// <returns>A new instance of <see cref="DATETIMETYPE"/>, or <paramref name="defaultValue"/></returns>
         public static DATETIMETYPE ParseOrDefault(string value, DATETIMETYPE defaultValue = default(DATETIMETYPE))
         {
             if (TryParse(value, out var result))
@@ -349,9 +401,6 @@ namespace QbSync.QbXml.Objects
 
             return defaultValue;
         }
-
-        
-
 
         /// <summary>
         /// Tries to parse <see cref="DATETIMETYPE"/> from a string. If an offset is not provided in the string, one will not be inferred.
@@ -373,7 +422,6 @@ namespace QbSync.QbXml.Objects
                 return false;
             }
         }
-
 
         /// <summary>
         /// Creates a new instance of the <see cref="DATETIMETYPE"/> class using an uncorrected <see cref="DateTimeOffset"/>.
@@ -399,9 +447,8 @@ namespace QbSync.QbXml.Objects
             };
         }
 
-
         /// <summary>
-        /// The QuickBooks max value for a date & time is 2038-01-19T03:14:07+00:00.
+        /// The QuickBooks max value for a date &amp; time is 2038-01-19T03:14:07+00:00.
         /// </summary>
         public static readonly DATETIMETYPE MaxValue = new DATETIMETYPE
         {

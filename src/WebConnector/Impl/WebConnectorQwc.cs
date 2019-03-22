@@ -5,8 +5,16 @@ using System.Text;
 
 namespace QbSync.WebConnector.Impl
 {
+    /// <summary>
+    /// Service handling the generation of the QWC File.
+    /// </summary>
     public class WebConnectorQwc : IWebConnectorQwc
     {
+        /// <summary>
+        /// Gets the QWC file as a string.
+        /// </summary>
+        /// <param name="model">The options to configure the QWC file.</param>
+        /// <returns>XML string.</returns>
         public string GetQwcFile(WebConnectorQwcModel model)
         {
             if (model == null)

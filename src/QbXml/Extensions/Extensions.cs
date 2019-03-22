@@ -6,23 +6,15 @@ using System.Xml.Serialization;
 
 namespace QbSync.QbXml.Extensions
 {
-    public static class Extensions
+    internal static class Extensions
     {
-        public static void ForEach<T>(this IEnumerable<T> enumeration, Action<T> action)
-        {
-            foreach (T item in enumeration)
-            {
-                action(item);
-            }
-        }
-
         /// <summary>
         /// Returns null if we can't find the node.
         /// </summary>
         /// <param name="node"></param>
-        /// <param name="xPath"></param>
+        /// <param name="xpath"></param>
         /// <returns></returns>
-        public static string ReadNode(this XmlNode node, string xpath)
+        internal static string ReadNode(this XmlNode node, string xpath)
         {
             var selectedNode = node.SelectSingleNode(xpath);
 
@@ -34,7 +26,7 @@ namespace QbSync.QbXml.Extensions
             return null;
         }
 
-        public static string ReadAttribute(this XmlNode node, string attributeName)
+        internal static string ReadAttribute(this XmlNode node, string attributeName)
         {
             var attributeCollection = node.Attributes;
             var attribute = attributeCollection.GetNamedItem(attributeName);
@@ -46,14 +38,14 @@ namespace QbSync.QbXml.Extensions
             return null;
         }
 
-        public static XmlElement CreateElementWithValue(this XmlDocument xmlDocument, string tagName, string innerText)
+        internal static XmlElement CreateElementWithValue(this XmlDocument xmlDocument, string tagName, string innerText)
         {
             var elem = xmlDocument.CreateElement(tagName);
             elem.InnerText = innerText;
             return elem;
         }
 
-        public static void AddOnly(this XmlAttributeOverrides xmlAttributeOverrides, System.Type type, string member, XmlAttributes attributes)
+        internal static void AddOnly(this XmlAttributeOverrides xmlAttributeOverrides, System.Type type, string member, XmlAttributes attributes)
         {
             var customAttributes = type.GetProperty(member).GetCustomAttributes(typeof(XmlElementAttribute), false) as XmlElementAttribute[];
 
@@ -87,7 +79,7 @@ namespace QbSync.QbXml.Extensions
             xmlAttributeOverrides.Add(type, member, xmlAttributes);
         }
 
-        public static bool IsSubclassOf(this System.Type type, System.Type baseType)
+        internal static bool IsSubclassOf(this System.Type type, System.Type baseType)
         {
             if (type == null || baseType == null || type == baseType)
                 return false;
@@ -118,9 +110,9 @@ namespace QbSync.QbXml.Extensions
         }
     }
 
-    static class XmlOverrider
+    internal static class XmlOverrider
     {
-        public class XmlElementAttributeEqualityComparer : IEqualityComparer<XmlElementAttribute>
+        internal class XmlElementAttributeEqualityComparer : IEqualityComparer<XmlElementAttribute>
         {
             public bool Equals(XmlElementAttribute x, XmlElementAttribute y)
             {

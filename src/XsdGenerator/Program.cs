@@ -80,15 +80,23 @@ namespace QbSync.XsdGenerator
             // output the C# code
             CSharpCodeProvider codeProvider = new CSharpCodeProvider();
 
+            var options = new CodeGeneratorOptions
+            {
+                BlankLinesBetweenMembers = true,
+                BracingStyle = "C",
+                ElseOnClosing = true,
+                IndentString = "    "
+            };
+
             using (StringWriter writer = new StringWriter())
             {
-                codeProvider.GenerateCodeFromNamespace(codeNamespace, writer, new CodeGeneratorOptions
-                {
-                    BlankLinesBetweenMembers = true,
-                    BracingStyle = "C",
-                    ElseOnClosing = true,
-                    IndentString = "    "
-                });
+                codeProvider.GenerateCodeFromCompileUnit(
+                    new CodeSnippetCompileUnit("#pragma warning disable 1591"),
+                    writer, options);
+                codeProvider.GenerateCodeFromNamespace(codeNamespace, writer, options);
+                codeProvider.GenerateCodeFromCompileUnit(
+                    new CodeSnippetCompileUnit("#pragma warning restore 1591"),
+                    writer, options);
 
                 string content = writer.GetStringBuilder().ToString();
                 if (string.IsNullOrEmpty(output))

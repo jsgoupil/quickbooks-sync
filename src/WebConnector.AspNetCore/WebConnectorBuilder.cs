@@ -5,8 +5,15 @@ using System.ComponentModel;
 
 namespace QbSync.WebConnector.AspNetCore
 {
+    /// <summary>
+    /// Controls the injection of steps, authentication, etc.
+    /// </summary>
     public class WebConnectorBuilder
     {
+        /// <summary>
+        /// Cosntructs a WebConnectorBuilder.
+        /// </summary>
+        /// <param name="services">Service Collection.</param>
         public WebConnectorBuilder(IServiceCollection services)
         {
             Services = services ?? throw new ArgumentNullException(nameof(services));
@@ -18,6 +25,14 @@ namespace QbSync.WebConnector.AspNetCore
         [EditorBrowsable(EditorBrowsableState.Never)]
         public IServiceCollection Services { get; }
 
+        /// <summary>
+        /// Adds a step for QuickBooks to process.
+        /// The order matters.
+        /// </summary>
+        /// <typeparam name="Request">A class handling the request.</typeparam>
+        /// <typeparam name="Response">A class handling the response.</typeparam>
+        /// <param name="lifetime">Optional lifetime of the instance.</param>
+        /// <returns>Itself. Chainable.</returns>
         public WebConnectorBuilder WithStep<Request, Response>(ServiceLifetime lifetime = ServiceLifetime.Scoped)
             where Request : IStepQueryRequest
             where Response : IStepQueryResponse
@@ -31,6 +46,12 @@ namespace QbSync.WebConnector.AspNetCore
             return this;
         }
 
+        /// <summary>
+        /// Adds an authenticator.
+        /// </summary>
+        /// <typeparam name="Authenticator">A class handling the authentication.</typeparam>
+        /// <param name="lifetime">Optional lifetime of the instance.</param>
+        /// <returns>Itself. Chainable.</returns>
         public WebConnectorBuilder AddAuthenticator<Authenticator>(ServiceLifetime lifetime = ServiceLifetime.Scoped)
             where Authenticator : IAuthenticator
         {
@@ -41,6 +62,12 @@ namespace QbSync.WebConnector.AspNetCore
             return this;
         }
 
+        /// <summary>
+        /// Adds a message validator.
+        /// </summary>
+        /// <typeparam name="MessageValidator">A class handling the validation of messages.</typeparam>
+        /// <param name="lifetime">Optional lifetime of the instance.</param>
+        /// <returns>Itself. Chainable.</returns>
         public WebConnectorBuilder WithMessageValidator<MessageValidator>(ServiceLifetime lifetime = ServiceLifetime.Scoped)
             where MessageValidator : IMessageValidator
         {
@@ -51,6 +78,12 @@ namespace QbSync.WebConnector.AspNetCore
             return this;
         }
 
+        /// <summary>
+        /// Adds a web connector handler.
+        /// </summary>
+        /// <typeparam name="WebConnectorHandler">A class handling the web connector messages.</typeparam>
+        /// <param name="lifetime">Optional lifetime of the instance.</param>
+        /// <returns>Itself. Chainable.</returns>
         public WebConnectorBuilder WithWebConnectorHandler<WebConnectorHandler>(ServiceLifetime lifetime = ServiceLifetime.Scoped)
             where WebConnectorHandler : IWebConnectorHandler
         {
