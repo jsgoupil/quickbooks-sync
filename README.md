@@ -9,7 +9,7 @@ QuickBooks Sync regroups multiple NuGet packages to sync data from QuickBooks De
 ### Installation ###
 
 ```
-Install-Package QbXml
+Install-Package QbSync.QbXml
 ```
 
 ### Introduction ###
@@ -59,8 +59,8 @@ public class CustomerResponse
 ### Installation ###
 
 ```
-Install-Package WebConnector
-Install-Package WebConnector.AspNetCore
+Install-Package QbSync.WebConnector
+Install-Package QbSync.WebConnector.AspNetCore
 ```
 
 The `WebConnector.AspNetCore` contains reference to SoapCore/AspNetCore.
