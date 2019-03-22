@@ -21,7 +21,7 @@ namespace QbSync.QbXml.Objects
         /// Initializes a new instance of the <see cref="DATETIMETYPE"/> class using the specified <see cref="DateTime"/>.
         /// NOTE: The offset from UTC, if any, that will be sent to QuickBooks along with this date depends on the <see cref="DateTime.Kind"/> of the specified <see cref="value"/>.
         /// <see cref="DateTimeKind"/>.<see cref="DateTimeKind.Utc"/> will send "+00:00".
-        /// <see cref="DateTimeKind"/>.<see cref="DateTimeKind.Local"/> will send an offset as determined by the timezone of the machine this application is running on.
+        /// <see cref="DateTimeKind"/>.<see cref="DateTimeKind.Local"/> will send an offset as determined by the time zone of the machine this application is running on.
         /// <see cref="DateTimeKind"/>.<see cref="DateTimeKind.Unspecified"/> will send no offset, which QuickBooks will interpret to mean the local time of the QuickBooks host computer.
         /// </summary>
         /// <seealso cref="DateTimeKind"/>
@@ -55,7 +55,7 @@ namespace QbSync.QbXml.Objects
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DATETIMETYPE"/> class using the specified year, month, day, hour, minute, second
+        /// Initializes a new instance of the <see cref="DATETIMETYPE"/> class using the specified year, month, day, hour, minute, second.
         /// </summary>
         /// <param name="year">The year (1970 - 2037)</param>
         /// <param name="month">The month of year (1 - 12)</param>
@@ -87,7 +87,7 @@ namespace QbSync.QbXml.Objects
 
         /// <summary>
         /// Gets the uncorrected <see cref="DateTimeOffset"/> value, as parsed from QuickBooks.
-        /// During DST, this will appear an hour off (or whatever the DST correction is in the QuickBooks host time zone)
+        /// During DST, this will appear an hour off (or whatever the DST correction is in the QuickBooks host time zone).
         /// </summary>
         public DateTimeOffset? UncorrectedDate
         {
@@ -103,54 +103,54 @@ namespace QbSync.QbXml.Objects
         }
         
         /// <summary>
-        /// Gets the number of ticks for the date
+        /// Gets the number of ticks for the date.
         /// </summary>
         public long Ticks => _value.Ticks;
 
         /// <summary>
-        /// Gets the year component of the date (1970-2038)
+        /// Gets the year component of the date (1970-2038).
         /// </summary>
         public int Year => _value.Year;
 
         /// <summary>
-        /// Gets the month component of the date (1-12)
+        /// Gets the month component of the date (1-12).
         /// </summary>
         public int Month => _value.Month;
 
         /// <summary>
-        /// Gets the day of month component of the date (1-31)
+        /// Gets the day of month component of the date (1-31).
         /// </summary>
         public int Day => _value.Day;
 
         /// <summary>
-        /// Gets the hour component of the date (0-23)
+        /// Gets the hour component of the date (0-23).
         /// </summary>
         public int Hour => _value.Hour;
 
         /// <summary>
-        /// Gets the minute component of the date (0-59)
+        /// Gets the minute component of the date (0-59).
         /// </summary>
         public int Minute => _value.Minute;
 
         /// <summary>
-        /// Gets the second component of the date (0-59)
+        /// Gets the second component of the date (0-59).
         /// </summary>
         public int Second => _value.Second;
 
         /// <summary>
-        /// Returns a local date formatted string "yyyy-MM-ddTHH:mm:ss" (no offset)
+        /// Returns a local date formatted string "yyyy-MM-ddTHH:mm:ss" (no offset).
         /// </summary>
         public override string ToString()
         {
-            // QuickBooks has inaccurate offset values
-            // The DateTime is otherwise accurate (follows DST), but the offset does not follow DST
-            // To accomodate for this, simply ignore the offset portion of the string, but only when parsing from XML
+            // QuickBooks has inaccurate offset values.
+            // The DateTime is otherwise accurate (follows DST), but the offset does not follow DST.
+            // To accomodate for this, simply ignore the offset portion of the string, but only when parsing from XML.
 
             return _value.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
         }
 
         /// <summary>
-        /// Returns a date formatted in either yyyy-MM-ddTHH:mm:ss or yyyy-MM-ddTHH:mm:ssK format (offset included if requested and available)
+        /// Returns a date formatted in either yyyy-MM-ddTHH:mm:ss or yyyy-MM-ddTHH:mm:ssK format (offset included if requested and available).
         /// </summary>
         /// <param name="includeUncorrectedOffset">If the uncorrected offset should be included</param>
         public string ToString(bool includeUncorrectedOffset)
@@ -162,7 +162,7 @@ namespace QbSync.QbXml.Objects
         
         /// <summary>
         /// Gets a <see cref="DateTime"/> value of this date. Will always have an <see cref="DateTimeKind.Unspecified"/> <see cref="DateTimeKind"/>
-        /// for instances returned from QuickBooks. <see cref="DateTime.Kind"/> will match input value if constructed from a <see cref="DateTime"/>
+        /// for instances returned from QuickBooks. <see cref="DateTime.Kind"/> will match input value if constructed from a <see cref="DateTime"/>.
         /// </summary>
         public DateTime ToDateTime()
         {
@@ -185,7 +185,7 @@ namespace QbSync.QbXml.Objects
         }
 
         /// <summary>
-        /// Returns a new <see cref="DATETIMETYPE"/> that adds the value of the specified <see cref="TimeSpan"/> to this instance
+        /// Returns a new <see cref="DATETIMETYPE"/> that adds the value of the specified <see cref="TimeSpan"/> to this instance.
         /// </summary>
         /// <param name="value">A positive or negative time interval</param>
         public DATETIMETYPE Add(TimeSpan value)
@@ -401,7 +401,7 @@ namespace QbSync.QbXml.Objects
 
 
         /// <summary>
-        /// The QuickBooks max value for a date & time is 2038-01-19T03:14:07+00:00
+        /// The QuickBooks max value for a date & time is 2038-01-19T03:14:07+00:00.
         /// </summary>
         public static readonly DATETIMETYPE MaxValue = new DATETIMETYPE
         {
@@ -410,7 +410,7 @@ namespace QbSync.QbXml.Objects
         };
 
         /// <summary>
-        /// Minimum date QuickBooks allows (1970-01-01)
+        /// Minimum date QuickBooks allows (1970-01-01).
         /// </summary>
         public static readonly DATETIMETYPE MinValue = new DATETIMETYPE
         {

@@ -73,8 +73,6 @@ namespace WebApplication.Sample.Application.Steps
                     }
 
                     var lastFromModifiedDate = response.CustomerRet.OrderBy(m => m.TimeModified).Select(m => m.TimeModified).LastOrDefault();
-                    
-
                     await dbContext.SaveIfNewerAsync(LAST_MODIFIED_CUSTOMER, lastFromModifiedDate);
                 }
 

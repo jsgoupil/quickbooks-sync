@@ -1,4 +1,5 @@
 ﻿using QbSync.QbXml.Objects;
+using System;
 
 namespace WebApplication.Sample.Extensions
 {
@@ -11,7 +12,14 @@ namespace WebApplication.Sample.Extensions
                 return DATETIMETYPE.MinValue;
             }
 
-            return new DATETIMETYPE(dateTimeType.ToDateTime().AddSeconds(1));
+            return dateTimeType.Add(TimeSpan.FromSeconds(1));
+        }
+
+        public static DateTimeOffset GetCorrectedDate(this DATETIMETYPE date, TimeZoneInfo quickBooksTimeZone)
+        {
+            var dateTime = date.ToDateTime();
+            var correctedOffset = quickBooksTimeZone.GetUtcOffset(dateTime);
+            return new DateTimeOffset(dateTime, correctedOffset);
         }
     }
 }
