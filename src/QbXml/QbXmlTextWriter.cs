@@ -7,8 +7,8 @@ namespace QbSync.QbXml
 {
     internal class QbXmlTextWriter : XmlTextWriter
     {
-        public QbXmlTextWriter(MemoryStream s, Encoding encoding)
-            : base(s, encoding)
+        public QbXmlTextWriter(TextWriter textWriter)
+            : base(textWriter)
         {
         }
 
