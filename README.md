@@ -373,36 +373,37 @@ public interface IWebConnectorHandler
 6. `CloseConnectionAsync` - The connection is closing, the Web Connector will not come back with this ticket.
 
 
-### Handling Dates ###
+### Handling Timestamps ###
 
-As mentioned above, QuickBooks does not handle timezones properly. The `DATETIMETYPE` class in this library is aware of this issue and
-will convert the value coming from QuickBooks by removing the offset values.
+QuickBooks does not handle Daylight Saving Time (DST) propertly. The `DATETIMETYPE` class in this library is aware of 
+this issue and will correct timestamps coming from QuickBooks by removing the offset values in the common use cases.
 
 Internally, QuickBooks returns an incorrect date time offset during DST. Consequently, QuickBooks expects that you send the 
-date time with the same incorrect offset OR a date time with no offset in the computer's timezone where QuickBooks is installed.
+date time with the same incorrect offset **OR** a date time, without an offset, in the computer's timezone where QuickBooks is installed.
+
 
 In order to get correct dates from a `DATETIMETYPE`, you can do the following:
 
 ```C#
-request.FromModifiedDate.ToString();
+var savedString = request.FromModifiedDate.ToString();
 // -> 2019-03-21T11:37:00 ; this value is the local time when the object has been modified
 ```
 
 ```C#
-request.FromModifiedDate.ToDateTime();
+var savedDateTime = request.FromModifiedDate.ToDateTime();
 // -> An unspecified `DateTime` representing the local time when the object has been modified
 ```
 
-To re-create a `DATETIMETYPE`, you may use one of the following methods:
+To re-create a `DATETIMETYPE` to use in a subsequent query, you may use one of the following methods:
 
 ```C#
-request.FromModifiedDate = DATETIMETYPE.Parse(savedToString);
+request.FromModifiedDate = DATETIMETYPE.Parse(savedString);
 ```
 
 or
 
 ```C#
-request.FromModifiedDate = new DATETIMETYPE(savedToDateTime);
+request.FromModifiedDate = new DATETIMETYPE(savedDateTime);
 ```
 
 Because the `request.FromModifiedDate` is inclusive, a common practice is to add one second to the previous date before making the query:
@@ -410,11 +411,45 @@ Because the `request.FromModifiedDate` is inclusive, a common practice is to add
 ```C#
 request.FromModifiedDate = new DATETIMETYPE(savedDateTime.AddSeconds(1));
 ```
+```C#
+request.FromModifiedDate = DATETIMETYPE.Parse(savedString).Add(TimeSpan.FromSeconds(1));
+```
+---
 
-If you need to display the dates, you may want to convert it to UTC first, however you must keep in mind that this value should be used for display only.
-You cannot use the converted date time to request data from QuickBooks.
+The above methods are the recommended approach, which will be the least likely to give you query issues due to QuickBooks DST issues. 
 
->> Give an example with NodaTime
+If you truly need the original _uncorrected_ value returned from QuickBooks that has a [potentially incorrect] offset, you can use:
+
+```C#
+request.FromModifiedDate.QuickBooksRawString;
+// -> 2019-03-21T11:37:00-08:00 ; the original string returned from quickbooks
+```
+
+or
+
+```C#
+request.FromModifiedDate.UncorrectedDate;
+// -> A nullable `DateTimeOffset` parsed value of the QuickBooksRawString
+```
+
+*Note: The `UncorrectedDate` while nullable, will never be null if the `DATETIMETYPE` was generated from a QuickBooks response**
+
+To re-create a `DATETIMETYPE` for a query in this situation:
+```C#
+request.FromModifiedDate = DATETIMETYPE.Parse(rawString);
+```
+
+or
+
+```C#
+request.FromModifiedDate = DATETIMETYPE.FromUncorrectedDate(uncorrectedDate);
+```
+
+A use case for this method is if you are required to persist a `DateTimeOffset`, or it any other UTC-based method, so that you can accurately
+use the value to do a future query.
+
+These methods should be used to show the value to an end-user since it may appear to be an hour off during DST.
+
 
 ## Internally how it works ##
 
