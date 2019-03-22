@@ -37,11 +37,13 @@ namespace QbSync.QbXml.Tests.QbXml
         public void BasicCustomerQueryRequestWithAccentTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new CustomerQueryRqType();
-            innerRequest.NameFilter = new NameFilter
+            var innerRequest = new CustomerQueryRqType
             {
-                MatchCriterion = MatchCriterion.Contains,
-                Name = "Jean-Sébastien Goupil"
+                NameFilter = new NameFilter
+                {
+                    MatchCriterion = MatchCriterion.Contains,
+                    Name = "Jean-Sébastien Goupil"
+                }
             };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
@@ -56,8 +58,10 @@ namespace QbSync.QbXml.Tests.QbXml
         public void BasicCustomerWhenCallingMaxReturnedMultipleTimes()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new CustomerQueryRqType();
-            innerRequest.MaxReturned = "100";
+            var innerRequest = new CustomerQueryRqType
+            {
+                MaxReturned = "100"
+            };
             innerRequest.MaxReturned = "200";
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
@@ -74,10 +78,12 @@ namespace QbSync.QbXml.Tests.QbXml
         public void BasicCustomerQueryWithSomeFilters()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new CustomerQueryRqType();
-            innerRequest.ActiveStatus = ActiveStatus.ActiveOnly;
-            innerRequest.OwnerID = new GUIDTYPE[] { new GUIDTYPE(Guid.NewGuid()) };
-            innerRequest.MaxReturned = "100";
+            var innerRequest = new CustomerQueryRqType
+            {
+                ActiveStatus = ActiveStatus.ActiveOnly,
+                OwnerID = new GUIDTYPE[] { new GUIDTYPE(Guid.NewGuid()) },
+                MaxReturned = "100"
+            };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
 
@@ -97,8 +103,10 @@ namespace QbSync.QbXml.Tests.QbXml
                 "1234", "3456"
             };
             var request = new QbXmlRequest();
-            var innerRequest = new CustomerQueryRqType();
-            innerRequest.ListID = list;
+            var innerRequest = new CustomerQueryRqType
+            {
+                ListID = list
+            };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
 
@@ -118,8 +126,10 @@ namespace QbSync.QbXml.Tests.QbXml
                 "abc", "def"
             };
             var request = new QbXmlRequest();
-            var innerRequest = new CustomerQueryRqType();
-            innerRequest.FullName = list;
+            var innerRequest = new CustomerQueryRqType
+            {
+                FullName = list
+            };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
 
@@ -136,11 +146,13 @@ namespace QbSync.QbXml.Tests.QbXml
         public void CustomerQueryRequest_FilterByNameRange_Test()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new CustomerQueryRqType();
-            innerRequest.NameRangeFilter = new NameRangeFilter
+            var innerRequest = new CustomerQueryRqType
             {
-                FromName = "ab",
-                ToName = "ac"
+                NameRangeFilter = new NameRangeFilter
+                {
+                    FromName = "ab",
+                    ToName = "ac"
+                }
             };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();

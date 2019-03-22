@@ -38,8 +38,10 @@ namespace QbSync.WebConnector.Tests.Impl
                 "</CustomerRet>" +
                 "</CustomerQueryRs></QBXMLMsgsRs></QBXML>";
 
-            var stepQueryResponseWithIteratorMock = new Mock<StepQueryResponseWithIterator<CustomerQueryRsType>>();
-            stepQueryResponseWithIteratorMock.CallBase = true;
+            var stepQueryResponseWithIteratorMock = new Mock<StepQueryResponseWithIterator<CustomerQueryRsType>>
+            {
+                CallBase = true
+            };
 
             var ret = await stepQueryResponseWithIteratorMock.Object.ReceiveXMLAsync(authenticatedTicket, xml, string.Empty, string.Empty);
             Assert.AreEqual(0, ret);
@@ -70,8 +72,10 @@ namespace QbSync.WebConnector.Tests.Impl
                 "</CustomerRet>" +
                 "</CustomerQueryRs></QBXMLMsgsRs></QBXML>";
 
-            var stepQueryResponseWithIteratorMock = new Mock<StepQueryResponseWithIterator<CustomerQueryRsType>>();
-            stepQueryResponseWithIteratorMock.CallBase = true;
+            var stepQueryResponseWithIteratorMock = new Mock<StepQueryResponseWithIterator<CustomerQueryRsType>>
+            {
+                CallBase = true
+            };
 
             var ret = await stepQueryResponseWithIteratorMock.Object.ReceiveXMLAsync(authenticatedTicket, xml, string.Empty, string.Empty);
             Assert.AreEqual(0, ret);

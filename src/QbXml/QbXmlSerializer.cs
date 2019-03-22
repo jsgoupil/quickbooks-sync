@@ -9,7 +9,7 @@ namespace QbSync.QbXml
     public sealed class QbXmlSerializer
     {
         private static volatile QbXmlSerializer instance;
-        private static object syncRoot = new System.Object();
+        private static readonly object syncRoot = new System.Object();
 
         /// <summary>
         /// Creates a serializer.

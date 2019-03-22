@@ -14,10 +14,10 @@ namespace QbSync.QbXml
 
         public override void WriteString(string text)
         {
-            base.WriteRaw(htmlEncodeSpecialCharacters(text));
+            base.WriteRaw(HtmlEncodeSpecialCharacters(text));
         }
 
-        private string htmlEncodeSpecialCharacters(string text)
+        private string HtmlEncodeSpecialCharacters(string text)
         {
             text = HttpUtility.HtmlEncode(text);
             StringBuilder sb = new StringBuilder();

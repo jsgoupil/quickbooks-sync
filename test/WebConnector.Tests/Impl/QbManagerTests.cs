@@ -562,8 +562,10 @@ namespace QbSync.WebConnector.Tests.Impl
                 stepRequests,
                 stepResponses,
                 loggerMock.Object
-            );
-            mock.CallBase = true;
+            )
+            {
+                CallBase = true
+            };
 
             return mock;
         }

@@ -6,11 +6,11 @@ namespace QbSync.QbXml.Objects
     internal class ObjectItem<U>
         where U : struct, IConvertible
     {
-        private object instance;
-        private PropertyInfo itemProperty;
-        private PropertyInfo itemElementNameProperty;
-        private object itemValue;
-        private U itemElementNameValue;
+        private readonly object instance;
+        private readonly PropertyInfo itemProperty;
+        private readonly PropertyInfo itemElementNameProperty;
+        private readonly object itemValue;
+        private readonly U itemElementNameValue;
         private ObjectItemValue property;
 
         public ObjectItem(object instance, string name)

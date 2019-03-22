@@ -78,8 +78,10 @@ namespace QbSync.QbXml.Tests.Types
         public void GuidWillOutputZeroInQbXmlRequestWhenConstructedFromZero()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new InvoiceQueryRqType();
-            innerRequest.OwnerID = new[] {new GUIDTYPE("0")};
+            var innerRequest = new InvoiceQueryRqType
+            {
+                OwnerID = new[] { new GUIDTYPE("0") }
+            };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
 
@@ -93,8 +95,10 @@ namespace QbSync.QbXml.Tests.Types
         public void GuidWillOutputHexadecimalInQbXmlRequestWhenConstructedFromEmptyGuid()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new InvoiceQueryRqType();
-            innerRequest.OwnerID = new[] { new GUIDTYPE(Guid.Empty) };
+            var innerRequest = new InvoiceQueryRqType
+            {
+                OwnerID = new[] { new GUIDTYPE(Guid.Empty) }
+            };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
 
@@ -108,8 +112,10 @@ namespace QbSync.QbXml.Tests.Types
         public void GuidWillOutputHexadecimalInQbXmlRequestWhenConstructedFromHexadecimal()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new InvoiceQueryRqType();
-            innerRequest.OwnerID = new[] { new GUIDTYPE("{00000000-0000-0000-0000-000000000000}") };
+            var innerRequest = new InvoiceQueryRqType
+            {
+                OwnerID = new[] { new GUIDTYPE("{00000000-0000-0000-0000-000000000000}") }
+            };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
 

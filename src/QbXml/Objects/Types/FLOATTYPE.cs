@@ -94,7 +94,7 @@ namespace QbSync.QbXml.Objects
             }
 
             // If one is null, but not both, return false.
-            if (((object)a == null) ^ ((object)b == null))
+            if ((a is null) ^ (b is null))
             {
                 return false;
             }
@@ -182,8 +182,7 @@ namespace QbSync.QbXml.Objects
 
         private static decimal Parse(string value)
         {
-            decimal output;
-            if (decimal.TryParse(value, out output))
+            if (decimal.TryParse(value, out decimal output))
             {
                 return output;
             }
