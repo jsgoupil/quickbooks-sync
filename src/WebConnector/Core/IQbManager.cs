@@ -1,7 +1,7 @@
 ﻿using System.ServiceModel;
 using System.Threading.Tasks;
 
-namespace QbSync.WebConnector.AspNetCore
+namespace QbSync.WebConnector.Core
 {
     [ServiceContract(Namespace = "http://developer.intuit.com/")]
     public interface IQbManager
