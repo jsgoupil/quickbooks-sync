@@ -10,28 +10,35 @@ namespace QbSync.QbXml.Tests.Types
     [TestFixture]
     public class DateTimeTypeTests
     {
-        [TestCase("2015-04-03T10:06:17-08:00", ExpectedResult = "2015-04-03T10:06:17-08:00")]
-        [TestCase("2015-04-03T10:06:17-07:00", ExpectedResult = "2015-04-03T10:06:17-07:00")]
-        [TestCase("2015-04-03T10:06:17Z", ExpectedResult = "2015-04-03T10:06:17+00:00", Description = "UTC Z offset format will change to +00:00")]
-        [TestCase("2015-04-03T10:06:17", ExpectedResult = "2015-04-03T10:06:17", Description = "UTC Offset is optional")]
+        [TestCase("2015-04-03T10:06:17-08:00", ExpectedResult = "2015-04-03T10:06:17")]
+        [TestCase("2015-04-03T10:06:17-07:00", ExpectedResult = "2015-04-03T10:06:17")]
+        [TestCase("2015-04-03T10:06:17Z", ExpectedResult = "2015-04-03T10:06:17")]
+        [TestCase("2015-04-03T10:06:17", ExpectedResult = "2015-04-03T10:06:17")]
         public string ToStringOffsetExistenceMatchesInputWhenParsingFromString(string input)
         {
             return DATETIMETYPE.Parse(input).ToString();
         }
 
+        [TestCase("2015-04-03T10:06:17-08:00", ExpectedResult = "2015-04-03T10:06:17")]
+        [TestCase("2015-04-03T10:06:17-07:00", ExpectedResult = "2015-04-03T10:06:17")]
+        [TestCase("2015-04-03T10:06:17Z", ExpectedResult = "2015-04-03T10:06:17")]
+        [TestCase("2015-04-03T10:06:17", ExpectedResult = "2015-04-03T10:06:17")]
+        public string ToStringOffsetExistenceMatchesInputWhenParsingFromStringWithoutOffset(string input)
+        {
+            return DATETIMETYPE.Parse(input).ToString(false);
+        }
+
         [TestCase("2015-04-03T10:06:17-08:00", ExpectedResult = "2015-04-03T10:06:17-08:00")]
         [TestCase("2015-04-03T10:06:17-07:00", ExpectedResult = "2015-04-03T10:06:17-07:00")]
         [TestCase("2015-04-03T10:06:17Z", ExpectedResult = "2015-04-03T10:06:17+00:00", Description = "UTC Z offset format will change to +00:00")]
         [TestCase("2015-04-03T10:06:17", ExpectedResult = "2015-04-03T10:06:17", Description = "UTC Offset is optional")]
-        public string ToStringOffsetExistenceMatchesInputWhenConstructingFromString(string input)
+        public string ToStringOffsetExistenceMatchesInputWhenParsingFromStringWithOffset(string input)
         {
-#pragma warning disable 618
-            return new DATETIMETYPE(input).ToString();
-#pragma warning restore 618
+            return DATETIMETYPE.Parse(input).ToString(true);
         }
 
         [Test]
-        public void RoundTripsAsExpectedWithoutTimeZoneFix()
+        public void RoundTripsAsExpectedWithoutOffset()
         {
             // Simulated value returned from QuickBooks, that we want to be sent the exact same way to future queries
             var str = "2019-02-20T10:36:51";
@@ -57,33 +64,22 @@ namespace QbSync.QbXml.Tests.Types
         }
 
         [Test]
-        public void RoundTripsAsExpectedWithTimeZoneFix()
+        public void RoundTripsAsExpectedWithOffset()
         {
-            // Simulated value returned from QuickBooks, that we want to be sent the exact same way to future queries
+            // Simulated value constructed with an offset. Either from previous versions of the library, or a manually constructed value
             var date = DATETIMETYPE.Parse("2019-02-20T10:36:51-08:00");
 
             // DATETIMETYPE > string
-            Assert.AreEqual("2019-02-20T10:36:51-08:00", date.ToString());
+            Assert.AreEqual("2019-02-20T10:36:51", date.ToString());
+
+            // DATETIMETYPE > string
+            Assert.AreEqual("2019-02-20T10:36:51-08:00", date.ToString(true));
+
+            // DATETIMETYPE > string
+            Assert.AreEqual("2019-02-20T10:36:51", date.ToString(false));
 
             // DATETIMETYPE > string > DATETIMETYPE > string
-            Assert.AreEqual("2019-02-20T10:36:51-08:00", DATETIMETYPE.Parse(date.ToString()).ToString());
-
-
-            // *********************************************************************************
-            // NOTE:
-            // These next tests make use of DateTimeOffset, which is only available for
-            // QuickBooks parsed values if a time zone fix is in place.
-            // Offset is kept throughout in these cases
-            // *********************************************************************************
-
-            // DATETIMETYPE > DateTimeOffset > DATETIMETYPE > string
-            Assert.AreEqual("2019-02-20T10:36:51-08:00", new DATETIMETYPE(date.GetDateTimeOffset()).ToString());
-
-            // DATETIMETYPE > DateTimeOffset > string > DATETIMETYPE > string
-            Assert.AreEqual("2019-02-20T10:36:51-08:00", DATETIMETYPE.Parse(date.GetDateTimeOffset().ToString()).ToString());
-
-            // DATETIMETYPE > DateTimeOffset > string > DateTimeOffset > DATETIMETYPE > string
-            Assert.AreEqual("2019-02-20T10:36:51-08:00", new DATETIMETYPE(DateTimeOffset.Parse(date.GetDateTimeOffset().ToString())).ToString());
+            Assert.AreEqual("2019-02-20T10:36:51-08:00", DATETIMETYPE.Parse(date.ToString(true)).ToString(true));
 
 
             // *********************************************************************************
@@ -117,11 +113,11 @@ namespace QbSync.QbXml.Tests.Types
             var date = new DateTime(2019, 2, 6, 17, 24, 0, DateTimeKind.Utc);
             var dt = new DATETIMETYPE(date);
 
-            Assert.AreEqual("2019-02-06T17:24:00+00:00", dt.ToString());
+            Assert.AreEqual("2019-02-06T17:24:00+00:00", dt.ToString(true));
         }
 
         [Test]
-        public void ToStringDoesIncludesOffsetWhenConstructedFromLocalDateTime()
+        public void ToStringIncludesOffsetWhenConstructedFromLocalDateTime()
         {
             var date = new DateTime(2019, 2, 6, 17, 24, 0, DateTimeKind.Local);
 
@@ -130,7 +126,7 @@ namespace QbSync.QbXml.Tests.Types
 
             var dt = new DATETIMETYPE(date);
 
-            Assert.AreEqual($"2019-02-06T17:24:00{offset}", dt.ToString());
+            Assert.AreEqual($"2019-02-06T17:24:00{offset}", dt.ToString(true));
         }
 
         [Test]
@@ -146,17 +142,9 @@ namespace QbSync.QbXml.Tests.Types
         [Test]
         public void UsesOffsetAsSuppliedWhenConstructedFromDateTimeOffset()
         {
-            var dt = new DATETIMETYPE(new DateTimeOffset(2019, 2, 6, 17, 24, 0, TimeSpan.FromHours(-8)));
+            var dt = DATETIMETYPE.FromUncorrectedDate(new DateTimeOffset(2019, 2, 6, 17, 24, 0, TimeSpan.FromHours(-8)));
 
-            Assert.AreEqual("2019-02-06T17:24:00-08:00", dt.ToString());
-        }
-
-        [Test]
-        public void UsesOffsetAsSuppliedWhenConstructedFromDateComponents()
-        {
-            var dt = new DATETIMETYPE(2019, 2, 6, 17, 24, 0, TimeSpan.FromHours(-8));
-
-            Assert.AreEqual("2019-02-06T17:24:00-08:00", dt.ToString());
+            Assert.AreEqual("2019-02-06T17:24:00-08:00", dt.ToString(true));
         }
 
         [Test]
@@ -171,10 +159,10 @@ namespace QbSync.QbXml.Tests.Types
         public void CompareAccountsForOffset()
         {
             // A's instant (moment in time globally) is later, but its DateTime is earlier
-            var a = new DATETIMETYPE(new DateTimeOffset(2019, 1, 1, 6, 0, 0, 0, TimeSpan.FromHours(-3)));
+            var a = DATETIMETYPE.FromUncorrectedDate(new DateTimeOffset(2019, 1, 1, 6, 0, 0, 0, TimeSpan.FromHours(-3)));
 
             // B's instant is earlier, but its DateTime is later
-            var b = new DATETIMETYPE(new DateTimeOffset(2019, 1, 1, 8, 0, 0, 0, TimeSpan.Zero));
+            var b = DATETIMETYPE.FromUncorrectedDate(new DateTimeOffset(2019, 1, 1, 8, 0, 0, 0, TimeSpan.Zero));
 
             Assert.AreEqual(1, a.CompareTo(b));
         }
@@ -182,7 +170,7 @@ namespace QbSync.QbXml.Tests.Types
         [Test]
         public void CompareIgnoresOffsetWhenOneDoNotHaveOffset()
         {
-            var a = new DATETIMETYPE(new DateTimeOffset(2019, 1, 1, 8, 0, 0, 0, TimeSpan.FromHours(-10)));
+            var a = DATETIMETYPE.FromUncorrectedDate(new DateTimeOffset(2019, 1, 1, 8, 0, 0, 0, TimeSpan.FromHours(-10)));
             var b = new DATETIMETYPE(new DateTime(2019, 1, 1, 8, 0, 0, 0, DateTimeKind.Unspecified));
 
             Assert.AreEqual(0, a.CompareTo(b));
@@ -247,8 +235,8 @@ namespace QbSync.QbXml.Tests.Types
         {
             // Even though these are two different offsets, they represent the same moment in time and both have offsets supplied, so should be equal
 
-            var a = new DATETIMETYPE(2019, 1, 1, 12, 0, 0, TimeSpan.FromHours(-1));
-            var b = new DATETIMETYPE(2019, 1, 1, 11, 0, 0, TimeSpan.FromHours(-2));
+            var a = DATETIMETYPE.FromUncorrectedDate(new DateTimeOffset(2019, 1, 1, 12, 0, 0, TimeSpan.FromHours(-1)));
+            var b = DATETIMETYPE.FromUncorrectedDate(new DateTimeOffset(2019, 1, 1, 11, 0, 0, TimeSpan.FromHours(-2)));
 
             Assert.AreEqual(0, a.CompareTo(b));
             Assert.IsTrue(a.Equals(b));
@@ -259,8 +247,8 @@ namespace QbSync.QbXml.Tests.Types
         {
             // Even though these are two different offsets, they represent the same moment in time and both have offsets supplied, so should be equal
 
-            var a = new DATETIMETYPE(2019, 1, 1, 12, 0, 0, TimeSpan.FromHours(-1));
-            var b = new DATETIMETYPE(2019, 1, 1, 11, 0, 0, TimeSpan.FromHours(-2));
+            var a = DATETIMETYPE.FromUncorrectedDate(new DateTimeOffset(2019, 1, 1, 12, 0, 0, TimeSpan.FromHours(-1)));
+            var b = DATETIMETYPE.FromUncorrectedDate(new DateTimeOffset(2019, 1, 1, 11, 0, 0, TimeSpan.FromHours(-2)));
 
             Assert.AreEqual(0, a.CompareTo(b));
             Assert.IsTrue(a == b);
@@ -271,7 +259,7 @@ namespace QbSync.QbXml.Tests.Types
         {
             // While these will compare the same, they should not be considered equal
 
-            var a = new DATETIMETYPE(new DateTimeOffset(2019, 1, 1, 8, 0, 0, 0, TimeSpan.Zero));
+            var a = DATETIMETYPE.FromUncorrectedDate(new DateTimeOffset(2019, 1, 1, 8, 0, 0, 0, TimeSpan.Zero));
             var b = new DATETIMETYPE(new DateTime(2019, 1, 1, 8, 0, 0, 0, DateTimeKind.Unspecified));
 
             Assert.AreEqual(0, a.CompareTo(b));
@@ -285,7 +273,7 @@ namespace QbSync.QbXml.Tests.Types
                 DATETIMETYPE.Parse("2019-02-06T17:24:00Z"),
                 DATETIMETYPE.Parse("2019-02-06T17:24:00+00:00"),
                 new DATETIMETYPE(new DateTime(2019, 1, 1, 8, 0, 0, 0, DateTimeKind.Utc)),
-                new DATETIMETYPE(new DateTimeOffset(2019, 2, 6, 17, 24, 0, TimeSpan.Zero)),
+                DATETIMETYPE.FromUncorrectedDate(new DateTimeOffset(2019, 2, 6, 17, 24, 0, TimeSpan.Zero)),
             };
         }
 
@@ -303,7 +291,7 @@ namespace QbSync.QbXml.Tests.Types
                 DATETIMETYPE.Parse("2019-02-06T17:24:00"),
                 DATETIMETYPE.Parse("2019-02-07T17:24:00-08:00"),
                 new DATETIMETYPE(new DateTime(2019, 1, 1, 8, 0, 0, 0, DateTimeKind.Unspecified)),
-                new DATETIMETYPE(new DateTimeOffset(2019, 2, 9, 17, 24, 0, TimeSpan.FromHours(-8)))
+                DATETIMETYPE.FromUncorrectedDate(new DateTimeOffset(2019, 2, 9, 17, 24, 0, TimeSpan.FromHours(-8)))
             };
         }
 
@@ -342,31 +330,14 @@ namespace QbSync.QbXml.Tests.Types
 
             var dt = new DATETIMETYPE(new DateTime(2019, 1, 1, 8, 0, 0, 0, DateTimeKind.Local));
 
-            Assert.AreEqual(offset, dt.GetDateTimeOffset().Offset);
-        }
-
-
-        [Test]
-        public void GetDateTimeOffsetThrowsWhenNoOffset()
-        {
-            var dt = DATETIMETYPE.Parse("2019-02-06T17:24:00");
-            Assert.Throws<InvalidOperationException>(() => dt.GetDateTimeOffset());
-        }
-
-        [Test]
-        public void GetDateTimeOffsetReturnsSameValue()
-        {
-            var dto = new DateTimeOffset(2019, 2, 6, 17, 24, 0, TimeSpan.FromHours(-8));
-            var dt = new DATETIMETYPE(dto);
-
-            Assert.AreEqual(dto, dt.GetDateTimeOffset());
+            Assert.AreEqual(offset, dt.UncorrectedDate.Value.Offset);
         }
 
         [Test]
         public void LessThanOperator()
         {
-            var a = new DATETIMETYPE(new DateTimeOffset(2019, 1, 1, 8, 0, 0, TimeSpan.Zero));
-            var b = new DATETIMETYPE(new DateTimeOffset(2019, 1, 1, 9, 0, 0, TimeSpan.Zero));
+            var a = DATETIMETYPE.FromUncorrectedDate(new DateTimeOffset(2019, 1, 1, 8, 0, 0, TimeSpan.Zero));
+            var b = DATETIMETYPE.FromUncorrectedDate(new DateTimeOffset(2019, 1, 1, 9, 0, 0, TimeSpan.Zero));
 
             Assert.IsTrue(a < b);
         }
@@ -374,8 +345,8 @@ namespace QbSync.QbXml.Tests.Types
         [Test]
         public void GreaterThanOperator()
         {
-            var a = new DATETIMETYPE(new DateTimeOffset(2019, 1, 1, 8, 0, 0, TimeSpan.Zero));
-            var b = new DATETIMETYPE(new DateTimeOffset(2019, 1, 1, 9, 0, 0, TimeSpan.Zero));
+            var a = DATETIMETYPE.FromUncorrectedDate(new DateTimeOffset(2019, 1, 1, 8, 0, 0, TimeSpan.Zero));
+            var b = DATETIMETYPE.FromUncorrectedDate(new DateTimeOffset(2019, 1, 1, 9, 0, 0, TimeSpan.Zero));
 
             Assert.IsTrue(b > a);
         }
@@ -404,7 +375,7 @@ namespace QbSync.QbXml.Tests.Types
         {
             Assert.Throws<ArgumentOutOfRangeException>(() =>
             {
-                var date = new DATETIMETYPE(new DateTimeOffset(2038, 2, 1, 0, 0, 0, TimeSpan.Zero));
+                var date = DATETIMETYPE.FromUncorrectedDate(new DateTimeOffset(2038, 2, 1, 0, 0, 0, TimeSpan.Zero));
             });
         }
 
@@ -413,7 +384,7 @@ namespace QbSync.QbXml.Tests.Types
         {
             Assert.Throws<ArgumentOutOfRangeException>(() =>
             {
-                var date = new DATETIMETYPE(new DateTimeOffset(1969, 12, 31, 23, 59, 59, TimeSpan.Zero));
+                var date = DATETIMETYPE.FromUncorrectedDate(new DateTimeOffset(1969, 12, 31, 23, 59, 59, TimeSpan.Zero));
             });
         }
 
@@ -422,7 +393,7 @@ namespace QbSync.QbXml.Tests.Types
         {
             Assert.Throws<ArgumentOutOfRangeException>(() =>
             {
-                var date = new DATETIMETYPE(2038, 1, 19, 3, 14, 8, TimeSpan.Zero);
+                var date = DATETIMETYPE.FromUncorrectedDate(new DateTimeOffset(2038, 1, 19, 3, 14, 8, TimeSpan.Zero));
             });
         }
 
@@ -458,7 +429,7 @@ namespace QbSync.QbXml.Tests.Types
         {
             Assert.DoesNotThrow(() =>
             {
-                var date = new DATETIMETYPE(1970, 01, 01, 0, 0, 0, TimeSpan.Zero);
+                var date = DATETIMETYPE.FromUncorrectedDate(new DateTimeOffset(1970, 01, 01, 0, 0, 0, TimeSpan.Zero));
             });
         }
 
@@ -467,7 +438,7 @@ namespace QbSync.QbXml.Tests.Types
         {
             Assert.DoesNotThrow(() =>
             {
-                var date = new DATETIMETYPE(new DateTimeOffset(2038, 1, 19, 3, 14, 7, 0, TimeSpan.Zero));
+                var date = DATETIMETYPE.FromUncorrectedDate(new DateTimeOffset(2038, 1, 19, 3, 14, 7, 0, TimeSpan.Zero));
             });
         }
 
@@ -513,7 +484,7 @@ namespace QbSync.QbXml.Tests.Types
 
         #region QuickBooks parsing and fixes
 
-        private CustomerRet CreateAndParseCustomerQueryXml(string timeCreated, string timeModified, TimeZoneInfo quickBooksTimeZone = null)
+        private CustomerRet CreateAndParseCustomerQueryXml(string timeCreated, string timeModified)
         {
             var ret = $"<CustomerRet><ListID>80000001-1422671082</ListID><TimeCreated>{timeCreated}</TimeCreated><TimeModified>{timeModified}</TimeModified><EditSequence>1422671082</EditSequence><Name>Chris Curtis</Name><FullName>Christopher Curtis</FullName><IsActive>true</IsActive></CustomerRet>";
 
@@ -555,41 +526,6 @@ namespace QbSync.QbXml.Tests.Types
             var customer = CreateAndParseCustomerQueryXml(time, time);
 
             Assert.AreEqual(DateTimeKind.Unspecified, customer.TimeModified.ToDateTime().Kind);
-        }
-
-        [Test]
-        [Ignore("Temporarily disabled")]
-        public void OffsetIsSetToTimeZoneCorrectValueWhenXmlParsedWithTimeZoneFix()
-        {
-            var time = "2015-04-03T10:06:17-08:00";
-
-            var customer = CreateAndParseCustomerQueryXml(time, time, QuickBooksTestHelper.GetPacificStandardTimeZoneInfo());
-
-            Assert.AreEqual("2015-04-03T10:06:17-07:00", customer.TimeModified.ToString());
-        }
-
-        [Test]
-        [Ignore("Temporarily disabled")]
-        public void OffsetIsRetainedWhenXmlParsedForNonDstTimeZoneFix()
-        {
-
-            var time = "2015-04-03T10:06:17+00:00";
-
-            var customer = CreateAndParseCustomerQueryXml(time, time, TimeZoneInfo.Utc);
-
-            Assert.AreEqual("2015-04-03T10:06:17+00:00", customer.TimeModified.ToString());
-        }
-
-        [Test]
-        public void OffsetIsIgnoredWhenXmlParsedAndTimeZoneFixBaseOffsetDoesNotMatchInput()
-        {
-            // A protection against misconfiguration of the time zone fix to the wrong time zone
-
-            var time = "2015-04-03T10:06:17-10:00";
-
-            var customer = CreateAndParseCustomerQueryXml(time, time, QuickBooksTestHelper.GetPacificStandardTimeZoneInfo());
-
-            Assert.AreEqual("2015-04-03T10:06:17", customer.TimeModified.ToString());
         }
 
         [Test]
