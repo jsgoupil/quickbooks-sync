@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+﻿using Microsoft.Extensions.DependencyInjection.Extensions;
+using QbSync.WebConnector.AspNetCore;
 using QbSync.WebConnector.Core;
 using QbSync.WebConnector.Impl;
 using System;
 
-namespace QbSync.WebConnector.Extensions
+namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {

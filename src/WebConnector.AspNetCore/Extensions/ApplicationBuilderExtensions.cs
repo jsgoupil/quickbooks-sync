@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using QbSync.WebConnector.AspNetCore;
 using QbSync.WebConnector.Core;
 using SoapCore;
 using System;
 using System.ServiceModel;
 
-namespace QbSync.WebConnector.Extensions
+namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ApplicationBuilderExtensions
     {

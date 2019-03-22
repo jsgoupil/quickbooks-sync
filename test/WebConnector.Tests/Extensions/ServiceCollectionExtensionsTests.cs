@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using QbSync.WebConnector.AspNetCore;
 using QbSync.WebConnector.Core;
-using QbSync.WebConnector.Extensions;
 using QbSync.WebConnector.Impl;
 using System;
 using System.Linq;

@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using QbSync.WebConnector.Core;
 using System;
 using System.ComponentModel;
 
-namespace QbSync.WebConnector.Core
+namespace QbSync.WebConnector.AspNetCore
 {
     public class WebConnectorBuilder
     {

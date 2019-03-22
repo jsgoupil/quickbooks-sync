@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace QbSync.WebConnector.Impl
+namespace QbSync.WebConnector.AspNetCore
 {
     public class QbManager : IQbManager
     {
