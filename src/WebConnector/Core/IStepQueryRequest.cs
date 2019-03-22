@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 
 namespace QbSync.WebConnector.Core
 {
+    /// <summary>
+    /// An interface representing a step request.
+    /// </summary>
     public interface IStepQueryRequest
     {
         /// <summary>

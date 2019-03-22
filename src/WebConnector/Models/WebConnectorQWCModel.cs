@@ -2,34 +2,89 @@
 
 namespace QbSync.WebConnector.Models
 {
+    /// <summary>
+    /// AuthFlag.
+    /// </summary>
     [Flags]
     public enum AuthFlag
     {
+        /// <summary>
+        /// All.
+        /// </summary>
         All = 0,
+
+        /// <summary>
+        /// SupportQBSimpleStart.
+        /// </summary>
         SupportQBSimpleStart = 1,
+
+        /// <summary>
+        /// SupportQBPro.
+        /// </summary>
         SupportQBPro = 2,
+
+        /// <summary>
+        /// SupportQBPremier.
+        /// </summary>
         SupportQBPremier = 4,
+
+        /// <summary>
+        /// SupportQBEnterprise.
+        /// </summary>
         SupportQBEnterprise = 8
     }
 
+    /// <summary>
+    /// PersonalDataPref.
+    /// </summary>
     public enum PersonalDataPref
     {
+        /// <summary>
+        /// PdpOptional.
+        /// </summary>
         PdpOptional,
+
+        /// <summary>
+        /// PdpRequired.
+        /// </summary>
         PdpRequired
     }
 
+    /// <summary>
+    /// QBType.
+    /// </summary>
     public enum QBType
     {
+        /// <summary>
+        /// QBFS.
+        /// </summary>
         QBFS,
+
+        /// <summary>
+        /// QBPOS.
+        /// </summary>
         QBPOS
     }
 
+    /// <summary>
+    /// UnattendedModePref.
+    /// </summary>
     public enum UnattendedModePref
     {
+        /// <summary>
+        /// UmpOptional.
+        /// </summary>
         UmpOptional,
+
+        /// <summary>
+        /// UmpRequired.
+        /// </summary>
         UmpRequired
     }
 
+    /// <summary>
+    /// Models holding the information on how to generate the QWC file.
+    /// </summary>
     public class WebConnectorQwcModel
     {
         /// <summary>
@@ -138,8 +193,8 @@ namespace QbSync.WebConnector.Models
         /// <summary>
         /// <para>Optional.</para>
         /// <para>QBWC will use this to display name in the QBWC UI. Otherwise, use
-        /// <AppName> as usual. This is just for UI purpose. Update process
-        /// still uses the <AppName> (or, AppUniqueName if provided).</para>
+        /// <see cref="AppName"/> as usual. This is just for UI purpose. Update process
+        /// still uses the <see cref="AppName"/> (or, AppUniqueName if provided).</para>
         /// </summary>
         public string AppDisplayName { get; set; }
 

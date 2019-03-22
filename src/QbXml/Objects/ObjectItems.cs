@@ -7,12 +7,12 @@ namespace QbSync.QbXml.Objects
 {
     internal class ObjectItems
     {
-        private object instance;
-        private string[] nameOrder;
-        private PropertyInfo itemsProperty;
-        private object[] itemsValue;
+        private readonly object instance;
+        private readonly string[] nameOrder;
+        private readonly PropertyInfo itemsProperty;
+        private readonly object[] itemsValue;
+        private readonly Dictionary<System.Type, string> typeMapping;
         private List<ObjectItemValue> propertyList;
-        private Dictionary<System.Type, string> typeMapping;
 
         public ObjectItems(object instance, string name, string[] nameOrder, Dictionary<System.Type, string> typeMapping)
         {

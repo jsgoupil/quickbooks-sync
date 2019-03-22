@@ -6,6 +6,14 @@ QuickBooks Sync regroups multiple NuGet packages to sync data from QuickBooks De
 
 ## QbXml ##
 
+### Installation ###
+
+```
+Install-Package QbXml
+```
+
+### Introduction ###
+
 QbXml is the language used by QuickBooks desktop to exchange back and forth data between an application and the QuickBooks database.
 
 Here is a couple of ideas how you can make some requests and parse responses.
@@ -47,6 +55,18 @@ public class CustomerResponse
 ```
 
 ## Web Connector ##
+
+### Installation ###
+
+```
+Install-Package WebConnector
+Install-Package WebConnector.AspNetCore
+```
+
+The `WebConnector.AspNetCore` contains reference to SoapCore/AspNetCore.
+If you wish to create your steps in a library that does not have this dependency, you may install the `WebConnector` package.
+
+### Introduction
 
 Version 1.0.0 supports .NET Standard 2.0. We follow the dependency injection standard to load the services.
 We abstracted the SOAP protocol so you only have to implement necessary services in order to make your queries to QuickBooks.

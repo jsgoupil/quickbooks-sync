@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Title>QuickBooks Sync - WebConnector.AspNetCore</Title>
+    <Description>Communicates with QuickBooks Web Connector.</Description>
+    <Author>Jean-Sébastien Goupil</Author>
+    <Authors>Jean-Sébastien Goupil</Authors>
+    <Copyright>Copyright © Jean-Sébastien Goupil 2015-2019</Copyright>
+    <Version>2.0.0</Version>
+    <AssemblyName>QbSync.WebConnector.AspNetCore</AssemblyName>
+    <RootNamespace>QbSync.WebConnector.AspNetCore</RootNamespace>
+    <PackageId>QbSync.WebConnector.AspNetCore</PackageId>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>quickbooks qbxml webconnector webservice service</PackageTags>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/jsgoupil/quickbooks-sync</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jsgoupil/quickbooks-sync</RepositoryUrl>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\LICENSE.md" Link="LICENSE.md" Pack="true" PackagePath="$(PackageLicenseFile)" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="SoapCore" Version="0.9.9" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WebConnector\WebConnector.csproj" />
+  </ItemGroup>
+
+</Project>

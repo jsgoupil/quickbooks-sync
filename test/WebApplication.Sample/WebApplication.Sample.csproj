@@ -11,6 +11,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\QbXml\QbXml.csproj" />
+    <ProjectReference Include="..\..\src\WebConnector.AspNetCore\WebConnector.AspNetCore.csproj" />
     <ProjectReference Include="..\..\src\WebConnector\WebConnector.csproj" />
   </ItemGroup>
   <ItemGroup>

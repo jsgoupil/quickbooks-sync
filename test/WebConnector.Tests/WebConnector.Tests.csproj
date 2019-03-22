@@ -19,6 +19,7 @@
     <PackageReference Include="NUnit3TestAdapter" Version="3.11.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\WebConnector.AspNetCore\WebConnector.AspNetCore.csproj" />
     <ProjectReference Include="..\..\src\WebConnector\WebConnector.csproj" />
   </ItemGroup>
 </Project>

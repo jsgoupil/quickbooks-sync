@@ -2,6 +2,9 @@
 
 namespace QbSync.WebConnector.Core
 {
+    /// <summary>
+    /// Message Validator which checks if a message is valid, and checks if the ticket is valid.
+    /// </summary>
     public interface IMessageValidator
     {
         /// <summary>

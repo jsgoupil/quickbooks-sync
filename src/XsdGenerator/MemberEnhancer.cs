@@ -14,14 +14,14 @@ namespace QbSync.XsdGenerator
         private const string xmlArrayAttributeString = "System.Xml.Serialization.XmlArrayAttribute";
 
         private CodeTypeDeclaration codeType;
-        private XmlSchemas xsds;
+        private readonly XmlSchemas xsds;
         private IEnumerable<CodeTypeDeclaration> codeNamespaceTypes;
         private IEnumerable<CodeMemberField> codeMemberFields;
         private IEnumerable<CodeMemberProperty> codeMemberProperties;
         private CodeAttributeDeclaration ignoreAttribute = new CodeAttributeDeclaration("System.Xml.Serialization.XmlIgnoreAttribute");
-        private CodeAttributeDeclaration editorBrowsableStateNever = new CodeAttributeDeclaration("System.ComponentModel.EditorBrowsable", new CodeAttributeArgument(new CodeSnippetExpression("System.ComponentModel.EditorBrowsableState.Never")));
-        private CodeAttributeDeclaration obsoleteAttribute = new CodeAttributeDeclaration("System.ObsoleteAttribute", new CodeAttributeArgument(new CodePrimitiveExpression("Marked as obsolete by Intuit.")));
-        private Func<CodeMemberProperty, bool> itemLambda = m => m.Name == "Items" || m.Name == "Item" || m.Name == "Item1" || m.Name == "Items1";
+        private readonly CodeAttributeDeclaration editorBrowsableStateNever = new CodeAttributeDeclaration("System.ComponentModel.EditorBrowsable", new CodeAttributeArgument(new CodeSnippetExpression("System.ComponentModel.EditorBrowsableState.Never")));
+        private readonly CodeAttributeDeclaration obsoleteAttribute = new CodeAttributeDeclaration("System.ObsoleteAttribute", new CodeAttributeArgument(new CodePrimitiveExpression("Marked as obsolete by Intuit.")));
+        private readonly Func<CodeMemberProperty, bool> itemLambda = m => m.Name == "Items" || m.Name == "Item" || m.Name == "Item1" || m.Name == "Items1";
 
         public MemberEnhancer(CodeTypeDeclaration codeType, CodeNamespace codeNamespace, XmlSchemas xsds)
         {
@@ -258,10 +258,12 @@ namespace QbSync.XsdGenerator
                     new CodeVariableReferenceExpression("value")
                 );
 
-            var propertySpecified = new CodeMemberProperty();
-            propertySpecified.Attributes = MemberAttributes.Public | MemberAttributes.Final;
-            propertySpecified.Name = p + "ValueSpecified";
-            propertySpecified.Type = new CodeTypeReference(typeof(bool));
+            var propertySpecified = new CodeMemberProperty
+            {
+                Attributes = MemberAttributes.Public | MemberAttributes.Final,
+                Name = p + "ValueSpecified",
+                Type = new CodeTypeReference(typeof(bool))
+            };
             propertySpecified.CustomAttributes.Add(new CodeAttributeDeclaration("System.Xml.Serialization.XmlIgnore"));
             propertySpecified.CustomAttributes.Add(editorBrowsableStateNever);
             propertySpecified.GetStatements.Add(
@@ -270,10 +272,12 @@ namespace QbSync.XsdGenerator
 
             var propertyName = codeAttributeDeclarationName.Contains("XmlAttributeAttribute") ? "AttributeName" : "ElementName";
 
-            var propertyValue = new CodeMemberProperty();
-            propertyValue.Attributes = MemberAttributes.Public | MemberAttributes.Final;
-            propertyValue.Name = p + "Value";
-            propertyValue.Type = new CodeTypeReference(typeName);
+            var propertyValue = new CodeMemberProperty
+            {
+                Attributes = MemberAttributes.Public | MemberAttributes.Final,
+                Name = p + "Value",
+                Type = new CodeTypeReference(typeName)
+            };
             propertyValue.CustomAttributes.Add(new CodeAttributeDeclaration(codeAttributeDeclarationName, new CodeAttributeArgument(propertyName, new CodePrimitiveExpression(p))));
             propertyValue.CustomAttributes.Add(editorBrowsableStateNever);
             propertyValue.GetStatements.Add(getValueExpression);
@@ -302,13 +306,9 @@ namespace QbSync.XsdGenerator
 
         private XmlSchemaMaxLengthFacet GetStringRestriction(XmlSchemaElement xmlSchemaElement)
         {
-            var xmlSchemaSimpleType = xmlSchemaElement.SchemaType as XmlSchemaSimpleType;
-
-            if (xmlSchemaSimpleType != null)
+            if (xmlSchemaElement.SchemaType is XmlSchemaSimpleType xmlSchemaSimpleType)
             {
-                var xmlSchemaSimpleTypeRestriction = xmlSchemaSimpleType.Content as XmlSchemaSimpleTypeRestriction;
-
-                if (xmlSchemaSimpleTypeRestriction != null)
+                if (xmlSchemaSimpleType.Content is XmlSchemaSimpleTypeRestriction xmlSchemaSimpleTypeRestriction)
                 {
                     return xmlSchemaSimpleTypeRestriction.Facets.OfType<XmlSchemaMaxLengthFacet>().FirstOrDefault();
                 }
@@ -334,8 +334,7 @@ namespace QbSync.XsdGenerator
 
         private XmlSchemaElement GetSchemaElement(XmlSchemaComplexType xmlSchemaComplexType, string name)
         {
-            var xmlSchemaSequence = xmlSchemaComplexType.ContentTypeParticle as XmlSchemaSequence;
-            if (xmlSchemaSequence != null)
+            if (xmlSchemaComplexType.ContentTypeParticle is XmlSchemaSequence xmlSchemaSequence)
             {
                 var xmlSchemaElementFound = xmlSchemaSequence.Items.OfType<XmlSchemaElement>()
                     .FirstOrDefault(m => m.QualifiedName?.Name == name);
@@ -716,8 +715,7 @@ namespace QbSync.XsdGenerator
         {
             foreach (var member in codeType.Members)
             {
-                var codeMemberProperty = member as CodeMemberProperty;
-                if (codeMemberProperty != null)
+                if (member is CodeMemberProperty codeMemberProperty)
                 {
                     if (codeMemberProperty.Name == memberName)
                     {
@@ -976,10 +974,11 @@ namespace QbSync.XsdGenerator
             List<CodeStatement> trueStatements = null;
             if (string.IsNullOrEmpty(withEnumChoice))
             {
-                trueStatements = new List<CodeStatement>();
-                trueStatements.Add(
+                trueStatements = new List<CodeStatement>
+                {
                     new CodeVariableDeclarationStatement(typeof(Dictionary<System.Type, string>), "typeMapping",
-                    new CodeObjectCreateExpression(typeof(Dictionary<System.Type, string>))));
+                    new CodeObjectCreateExpression(typeof(Dictionary<System.Type, string>)))
+                };
 
                 // We need to add a type mapping since we have not access to a choice name.
                 foreach (var customAttribute in codeTypeMember.CustomAttributes.OfType<CodeAttributeDeclaration>())

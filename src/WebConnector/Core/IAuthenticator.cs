@@ -2,6 +2,9 @@
 
 namespace QbSync.WebConnector.Core
 {
+    /// <summary>
+    /// An authenticator will keep the state in your database of what is happening with the Web Connector session.
+    /// </summary>
     public interface IAuthenticator
     {
         /// <summary>

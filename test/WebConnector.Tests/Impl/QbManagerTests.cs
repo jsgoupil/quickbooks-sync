@@ -3,6 +3,7 @@ using Moq;
 using Moq.Protected;
 using NUnit.Framework;
 using QbSync.QbXml;
+using QbSync.WebConnector.AspNetCore;
 using QbSync.WebConnector.Core;
 using QbSync.WebConnector.Impl;
 using QbSync.WebConnector.Tests.Helpers;
@@ -561,8 +562,10 @@ namespace QbSync.WebConnector.Tests.Impl
                 stepRequests,
                 stepResponses,
                 loggerMock.Object
-            );
-            mock.CallBase = true;
+            )
+            {
+                CallBase = true
+            };
 
             return mock;
         }

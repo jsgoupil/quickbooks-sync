@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace QbSync.WebConnector.Core
 {
+    /// <summary>
+    /// Interface used to handle some messages between the WebConnector and your server.
+    /// </summary>
     public interface IWebConnectorHandler
     {
         /// <summary>

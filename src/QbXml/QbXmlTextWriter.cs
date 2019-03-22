@@ -7,17 +7,17 @@ namespace QbSync.QbXml
 {
     internal class QbXmlTextWriter : XmlTextWriter
     {
-        public QbXmlTextWriter(MemoryStream s, Encoding encoding)
-            : base(s, encoding)
+        public QbXmlTextWriter(TextWriter textWriter)
+            : base(textWriter)
         {
         }
 
         public override void WriteString(string text)
         {
-            base.WriteRaw(htmlEncodeSpecialCharacters(text));
+            base.WriteRaw(HtmlEncodeSpecialCharacters(text));
         }
 
-        private string htmlEncodeSpecialCharacters(string text)
+        private string HtmlEncodeSpecialCharacters(string text)
         {
             text = HttpUtility.HtmlEncode(text);
             StringBuilder sb = new StringBuilder();

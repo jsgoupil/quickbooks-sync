@@ -6,12 +6,23 @@ using System.Linq;
 
 namespace QbSync.QbXml
 {
+    /// <summary>
+    /// Base XML object which holds the response.
+    /// </summary>
     public class QbXmlResponse
     {
+        /// <summary>
+        /// Creates a QbXmlResponse.
+        /// </summary>
         public QbXmlResponse()
         {
         }
 
+        /// <summary>
+        /// Parses a string and returns a QBXML object.
+        /// </summary>
+        /// <param name="response">XML.</param>
+        /// <returns>QBXML object.</returns>
         public QBXML ParseResponseRaw(string response)
         {
             var reader = new StringReader(response);
@@ -19,23 +30,47 @@ namespace QbSync.QbXml
             return ret;
         }
 
+        /// <summary>
+        /// Gets a single item from the XML response.
+        /// </summary>
+        /// <typeparam name="T">Object to get.</typeparam>
+        /// <param name="response">XML.</param>
+        /// <returns>Object instance.</returns>
         public T GetSingleItemFromResponse<T>(string response)
             where T : class
         {
             return GetSingleItemFromResponse(response, typeof(T)) as T;
         }
 
+        /// <summary>
+        /// Gets multiple items from the XML response.
+        /// </summary>
+        /// <typeparam name="T">Objects to get.</typeparam>
+        /// <param name="response">XML.</param>
+        /// <returns>Object instances.</returns>
         public IEnumerable<T> GetItemsFromResponse<T>(string response)
             where T : class
         {
             return GetItemsFromResponse(response, typeof(T)).Cast<T>();
         }
 
+        /// <summary>
+        /// Gets a single item from the XML response.
+        /// </summary>
+        /// <param name="response">XML.</param>
+        /// <param name="type">Object to get.</param>
+        /// <returns>Object instance.</returns>
         public object GetSingleItemFromResponse(string response, System.Type type)
         {
             return GetItemsFromResponse(response, type).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Gets multiple items from the XML response.
+        /// </summary>
+        /// <param name="response">XML.</param>
+        /// <param name="type">Objects to get</param>
+        /// <returns>Object instances.</returns>
         public IEnumerable<object> GetItemsFromResponse(string response, System.Type type)
         {
             var qbXml = ParseResponseRaw(response);
@@ -46,8 +81,7 @@ namespace QbSync.QbXml
         {
             foreach (var item in qbXml.Items)
             {
-                var typedItem = item as QBXMLMsgsRs;
-                if (typedItem != null)
+                if (item is QBXMLMsgsRs typedItem)
                 {
                     foreach (var innerItem in typedItem.Items)
                     {

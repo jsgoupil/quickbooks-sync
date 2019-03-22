@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebConnector", "src\WebConn
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QbXml.Tests", "test\QbXml.Tests\QbXml.Tests.csproj", "{BBDA696E-1ACB-4D34-A79F-4DF35C62F56A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebConnector.Tests", "test\WebConnector.Tests\WebConnector.Tests.csproj", "{0F73DBB5-3752-4427-B8D2-DDACF3252FD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebConnector.Tests", "test\WebConnector.Tests\WebConnector.Tests.csproj", "{0F73DBB5-3752-4427-B8D2-DDACF3252FD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XsdGenerator", "src\XsdGenerator\XsdGenerator.csproj", "{0D55C4EE-9DDB-45EA-B5BF-4C8D67068494}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XsdGenerator", "src\XsdGenerator\XsdGenerator.csproj", "{0D55C4EE-9DDB-45EA-B5BF-4C8D67068494}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{B22C6EA4-4A2B-45B9-8A74-BB28CD713A86}"
 	ProjectSection(SolutionItems) = preProject
@@ -23,9 +23,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{B22C6EA4
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication.Sample", "test\WebApplication.Sample\WebApplication.Sample.csproj", "{A13BCAD9-7365-41FB-9BA3-C0A338860A86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication.Sample", "test\WebApplication.Sample\WebApplication.Sample.csproj", "{A13BCAD9-7365-41FB-9BA3-C0A338860A86}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6FA50DB9-4875-48F0-940E-E37384B183F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebConnector.AspNetCore", "src\WebConnector.AspNetCore\WebConnector.AspNetCore.csproj", "{D640CFC6-5AB4-45A7-8AD3-465D2F1176EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{A13BCAD9-7365-41FB-9BA3-C0A338860A86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A13BCAD9-7365-41FB-9BA3-C0A338860A86}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A13BCAD9-7365-41FB-9BA3-C0A338860A86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D640CFC6-5AB4-45A7-8AD3-465D2F1176EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D640CFC6-5AB4-45A7-8AD3-465D2F1176EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D640CFC6-5AB4-45A7-8AD3-465D2F1176EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D640CFC6-5AB4-45A7-8AD3-465D2F1176EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -21,7 +21,7 @@
     <None Include="..\..\LICENSE.md" Link="LICENSE.md" Pack="true" PackagePath="$(PackageLicenseFile)" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="SoapCore" Version="0.9.9" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\QbXml\QbXml.csproj" />
