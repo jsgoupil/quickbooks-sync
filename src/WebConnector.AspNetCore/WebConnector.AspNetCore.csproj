@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Title>QuickBooks Sync - WebConnector.AspNetCore</Title>
-    <Description>Communicates with QuickBooks Web Connector. Includes dependency on AspNetCore</Description>
+    <Description>Communicates with QuickBooks Web Connector. Includes dependency on AspNetCore.</Description>
     <Author>Jean-Sébastien Goupil</Author>
     <Authors>Jean-Sébastien Goupil</Authors>
     <Copyright>Copyright © Jean-Sébastien Goupil 2015-2019</Copyright>
