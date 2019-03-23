@@ -53,14 +53,14 @@ namespace QbSync.WebConnector.AspNetCore
         /// Authenticates a login/password and return important information regarding if more requests
         /// should be executed immediately.
         /// </summary>
-        /// <param name="login">Login.</param>
-        /// <param name="password">Password.</param>
+        /// <param name="strUserName">Login.</param>
+        /// <param name="strPassword">Password.</param>
         /// <returns>Array of 4 strings. 0: ticket; 1: nvu if invalid user, or empty string if valid; 2: time to wait in seconds before coming back; 3: not used</returns>
-        public virtual async Task<string[]> AuthenticateAsync(string login, string password)
+        public virtual async Task<string[]> AuthenticateAsync(string strUserName, string strPassword)
         {
             try
             {
-                var authenticatedTicket = await authenticator.GetAuthenticationFromLoginAsync(login, password);
+                var authenticatedTicket = await authenticator.GetAuthenticationFromLoginAsync(strUserName, strPassword);
 
                 if (authenticatedTicket == null)
                 {
@@ -69,7 +69,7 @@ namespace QbSync.WebConnector.AspNetCore
 
                 try
                 {
-                    LogMessage(authenticatedTicket, LogMessageType.Authenticate, LogDirection.In, authenticatedTicket.Ticket, login, password);
+                    LogMessage(authenticatedTicket, LogMessageType.Authenticate, LogDirection.In, authenticatedTicket.Ticket, strUserName, strPassword);
 
                     var ret = await AuthenticateInternalAsync(authenticatedTicket);
 
@@ -110,12 +110,12 @@ namespace QbSync.WebConnector.AspNetCore
         /// <summary>
         /// Indicates which version the Web Connector is using.
         /// </summary>
-        /// <param name="version">Web Connector Client version.</param>
+        /// <param name="strVersion">Web Connector Client version.</param>
         /// <returns>An empty string if everything is fine, W:&lt;message&gt; if warning; E:&lt;message&gt; if error.</returns>
-        public virtual string ClientVersion(string version)
-        {
+        public virtual string ClientVersion(string strVersion)
+        {   
             var requiredVersion = GetMinimumRequiredVersion();
-            var receivedVersion = new Version(version);
+            var receivedVersion = new Version(strVersion);
 
             if (receivedVersion < requiredVersion)
             {

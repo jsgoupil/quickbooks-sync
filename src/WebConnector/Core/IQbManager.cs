@@ -13,11 +13,11 @@ namespace QbSync.WebConnector.Core
         /// Authenticates a login/password and return important information regarding if more requests
         /// should be executed immediately.
         /// </summary>
-        /// <param name="login">Login.</param>
-        /// <param name="password">Password.</param>
+        /// <param name="strUserName">Login.</param>
+        /// <param name="strPassword">Password.</param>
         /// <returns>Array of 4 strings. 0: ticket; 1: nvu if invalid user, or empty string if valid; 2: time to wait in seconds before coming back; 3: not used</returns>
         [OperationContract(Action = "http://developer.intuit.com/authenticate", Name = "authenticate")]
-        Task<string[]> AuthenticateAsync(string login, string password);
+        Task<string[]> AuthenticateAsync(string strUserName, string strPassword);
 
         /// <summary>
         /// Returns the server version to the Web Connector.
@@ -29,10 +29,10 @@ namespace QbSync.WebConnector.Core
         /// <summary>
         /// Indicates which version the Web Connector is using.
         /// </summary>
-        /// <param name="version">Web Connector Client version.</param>
+        /// <param name="strVersion">Web Connector Client version.</param>
         /// <returns>An empty string if everything is fine, W:&lt;message&gt; if warning; E:&lt;message&gt; if error.</returns>
         [OperationContract(Action = "http://developer.intuit.com/clientVersion", Name = "clientVersion")]
-        string ClientVersion(string version);
+        string ClientVersion(string strVersion);
 
         /// <summary>
         /// An error happened with the Web Conenctor.
