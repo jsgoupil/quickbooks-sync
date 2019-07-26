@@ -104,9 +104,8 @@ namespace QbSync.QbXml.Objects
             if (nameOrder != null)
             {
                 propertyList = propertyList
-                               .GroupBy(m => m.Name)
-                               .OrderBy(m => Array.FindIndex(nameOrder, n => n == m.Key))
-                               .SelectMany(m => m).ToList();
+                               .OrderBy(m => Array.FindIndex(nameOrder, n => n == m.Name))
+                               .ToList();
             }
 
             var itemsValue = propertyList
