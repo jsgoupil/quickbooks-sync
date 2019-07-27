@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using QbSync.QbXml.Extensions;
 using QbSync.QbXml.Objects;
 using QbSync.QbXml.Tests.Helpers;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 
@@ -97,7 +96,7 @@ namespace QbSync.QbXml.Tests.QbXml
             Assert.AreEqual(innerRequest.InvoiceAdd.InvoiceLineAdd.First().LotNumber, nodes2[0].ReadNode("LotNumber"));
             Assert.IsEmpty(QuickBooksTestHelper.GetXmlValidation(xml));
         }
-        
+
         [Test]
         public void BasicInvoiceAddRequest_Order_Test()
         {
@@ -125,7 +124,7 @@ namespace QbSync.QbXml.Tests.QbXml
                     Desc = $"Another Test {i} item"
                 });
             }
-            
+
             innerRequest.InvoiceAdd.InvoiceLineAdd = items.ToArray();
 
             request.AddToSingle(innerRequest);
@@ -143,7 +142,7 @@ namespace QbSync.QbXml.Tests.QbXml
             var nodes2 = node.SelectNodes("InvoiceLineAdd");
             Assert.AreEqual(innerRequest.InvoiceAdd.InvoiceLineAdd.Count(), nodes2.Count);
 
-            for (var i = 0; i < 20; i+=2)
+            for (var i = 0; i < 20; i += 2)
             {
                 var c = i / 2;
                 Assert.AreEqual($"Test Item {c} for Test", nodes2[i].ReadNode("Desc"));
