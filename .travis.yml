@@ -1,5 +1,6 @@
 language: csharp
 mono: latest
+dist: trusty
 sudo: required
 dotnet: 2.0.3
 solution: QuickbooksSync.sln

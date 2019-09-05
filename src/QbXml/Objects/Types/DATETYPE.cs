@@ -37,6 +37,31 @@ namespace QbSync.QbXml.Objects
         }
 
         /// <summary>
+        /// Gets the original raw string value parsed from QuickBooks. Will be null if not deserialized from XML.
+        /// </summary>
+        public string QuickBooksRawString { get; private set; }
+
+        /// <summary>
+        /// Gets the number of ticks for the date.
+        /// </summary>
+        public long Ticks => _value.Ticks;
+
+        /// <summary>
+        /// Gets the year component of the date (1970-2038).
+        /// </summary>
+        public int Year => _value.Year;
+
+        /// <summary>
+        /// Gets the month component of the date (1-12).
+        /// </summary>
+        public int Month => _value.Month;
+
+        /// <summary>
+        /// Gets the day of month component of the date (1-31).
+        /// </summary>
+        public int Day => _value.Day;
+
+        /// <summary>
         /// A string representation of the date.
         /// </summary>
         /// <returns>Date in yyyy-MM-dd format.</returns>
@@ -166,7 +191,8 @@ namespace QbSync.QbXml.Objects
             reader.ReadStartElement();
             if (!isEmptyElement)
             {
-                _value = Parse(reader.ReadContentAsString());
+                QuickBooksRawString = reader.ReadContentAsString();
+                _value = Parse(QuickBooksRawString);
                 reader.ReadEndElement();
             }
         }
