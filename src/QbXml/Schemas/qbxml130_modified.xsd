@@ -931,7 +931,7 @@
       <xsd:enumeration value="FormT2"/>
       <xsd:enumeration value="Form1044"/>
       <xsd:enumeration value="Form3010"/>
-			<xsd:enumeration value="OtherOrNone"/>
+      <xsd:enumeration value="OtherOrNone"/>
 		</xsd:restriction>
 	</xsd:simpleType>
 </xsd:element>
