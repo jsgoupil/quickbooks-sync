@@ -927,12 +927,12 @@
 			<xsd:enumeration value="Form990"/>
 			<xsd:enumeration value="Form990PF"/>
 			<xsd:enumeration value="Form990T"/>
-      <xsd:enumeration value="FormT1"/>
-      <xsd:enumeration value="FormT2"/>
-      <xsd:enumeration value="Form1044"/>
-      <xsd:enumeration value="Form3010"/>
-      <xsd:enumeration value="OtherOrNone"/>
-		</xsd:restriction>
+			<xsd:enumeration value="FormT1"/>
+			<xsd:enumeration value="FormT2"/>
+			<xsd:enumeration value="Form1044"/>
+			<xsd:enumeration value="Form3010"/>
+			<xsd:enumeration value="OtherOrNone"/>
+    </xsd:restriction>
 	</xsd:simpleType>
 </xsd:element>
 <xsd:element name="PagerPIN" type="STRTYPE"/>
