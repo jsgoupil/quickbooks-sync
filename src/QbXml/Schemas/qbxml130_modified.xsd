@@ -932,7 +932,7 @@
 			<xsd:enumeration value="Form1044"/>
 			<xsd:enumeration value="Form3010"/>
 			<xsd:enumeration value="OtherOrNone"/>
-    </xsd:restriction>
+		</xsd:restriction>
 	</xsd:simpleType>
 </xsd:element>
 <xsd:element name="PagerPIN" type="STRTYPE"/>
