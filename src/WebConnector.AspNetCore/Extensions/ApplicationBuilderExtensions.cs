@@ -4,6 +4,9 @@ using QbSync.WebConnector.Core;
 using SoapCore;
 using System;
 using System.ServiceModel;
+using System.ServiceModel.Channels;
+using System.Text;
+using System.Xml;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -28,7 +31,20 @@ namespace Microsoft.Extensions.DependencyInjection
             configuration(options);
 
             app
-                .UseSoapEndpoint<EndPoint>(options.SoapPath, new BasicHttpBinding(), SoapSerializer.XmlSerializer);
+                .UseSoapEndpoint(
+                    typeof(EndPoint),
+                    options.SoapPath,
+                    new SoapEncoderOptions()
+                    {
+                        ReaderQuotas = XmlDictionaryReaderQuotas.Max,
+                        WriteEncoding = Encoding.UTF8,
+                        MessageVersion = MessageVersion.Soap11
+                    },
+                    SoapSerializer.XmlSerializer,
+                    false,
+                    null,
+                    new BasicHttpBinding()
+                );
 
             return app;
         }
