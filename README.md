@@ -216,7 +216,7 @@ public class CustomerQuery
 ```
 
 The 2 classes CustomerQueryRqType/CustomerQueryRsType are provided by the QbXml NuGet package. You associate the request and the response. They implement `QbRequest` and `QbResponse`.
-To find the correct request and response pair, visit https://developer-static.intuit.com/qbSDK-current/Common/newOSR/index.html
+To find the correct request and response pair, visit https://developer.intuit.com/app/developer/qbdesktop/docs/api-reference
 
 
 ### Implement step with an iterator ###
@@ -387,10 +387,10 @@ public interface IWebConnectorHandler
 
 ### Handling Timestamps ###
 
-QuickBooks does not handle Daylight Saving Time (DST) properly. The `DATETIMETYPE` class in this library is aware of 
+QuickBooks does not handle Daylight Saving Time (DST) properly. The `DATETIMETYPE` class in this library is aware of
 this issue and will correct timestamps coming from QuickBooks by removing the offset values in the common use cases.
 
-Internally, QuickBooks returns an incorrect date time offset during DST. Consequently, QuickBooks expects that you send the 
+Internally, QuickBooks returns an incorrect date time offset during DST. Consequently, QuickBooks expects that you send the
 date time with the same incorrect offset **OR** a date time, without an offset, in the computer's time zone where QuickBooks is installed.
 
 
@@ -429,7 +429,7 @@ request.FromModifiedDate = DATETIMETYPE.Parse(savedString).Add(TimeSpan.FromSeco
 
 ---
 
-The above methods are the recommended approach, which will be the least likely to give you query issues due to QuickBooks DST issues. 
+The above methods are the recommended approach, which will be the least likely to give you query issues due to QuickBooks DST issues.
 
 If you truly need the original _uncorrected_ value returned from QuickBooks that has a potentially incorrect offset, you can use:
 
