@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace QbSync.QbXml.Objects
+﻿namespace QbSync.QbXml.Objects
 {
     public interface IQbAddress : IQbAddressBlock
     {
