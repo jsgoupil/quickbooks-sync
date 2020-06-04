@@ -138,6 +138,31 @@ namespace QbSync.XsdGenerator
             {
                 codeType.BaseTypes.Add("IQbIteratorResponse");
             }
+
+            var complexType = GetXmlSchemaComplexType();
+            if (complexType?.Particle?.GetType().GetProperty("Items")?.GetValue(complexType.Particle) is XmlSchemaObjectCollection items)
+            {
+                if (items.OfType<XmlSchemaGroupRef>().Any(x => x.RefName?.Name == "ListCore"))
+                {
+                    codeType.BaseTypes.Add("IQbListRet");
+                }
+
+                if (items.OfType<XmlSchemaGroupRef>().Any(x => x.RefName?.Name == "TxnCore"))
+                {
+                    codeType.BaseTypes.Add("IQbTxnRet");
+                }
+            }
+
+            var missingTxnRets = new[]
+            {
+                "ReceivePaymentRet",
+                "ARRefundCreditCardRet"
+            };
+
+            if (missingTxnRets.Contains(codeType.Name))
+            {
+                codeType.BaseTypes.Add("IQbTxnRet");
+            }
         }
 
         private void RemoveFields(string[] fields)

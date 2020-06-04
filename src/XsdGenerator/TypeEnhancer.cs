@@ -1,6 +1,8 @@
-﻿using System.CodeDom;
+﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
 namespace QbSync.XsdGenerator
@@ -46,10 +48,50 @@ namespace QbSync.XsdGenerator
                 }
                 else if (responseList.Contains(codeType.Name))
                 {
-                    codeType.BaseTypes.Add("IQbResponse");
+                    AddQbResponseInterface(codeType);
                 }
             }
         }
+
+        private static void AddQbResponseInterface(CodeTypeDeclaration codeType)
+        {
+            codeType.BaseTypes.Add("IQbResponse");
+
+            if (!codeType.Name.EndsWith("RsType"))
+            {
+                return;
+            }
+
+            var expectedRetName = Regex.Replace(codeType.Name, "[A-Z][a-z]+RsType$", "Ret");
+
+            var retProperty = codeType.Members.OfType<CodeMemberProperty>().FirstOrDefault(x => x.Name == expectedRetName);
+            if (retProperty != null)
+            {
+                var type = retProperty.Type.BaseType + string.Concat(Enumerable.Repeat("[]", retProperty.Type.ArrayRank));
+
+                var getRetResultMethod = new CodeMemberMethod
+                {
+                    Attributes = MemberAttributes.Public | MemberAttributes.Final,
+                    Name = "GetRetResult",
+                    ReturnType = new CodeTypeReference(type),
+                    Statements =
+                    {
+                        new CodeMethodReturnStatement(new CodeSnippetExpression($"this.{retProperty.Name}"))
+                    },
+                    Comments =
+                    {
+                        new CodeCommentStatement("<summary>", true),
+                        new CodeCommentStatement("Implementation of <see cref=\"IQbResponse{TResultRet}.GetRetResult\" /> that returns", true),
+                        new CodeCommentStatement($"the value of the *Ret result property <see cref=\"{codeType.Name}.{retProperty.Name}\"/>.", true),
+                        new CodeCommentStatement("</summary>", true)
+                    }
+                };
+
+                codeType.BaseTypes.Add($"IQbResponse<{type}>");
+                codeType.Members.Add(getRetResultMethod);
+            }
+        }
+
 
         private void AddQbNormalizer()
         {
