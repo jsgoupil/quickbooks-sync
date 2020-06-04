@@ -151,6 +151,31 @@ namespace QbSync.XsdGenerator
                 {
                     codeType.BaseTypes.Add("IQbTxnRet");
                 }
+
+                if (items.OfType<XmlSchemaGroupRef>().Any(x => new []{ "AddressData", "ShipToAddressData" }.Contains(x.RefName?.Name)))
+                {
+                    codeType.BaseTypes.Add("IQbAddress");
+                }
+
+                if (items.OfType<XmlSchemaGroupRef>().Any(x => x.RefName?.Name == "AddressBlockData"))
+                {
+                    codeType.BaseTypes.Add("IQbAddressBlock");
+                }
+
+                if (items.OfType<XmlSchemaGroupRef>().Any(x => x.RefName?.Name == "ContactInfo"))
+                {
+                    codeType.BaseTypes.Add("IQbContactInfo");
+                }
+
+                if (items.OfType<XmlSchemaGroupRef>().Any(x => x.RefName?.Name == "CommInfo"))
+                {
+                    codeType.BaseTypes.Add("IQbCommInfo");
+                }
+
+                if (items.OfType<XmlSchemaGroupRef>().Any(x => x.RefName?.Name == "PersonName"))
+                {
+                    codeType.BaseTypes.Add("IQbPersonName");
+                }
             }
 
             var missingTxnRets = new[]
