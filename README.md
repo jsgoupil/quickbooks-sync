@@ -71,7 +71,7 @@ If you wish to create your steps in a library that does not have this dependency
 Version 1.0.0 supports .NET Standard 2.0. We follow the dependency injection standard to load the services.
 We abstracted the SOAP protocol so you only have to implement necessary services in order to make your queries to QuickBooks.
 
-Thanks to the Web Connector, you can communicate with QuickBooks Desktop. Users must download it at the following address: [http://marketplace.intuit.com/webconnector/](http://marketplace.intuit.com/webconnector/ "http://marketplace.intuit.com/webconnector/")
+Thanks to the Web Connector, you can communicate with QuickBooks Desktop. Users must download it at the following address: [Intuit Web Connector](https://developer.intuit.com/app/developer/qbdesktop/docs/get-started/get-started-with-quickbooks-web-connector#download-and-install-the-quickbooks-web-connector)
 
 The Web Connector uses the SOAP protocol to talk with your website, the NuGet package takes care of the heavy lifting to talk with the QuickBooks Desktop. However, you must implement some services in order to get everything working according to your needs. The Web Connector will come periodically to your website asking if you have any requests to do to its database.
 With the nature of SOAP in mind, there are no protocols keeping the connection state between QuickBooks and your server. For this reason, your server needs to keep track of sessions with a database.
@@ -153,7 +153,7 @@ public interface IAuthenticator
 2. `GetAuthenticationFromTicketAsync` - Authenticates a ticket previously given from a GetAuthenticationFromLogin call.
 3. `SaveTicketAsync` - Saves the ticket to the database.
 
-The IAuthenticatedTicket contains 3 mandatory properties:
+The `IAuthenticatedTicket` contains 3 mandatory properties:
 
 ```C#
 public interface IAuthenticatedTicket
@@ -215,7 +215,7 @@ public class CustomerQuery
 }
 ```
 
-The 2 classes CustomerQueryRqType/CustomerQueryRsType are provided by the QbXml NuGet package. You associate the request and the response. They implement `QbRequest` and `QbResponse`.
+The 2 classes `CustomerQueryRqType`/`CustomerQueryRsType` are provided by the QbXml NuGet package. You associate the request and the response. They implement `QbRequest` and `QbResponse`.
 To find the correct request and response pair, visit https://developer.intuit.com/app/developer/qbdesktop/docs/api-reference
 
 
@@ -245,7 +245,7 @@ The requests and responses that support an iterator implements `QbIteratorReques
 If you wish to send more than one request at once to QuickBooks, inherit from `GroupStepQueryRequestBase` and `GroupStepQueryResponseBase` and send as many objects you want to QuickBooks. Keep in mind that you should keep the final result
 under a certain size to allow your server to be able to parse it.
 
-Look at this example which make a CustomerAdd and a CustomerQuery in one step.
+Look at this example which make a `CustomerAdd` and a `CustomerQuery` in one step.
 
 ```C#
 public class CustomerGroupAddQuery
@@ -341,24 +341,24 @@ public interface IStepQueryResponse
 }
 ```
 
-1. `GotoStepAsync` - Indicates the exact step name you would like to go. If you return null, the `GotoNextStep` will be called.
+1. `GotoStepAsync` - Indicates the exact step name you would like to go. If you return `null`, the `GotoNextStepAsync` will be called.
 2. `GotoNextStepAsync` - Indicates if you should go to the next step or not. If you return `false`, the same exact step will be executed.
 
 
 ### Implement a MessageValidator ###
 
 QuickBooks supports multiple versions. However, this package supports only version 13.0 and above. In order to validate a request, you must provide a `IMessageValidator`.
-The reason this package cannot validate the version is because of the nature of the Web Connector: it takes 2 calls from the WebConnector to validate the version then warn the user.
+The reason this package cannot validate the version is because of the nature of the Web Connector: it takes 2 calls from the Web Connector to validate the version then warn the user.
 
 1. The first call sends a version to your server. You can validate the version and must save the ticket for reference in the second call.
-2. The second call, you need to tell the WebConnector the version was wrong based on the ticket saved in step 1.
+2. The second call, you need to tell the Web Connector the version was wrong based on the ticket saved in step 1.
 
 Since this is done with two requests, the first request must persist that the version is wrong based on the ticket.
 With `IsValidTicket`, simply check if the ticket has been saved in your database (as invalid). If you find the ticket in your database, you can safely remove it from it as this method will not be called again with the same ticket.
 
-This step is optional. If you don't implement a MessageValidator, we assume that the version is valid.
+This step is optional. If you don't implement a `MessageValidator`, we assume that the version is valid.
 
-The MessageValidator can also be used to get the company file path that QuickBooks sends you.
+The `MessageValidator` can also be used to get the company file path that QuickBooks sends you.
 
 
 ### Implement a WebConnectorHandler ###
@@ -473,16 +473,16 @@ If you are not contributing to this project, you most likely don't need to read 
 
 The Web Connector executes the following tasks:
 
-1. Authenticate - Sends the login/password that you must verify. You also return a session ticket that will be used for the rest of messages that are exchanged back and forth.
-2. SendRequestXML - The Web Connector expects that you return an XML command that will execute on the database.
-3. ReceiveRequestXML - Response regarding the previous step.
+1. `Authenticate` - Sends the login/password that you must verify. You also return a session ticket that will be used for the rest of messages that are exchanged back and forth.
+2. `SendRequestXML` - The Web Connector expects that you return an XML command that will execute on the database.
+3. `ReceiveRequestXML` - Response regarding the previous step.
 4. GOTO Step 2 - Until you return an empty string, indicating that you are done.
-5. CloseConnection - Connection is done.
+5. `CloseConnection` - Connection is done.
 
 
 ### QbManager ###
 
-The QbManager can be overriden in order to handle the communication at a lower level. You most likely don't need to do this.
+The `QbManager` can be overriden in order to handle the communication at a lower level. You most likely don't need to do this.
 Use the `WebConnectorHandler`.
 
 1. `SaveChangesAsync` - Called before returning any data to the Web Connector. It's time to save data to your database.
@@ -497,7 +497,7 @@ Use the `WebConnectorHandler`.
 10. `ConnectionErrorAsync` - An error happened with the Web Connector.
 11. `CloseConnectionAsync` - Closing the connection. Return a string to show to the user in the Web Connector.
 12. `OnExceptionAsync` - Called if any of your steps throw an exception. It would be a great time to log this exception for future debugging.
-13. `ProcessClientInformationAsync` - Called when the WebConnector first connect to the service. It contains the information about the QuickBooks database.
+13. `ProcessClientInformationAsync` - Called when the Web Connector first connect to the service. It contains the information about the QuickBooks database.
 14. `GetCompanyFileAsync` - Indicates which company file to use on the client. By default, it uses the one currently opened.
 
 
