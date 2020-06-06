@@ -26,5 +26,17 @@ namespace QbSync.QbXml.Objects
         /// </summary>
         string statusSeverity { get; set; }
     }
+
+    /// <summary>
+    /// An interface indicating if the class is a response.
+    /// </summary>
+    /// <typeparam name="TResultRet">The *Ret result object type included in the response</typeparam>
+    public interface IQbResponse<out TResultRet> : IQbResponse
+    {
+        /// <summary>
+        /// Gets the value of the *Ret result object from the response.
+        /// </summary>
+        TResultRet GetRetResult();
+    }
 }
 #pragma warning restore IDE1006
