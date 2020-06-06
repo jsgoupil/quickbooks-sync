@@ -715,9 +715,9 @@ namespace QbSync.XsdGenerator
                 {
                     isArray = true;
                 }
-                else if (xmlSchemaElement.Parent as XmlSchemaChoice != null)
+                else if (xmlSchemaElement.Parent is XmlSchemaChoice parent)
                 {
-                    isArray = (xmlSchemaElement.Parent as XmlSchemaChoice).MaxOccurs > 1;
+                    isArray = parent.MaxOccurs > 1;
                 }
             }
 
@@ -790,7 +790,7 @@ namespace QbSync.XsdGenerator
                 else if (i == 1)
                 {
                     CodeTypeOfExpression arg2 = attribute.Arguments[i].Value as CodeTypeOfExpression;
-                    enhancedProperty.Type = arg2.Type.BaseType as string;
+                    enhancedProperty.Type = arg2.Type.BaseType + string.Concat(Enumerable.Repeat("[]", arg2.Type.ArrayRank));
                 }
                     /* // NOT WORKING with XmlSerializer.
                      * // If we remove the DataType attribute we get a "cannot create temporary class"
