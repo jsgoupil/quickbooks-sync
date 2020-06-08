@@ -216,7 +216,7 @@ public class CustomerQuery
 ```
 
 The 2 classes `CustomerQueryRqType`/`CustomerQueryRsType` are provided by the QbXml NuGet package. You associate the request and the response. They implement `QbRequest` and `QbResponse`.
-To find the correct request and response pair, visit https://developer.intuit.com/app/developer/qbdesktop/docs/api-reference
+To find the correct request and response pair, visit https://static.developer.intuit.com/qbSDK-current/common/newosr/index.html
 
 
 ### Implement step with an iterator ###
