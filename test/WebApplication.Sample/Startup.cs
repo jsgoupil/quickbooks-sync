@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SoapCore;
 using WebApplication.Sample.Application;
 using WebApplication.Sample.Application.Steps;
 using WebApplication.Sample.Db;

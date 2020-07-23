@@ -2,6 +2,7 @@
 using QbSync.WebConnector.AspNetCore;
 using QbSync.WebConnector.Core;
 using QbSync.WebConnector.Impl;
+using SoapCore;
 using System;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -24,6 +25,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentNullException(nameof(configuration));
             }
 
+            services.AddSoapCore();
             services.TryAddScoped<IAuthenticator, AuthenticatorRequired>();
             services.TryAddScoped<IMessageValidator, MessageValidatorNoop>();
             services.TryAddScoped<IWebConnectorHandler, WebConnectorHandlerNoop>();
