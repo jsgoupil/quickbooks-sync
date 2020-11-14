@@ -25,6 +25,7 @@ namespace QbSync.QbXml
         /// Parses a string and returns a QBXML object.
         /// </summary>
         /// <param name="response">XML.</param>
+        /// <param name="events">XmlDeserializationEvents that could be triggered while deserializing</param>
         /// <returns>QBXML object.</returns>
         public QBXML ParseResponseRaw(string response, XmlDeserializationEvents events = new XmlDeserializationEvents())
         {
@@ -38,6 +39,7 @@ namespace QbSync.QbXml
         /// </summary>
         /// <typeparam name="T">Object to get.</typeparam>
         /// <param name="response">XML.</param>
+        /// <param name="events">XmlDeserializationEvents that could be triggered while deserializing</param>
         /// <returns>Object instance.</returns>
         public T GetSingleItemFromResponse<T>(string response, XmlDeserializationEvents events = new XmlDeserializationEvents())
             where T : class
@@ -50,6 +52,7 @@ namespace QbSync.QbXml
         /// </summary>
         /// <typeparam name="T">Objects to get.</typeparam>
         /// <param name="response">XML.</param>
+        /// <param name="events">XmlDeserializationEvents that could be triggered while deserializing</param>
         /// <returns>Object instances.</returns>
         public IEnumerable<T> GetItemsFromResponse<T>(string response, XmlDeserializationEvents events = new XmlDeserializationEvents())
             where T : class
@@ -62,6 +65,7 @@ namespace QbSync.QbXml
         /// </summary>
         /// <param name="response">XML.</param>
         /// <param name="type">Object to get.</param>
+        /// <param name="events">XmlDeserializationEvents that could be triggered while deserializing</param>
         /// <returns>Object instance.</returns>
         public object GetSingleItemFromResponse(string response, System.Type type, XmlDeserializationEvents events = new XmlDeserializationEvents())
         {
@@ -73,6 +77,7 @@ namespace QbSync.QbXml
         /// </summary>
         /// <param name="response">XML.</param>
         /// <param name="type">Objects to get</param>
+        /// <param name="events">XmlDeserializationEvents that could be triggered while deserializing</param>
         /// <returns>Object instances.</returns>
         public IEnumerable<object> GetItemsFromResponse(string response, System.Type type, XmlDeserializationEvents events = new XmlDeserializationEvents())
         {
