@@ -114,11 +114,17 @@ namespace QbSync.QbXml.Tests.QbXml
     </EmployeePayrollInfo>
 </EmployeeRet>";
             var response = new QbXmlResponse();
-            var unknownElements = 0;
+            var onUnknownElementCalled = 0;
             XmlDeserializationEvents events = new XmlDeserializationEvents();
             events.OnUnknownElement += (object sender, XmlElementEventArgs e) =>
             {
-                unknownElements++;
+                onUnknownElementCalled++;
+                if (e.Element.Name == nameof(EmployeePayrollInfo.UseTimeDataToCreatePaychecks) && Enum.TryParse(typeof(UseTimeDataToCreatePaychecks), e.Element.InnerText, out object useTimeData))
+                {
+                    var employeePayrollInfo = (EmployeePayrollInfo)e.ObjectBeingDeserialized;
+                    employeePayrollInfo.UseTimeDataToCreatePaychecksSpecified = true;
+                    employeePayrollInfo.UseTimeDataToCreatePaychecks = (UseTimeDataToCreatePaychecks)useTimeData;
+                }
             };
             var rs = response.GetSingleItemFromResponse<EmployeeQueryRsType>(QuickBooksTestHelper.CreateQbXmlWithEnvelope(employeeRet, "EmployeeQueryRs"), events);
 
@@ -127,7 +133,11 @@ namespace QbSync.QbXml.Tests.QbXml
 
             Assert.AreEqual(1, employees.Length);
             Assert.AreEqual("1111111-111111111", employee.ListID);
-            Assert.GreaterOrEqual(unknownElements, 1);
+            // Custom event handler was called at least once
+            Assert.GreaterOrEqual(onUnknownElementCalled, 1);
+            // Custom event handler updated a known property captured by the OnUnknownElement event
+            Assert.IsTrue(employee.EmployeePayrollInfo.UseTimeDataToCreatePaychecksSpecified);
+            Assert.AreEqual(UseTimeDataToCreatePaychecks.UseTimeData, employee.EmployeePayrollInfo.UseTimeDataToCreatePaychecks);
         }
     }
 }
