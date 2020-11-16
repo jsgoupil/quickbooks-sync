@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using QbSync.QbXml.Objects;
 using QbSync.QbXml.Tests.Helpers;
-using System;
 using System.Linq;
 
 namespace QbSync.QbXml.Tests.QbXml

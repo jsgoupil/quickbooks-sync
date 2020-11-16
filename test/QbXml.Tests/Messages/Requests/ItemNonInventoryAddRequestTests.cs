@@ -2,7 +2,6 @@
 using QbSync.QbXml.Extensions;
 using QbSync.QbXml.Objects;
 using QbSync.QbXml.Tests.Helpers;
-using System;
 using System.Xml;
 
 namespace QbSync.QbXml.Tests.QbXml

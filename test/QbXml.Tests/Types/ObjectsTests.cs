@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using NUnit.Framework;
+using QbSync.QbXml.Objects;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Xml;
 using System.Xml.Serialization;
-using NUnit.Framework;
-using QbSync.QbXml.Objects;
-using QbSync.QbXml.Tests.Helpers;
 
 namespace QbSync.QbXml.Tests.Types
 {

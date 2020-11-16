@@ -1,8 +1,9 @@
 ﻿using QbSync.QbXml.Objects;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace QbSync.QbXml
 {
@@ -22,12 +23,17 @@ namespace QbSync.QbXml
         /// Parses a string and returns a QBXML object.
         /// </summary>
         /// <param name="response">XML.</param>
+        /// <param name="events">XmlDeserializationEvents that could be triggered while deserializing.</param>
         /// <returns>QBXML object.</returns>
-        public QBXML ParseResponseRaw(string response)
+        public QBXML ParseResponseRaw(string response, XmlDeserializationEvents? events = null)
         {
             var reader = new StringReader(response);
-            var ret = QbXmlSerializer.Instance.XmlSerializer.Deserialize(reader) as QBXML;
-            return ret;
+            if (events.HasValue)
+            {
+                return QbXmlSerializer.Instance.XmlSerializer.Deserialize(XmlReader.Create(reader), events.Value) as QBXML;
+            }
+
+            return QbXmlSerializer.Instance.XmlSerializer.Deserialize(reader) as QBXML;
         }
 
         /// <summary>
@@ -35,11 +41,12 @@ namespace QbSync.QbXml
         /// </summary>
         /// <typeparam name="T">Object to get.</typeparam>
         /// <param name="response">XML.</param>
+        /// <param name="events">XmlDeserializationEvents that could be triggered while deserializing.</param>
         /// <returns>Object instance.</returns>
-        public T GetSingleItemFromResponse<T>(string response)
+        public T GetSingleItemFromResponse<T>(string response, XmlDeserializationEvents? events = null)
             where T : class
         {
-            return GetSingleItemFromResponse(response, typeof(T)) as T;
+            return GetSingleItemFromResponse(response, typeof(T), events) as T;
         }
 
         /// <summary>
@@ -47,11 +54,12 @@ namespace QbSync.QbXml
         /// </summary>
         /// <typeparam name="T">Objects to get.</typeparam>
         /// <param name="response">XML.</param>
+        /// <param name="events">XmlDeserializationEvents that could be triggered while deserializing.</param>
         /// <returns>Object instances.</returns>
-        public IEnumerable<T> GetItemsFromResponse<T>(string response)
+        public IEnumerable<T> GetItemsFromResponse<T>(string response, XmlDeserializationEvents? events = null)
             where T : class
         {
-            return GetItemsFromResponse(response, typeof(T)).Cast<T>();
+            return GetItemsFromResponse(response, typeof(T), events).Cast<T>();
         }
 
         /// <summary>
@@ -59,21 +67,23 @@ namespace QbSync.QbXml
         /// </summary>
         /// <param name="response">XML.</param>
         /// <param name="type">Object to get.</param>
+        /// <param name="events">XmlDeserializationEvents that could be triggered while deserializing.</param>
         /// <returns>Object instance.</returns>
-        public object GetSingleItemFromResponse(string response, System.Type type)
+        public object GetSingleItemFromResponse(string response, System.Type type, XmlDeserializationEvents? events = null)
         {
-            return GetItemsFromResponse(response, type).FirstOrDefault();
+            return GetItemsFromResponse(response, type, events).FirstOrDefault();
         }
 
         /// <summary>
         /// Gets multiple items from the XML response.
         /// </summary>
         /// <param name="response">XML.</param>
-        /// <param name="type">Objects to get</param>
+        /// <param name="type">Objects to get.</param>
+        /// <param name="events">XmlDeserializationEvents that could be triggered while deserializing.</param>
         /// <returns>Object instances.</returns>
-        public IEnumerable<object> GetItemsFromResponse(string response, System.Type type)
+        public IEnumerable<object> GetItemsFromResponse(string response, System.Type type, XmlDeserializationEvents? events = null)
         {
-            var qbXml = ParseResponseRaw(response);
+            var qbXml = ParseResponseRaw(response, events);
             return SearchFor(qbXml, type);
         }
 

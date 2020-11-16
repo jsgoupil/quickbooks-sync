@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using QbSync.WebConnector.AspNetCore;
 using QbSync.WebConnector.Core;
 using SoapCore;
 using System;

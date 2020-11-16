@@ -1,10 +1,7 @@
 ﻿using Moq;
-using Moq.Protected;
 using NUnit.Framework;
-using QbSync.QbXml;
 using QbSync.QbXml.Objects;
 using QbSync.WebConnector.Impl;
-using QbSync.WebConnector.Tests.Helpers;
 using QbSync.WebConnector.Tests.Models;
 using System;
 using System.Threading.Tasks;

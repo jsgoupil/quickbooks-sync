@@ -1,10 +1,8 @@
 ﻿using QbSync.QbXml.Objects;
 using QbSync.WebConnector.Core;
 using QbSync.WebConnector.Impl;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using WebApplication.Sample.Extensions;
 
 namespace WebApplication.Sample.Application.Steps
 {

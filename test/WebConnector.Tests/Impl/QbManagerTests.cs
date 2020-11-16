@@ -5,7 +5,6 @@ using NUnit.Framework;
 using QbSync.QbXml;
 using QbSync.WebConnector.AspNetCore;
 using QbSync.WebConnector.Core;
-using QbSync.WebConnector.Impl;
 using QbSync.WebConnector.Tests.Helpers;
 using System;
 using System.Collections.Generic;

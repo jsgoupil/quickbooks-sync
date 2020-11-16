@@ -1,5 +1,4 @@
-﻿using QbSync.QbXml;
-using QbSync.WebConnector.Core;
+﻿using QbSync.WebConnector.Core;
 using System;
 using System.Threading.Tasks;
 
