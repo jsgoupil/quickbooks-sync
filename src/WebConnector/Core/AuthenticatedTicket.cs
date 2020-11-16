@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace QbSync.WebConnector.Core
+﻿namespace QbSync.WebConnector.Core
 {
     /// <summary>
     /// An object which will keep the state of what is happening with the Web Connector session.

@@ -1,9 +1,9 @@
 ﻿using QbSync.QbXml;
 using QbSync.QbXml.Objects;
 using QbSync.WebConnector.Core;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace QbSync.WebConnector.Impl
 {

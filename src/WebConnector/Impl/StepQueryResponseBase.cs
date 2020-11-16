@@ -33,7 +33,7 @@ namespace QbSync.WebConnector.Impl
         /// <param name="response">QbXml.</param>
         /// <param name="hresult">HResult.</param>
         /// <param name="message">Message.</param>
-        /// <param name="events">XmlDeserializationEvents that could be triggered while deserializing</param>
+        /// <param name="events">XmlDeserializationEvents that could be triggered while deserializing.</param>
         /// <returns>Message to be returned to the Web Connector.</returns>
         public virtual async Task<int> ReceiveXMLAsync(IAuthenticatedTicket authenticatedTicket, string response, string hresult, string message, XmlDeserializationEvents? events = null)
         {

@@ -1,9 +1,9 @@
 ﻿using Moq;
 using NUnit.Framework;
-using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using QbSync.WebConnector.Core;
 using QbSync.WebConnector.Tests.Impl;
+using System.Threading.Tasks;
 
 namespace QbSync.WebConnector.Tests.Helpers
 {

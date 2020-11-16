@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Serialization;
-using NUnit.Framework;
-using QbSync.QbXml;
+﻿using NUnit.Framework;
 using QbSync.QbXml.Objects;
 using QbSync.QbXml.Tests.Helpers;
+using System;
+using System.Xml.Serialization;
 
 namespace QbSync.QbXml.Tests.QbXml
 {
@@ -133,8 +130,10 @@ namespace QbSync.QbXml.Tests.QbXml
 
             Assert.AreEqual(1, employees.Length);
             Assert.AreEqual("1111111-111111111", employee.ListID);
+
             // Custom event handler was called at least once
             Assert.GreaterOrEqual(onUnknownElementCalled, 1);
+
             // Custom event handler updated a known property captured by the OnUnknownElement event
             Assert.IsTrue(employee.EmployeePayrollInfo.UseTimeDataToCreatePaychecksSpecified);
             Assert.AreEqual(UseTimeDataToCreatePaychecks.UseTimeData, employee.EmployeePayrollInfo.UseTimeDataToCreatePaychecks);

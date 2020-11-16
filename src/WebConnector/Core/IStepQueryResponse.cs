@@ -1,5 +1,4 @@
-﻿using QbSync.QbXml;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace QbSync.WebConnector.Core
@@ -22,7 +21,7 @@ namespace QbSync.WebConnector.Core
         /// <param name="response">QbXml.</param>
         /// <param name="hresult">HResult.</param>
         /// <param name="message">Message.</param>
-        /// <param name="events">XmlDeserializationEvents that could be triggered while deserializing</param>
+        /// <param name="events">XmlDeserializationEvents that could be triggered while deserializing.</param>
         /// <returns>Message to be returned to the Web Connector.</returns>
         Task<int> ReceiveXMLAsync(IAuthenticatedTicket authenticatedTicket, string response, string hresult, string message, XmlDeserializationEvents? events = null);
 
