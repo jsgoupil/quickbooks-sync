@@ -304,7 +304,7 @@ namespace QbSync.WebConnector.Tests.Impl
         {
             var expectedResult = 0;
             stepQueryResponseMock
-                .Setup(m => m.ReceiveXMLAsync(AuthenticatedTicket, null, null, null, null))
+                .Setup(m => m.ReceiveXMLAsync(AuthenticatedTicket, null, null, null))
                 .ReturnsAsync(expectedResult);
             stepQueryResponseMock
                 .Setup(m => m.GotoNextStepAsync())
@@ -327,7 +327,7 @@ namespace QbSync.WebConnector.Tests.Impl
             var expectedResult = 0;
             var gotoStep = "step2";
             stepQueryResponseMock
-                .Setup(m => m.ReceiveXMLAsync(AuthenticatedTicket, null, null, null, null))
+                .Setup(m => m.ReceiveXMLAsync(AuthenticatedTicket, null, null, null))
                 .ReturnsAsync(expectedResult);
             stepQueryResponseMock
                 .Setup(m => m.GotoStepAsync())
@@ -349,7 +349,7 @@ namespace QbSync.WebConnector.Tests.Impl
         {
             var expectedResult = 0;
             stepQueryResponseMock
-                .Setup(m => m.ReceiveXMLAsync(AuthenticatedTicket, null, null, null, null))
+                .Setup(m => m.ReceiveXMLAsync(AuthenticatedTicket, null, null, null))
                 .ReturnsAsync(expectedResult);
             stepQueryResponseMock
                 .Setup(m => m.GotoNextStepAsync())
@@ -372,7 +372,7 @@ namespace QbSync.WebConnector.Tests.Impl
         {
             var expectedResult = -1;
             stepQueryResponseMock
-                .Setup(m => m.ReceiveXMLAsync(AuthenticatedTicket, null, null, null, null))
+                .Setup(m => m.ReceiveXMLAsync(AuthenticatedTicket, null, null, null))
                 .ReturnsAsync(expectedResult);
             stepQueryResponseMock
                 .SetupGet(m => m.Name)
@@ -485,7 +485,7 @@ namespace QbSync.WebConnector.Tests.Impl
         {
             var ex = new Exception();
             stepQueryResponseMock
-                .Setup(m => m.ReceiveXMLAsync(AuthenticatedTicket, null, null, null, null))
+                .Setup(m => m.ReceiveXMLAsync(AuthenticatedTicket, null, null, null))
                 .Throws(ex);
 
             var guid = Guid.NewGuid().ToString();
@@ -500,7 +500,7 @@ namespace QbSync.WebConnector.Tests.Impl
             var expectedResult = -1;
             var IStepQueryResponseMock1 = new Mock<IStepQueryResponse>();
             IStepQueryResponseMock1
-                .Setup(m => m.ReceiveXMLAsync(AuthenticatedTicket, null, null, null, null))
+                .Setup(m => m.ReceiveXMLAsync(AuthenticatedTicket, null, null, null))
                 .Throws(ex);
 
             var result = await syncManagerMock.Object.ReceiveRequestXMLAsync(guid, null, null, null);

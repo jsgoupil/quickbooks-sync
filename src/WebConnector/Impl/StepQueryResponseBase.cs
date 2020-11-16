@@ -2,7 +2,6 @@
 using QbSync.QbXml.Objects;
 using QbSync.WebConnector.Core;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace QbSync.WebConnector.Impl
 {
@@ -33,15 +32,14 @@ namespace QbSync.WebConnector.Impl
         /// <param name="response">QbXml.</param>
         /// <param name="hresult">HResult.</param>
         /// <param name="message">Message.</param>
-        /// <param name="events">XmlDeserializationEvents that could be triggered while deserializing.</param>
         /// <returns>Message to be returned to the Web Connector.</returns>
-        public virtual async Task<int> ReceiveXMLAsync(IAuthenticatedTicket authenticatedTicket, string response, string hresult, string message, XmlDeserializationEvents? events = null)
+        public virtual async Task<int> ReceiveXMLAsync(IAuthenticatedTicket authenticatedTicket, string response, string hresult, string message)
         {
             var responseObject = new QbXmlResponse();
 
             if (!string.IsNullOrEmpty(response))
             {
-                var msgResponseObject = responseObject.GetSingleItemFromResponse(response, typeof(QbResponse), events) as QbResponse;
+                var msgResponseObject = responseObject.GetSingleItemFromResponse(response, typeof(QbResponse)) as QbResponse;
                 await ExecuteResponseAsync(authenticatedTicket, msgResponseObject);
 
                 return 0;
