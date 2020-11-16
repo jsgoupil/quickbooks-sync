@@ -5,6 +5,9 @@
     /// </summary>
     public interface IQbRequest
     {
+        /// <summary>
+        /// The request ID.
+        /// </summary>
         string requestID { get; set; }
     }
 }
