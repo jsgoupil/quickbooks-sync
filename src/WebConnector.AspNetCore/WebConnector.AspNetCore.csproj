@@ -6,7 +6,7 @@
     <Description>Communicates with QuickBooks Web Connector. Includes dependency on AspNetCore.</Description>
     <Author>Jean-Sébastien Goupil</Author>
     <Authors>Jean-Sébastien Goupil</Authors>
-    <Copyright>Copyright © Jean-Sébastien Goupil 2015-2019</Copyright>
+    <Copyright>Copyright © Jean-Sébastien Goupil 2015-2020</Copyright>
     <Version>2.0.2</Version>
     <AssemblyName>QbSync.WebConnector.AspNetCore</AssemblyName>
     <RootNamespace>QbSync.WebConnector.AspNetCore</RootNamespace>
