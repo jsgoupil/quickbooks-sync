@@ -5,7 +5,7 @@ namespace WebApplication.Sample.Extensions
 {
     public static class DATETIMETYPEExtensions
     {
-        public static DATETIMETYPE GetQueryFromModifiedDate(this DATETIMETYPE dateTimeType)
+        public static DATETIMETYPE GetQueryFromModifiedDate(this DATETIMETYPE? dateTimeType)
         {
             if (dateTimeType == null)
             {

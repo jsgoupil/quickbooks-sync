@@ -18,7 +18,7 @@ namespace QbSync.QbXml
         /// </summary>
         public static readonly Version VERSION = new Version(13, 0);
 
-        private List<QBXMLMsgsRq> qbxmlMsgsRqList;
+        private readonly List<QBXMLMsgsRq> qbxmlMsgsRqList;
 
         /// <summary>
         /// Creates a QbXmlRequest.
@@ -61,18 +61,16 @@ namespace QbSync.QbXml
                 ItemsElementName = Enumerable.Repeat(ItemsChoiceType99.QBXMLMsgsRq, qbxmlMsgsRqList.Count()).ToArray()
             };
 
-            using (var writer = new StringWriter())
-            using (XmlWriter xmlWriter = new QbXmlTextWriter(writer))
-            {
-                xmlWriter.WriteProcessingInstruction("xml", "version=\"1.0\" encoding=\"utf-8\"");
-                xmlWriter.WriteProcessingInstruction("qbxml", string.Format("version=\"{0}.{1}\"", VERSION.Major, VERSION.Minor));
-                var ns = new XmlSerializerNamespaces();
-                ns.Add("", "");
-                QbXmlSerializer.Instance.XmlSerializer.Serialize(xmlWriter, qbXml, ns);
+            using var writer = new StringWriter();
+            using XmlWriter xmlWriter = new QbXmlTextWriter(writer);
+            xmlWriter.WriteProcessingInstruction("xml", "version=\"1.0\" encoding=\"utf-8\"");
+            xmlWriter.WriteProcessingInstruction("qbxml", string.Format("version=\"{0}.{1}\"", VERSION.Major, VERSION.Minor));
+            var ns = new XmlSerializerNamespaces();
+            ns.Add("", "");
+            QbXmlSerializer.Instance.XmlSerializer.Serialize(xmlWriter, qbXml, ns);
 
-                xmlWriter.Flush();
-                return writer.ToString();
-            }
+            xmlWriter.Flush();
+            return writer.ToString();
         }
     }
 }

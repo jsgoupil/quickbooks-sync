@@ -10,7 +10,7 @@ namespace QbSync.QbXml.Objects
         private readonly object instance;
         private readonly string[] nameOrder;
         private readonly PropertyInfo itemsProperty;
-        private readonly object[] itemsValue;
+        private readonly object[]? itemsValue;
         private readonly Dictionary<System.Type, string> typeMapping;
         private List<ObjectItemValue> propertyList;
 
@@ -33,16 +33,20 @@ namespace QbSync.QbXml.Objects
             {
                 for (var i = 0; i < itemsValue.Length; i++)
                 {
-                    propertyList.Add(new ObjectItemValue
+                    var name = GetMappingName(itemsValue[i].GetType());
+                    if (name != null)
                     {
-                        Name = GetMappingName(itemsValue[i].GetType()),
-                        Value = itemsValue[i]
-                    });
+                        propertyList.Add(new ObjectItemValue
+                        {
+                            Name = name,
+                            Value = itemsValue[i]
+                        });
+                    }
                 }
             }
         }
 
-        private string GetMappingName(System.Type type)
+        private string? GetMappingName(System.Type type)
         {
             foreach (var kvp in typeMapping)
             {

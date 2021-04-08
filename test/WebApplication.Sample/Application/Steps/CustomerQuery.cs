@@ -37,7 +37,7 @@ namespace WebApplication.Sample.Application.Steps
                 return await base.ExecuteRequestAsync(authenticatedTicket, request);
             }
 
-            protected override async Task<string> RetrieveMessageAsync(IAuthenticatedTicket ticket, string key)
+            protected override async Task<string?> RetrieveMessageAsync(IAuthenticatedTicket ticket, string key)
             {
                 var state = await dbContext.QbKvpStates
                     .Where(m => m.Ticket == ticket.Ticket)

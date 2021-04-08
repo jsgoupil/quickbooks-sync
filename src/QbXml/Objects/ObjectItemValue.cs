@@ -2,7 +2,7 @@
 {
     internal class ObjectItemValue
     {
-        public string Name { get; set; }
-        public object Value { get; set; }
+        public string Name { get; set; } = default!;
+        public object? Value { get; set; }
     }
 }

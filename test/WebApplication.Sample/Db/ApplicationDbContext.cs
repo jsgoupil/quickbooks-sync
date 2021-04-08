@@ -6,10 +6,10 @@ namespace WebApplication.Sample.Db
 {
     public class ApplicationDbContext : DbContext
     {
-        public DbSet<User> Users { get; set; }
-        public DbSet<QbTicket> QbTickets { get; set; }
-        public DbSet<QbKvpState> QbKvpStates { get; set; }
-        public DbSet<QbSetting> QbSettings { get; set; }
+        public DbSet<User> Users { get; set; } = default!;
+        public DbSet<QbTicket> QbTickets { get; set; } = default!;
+        public DbSet<QbKvpState> QbKvpStates { get; set; } = default!;
+        public DbSet<QbSetting> QbSettings { get; set; } = default!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -33,35 +33,35 @@ namespace WebApplication.Sample.Db
     public class User
     {
         public int Id { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
+        public string UserName { get; set; } = default!;
+        public string Password { get; set; } = default!;
     }
 
     public class QbKvpState
     {
-        public string Ticket { get; set; }
-        public string Key { get; set; }
-        public string Value { get; set; }
-        public string CurrentStep { get; set; }
+        public string Ticket { get; set; } = default!;
+        public string Key { get; set; } = default!;
+        public string? Value { get; set; }
+        public string CurrentStep { get; set; } = default!;
     }
 
     public class QbTicket : IAuthenticatedTicket
     {
         [Key]
-        public string Ticket { get; set; }
+        public string Ticket { get; set; } = default!;
 
-        public string CurrentStep { get; set; }
+        public string CurrentStep { get; set; } = default!;
 
         public bool Authenticated { get; set; }
 
         public int? UserId { get; set; }
-        public virtual User User { get; set; }
+        public virtual User? User { get; set; }
     }
 
     public class QbSetting
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Value { get; set; }
+        public string Name { get; set; } = default!;
+        public string? Value { get; set; }
     }
 }

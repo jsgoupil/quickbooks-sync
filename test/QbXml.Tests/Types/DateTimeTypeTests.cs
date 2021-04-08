@@ -482,7 +482,7 @@ namespace QbSync.QbXml.Tests.Types
 
         #region QuickBooks parsing and fixes
 
-        private CustomerRet CreateAndParseCustomerQueryXml(string timeCreated, string timeModified)
+        private static CustomerRet CreateAndParseCustomerQueryXml(string timeCreated, string timeModified)
         {
             var ret = $"<CustomerRet><ListID>80000001-1422671082</ListID><TimeCreated>{timeCreated}</TimeCreated><TimeModified>{timeModified}</TimeModified><EditSequence>1422671082</EditSequence><Name>Chris Curtis</Name><FullName>Christopher Curtis</FullName><IsActive>true</IsActive></CustomerRet>";
 

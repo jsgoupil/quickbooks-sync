@@ -17,22 +17,25 @@ namespace WebApplication.Sample.Application
             this.dbContext = dbContext;
         }
 
-        public override async Task CloseConnectionAsync(IAuthenticatedTicket authenticatedTicket)
+        public override async Task CloseConnectionAsync(IAuthenticatedTicket? authenticatedTicket)
         {
-            // We do some clean up.
-            var savedStates = dbContext.QbKvpStates
-                .Where(m => m.Ticket == authenticatedTicket.Ticket)
-                .ToList();
+            if (authenticatedTicket != null)
+            {
+                // We do some clean up.
+                var savedStates = dbContext.QbKvpStates
+                    .Where(m => m.Ticket == authenticatedTicket.Ticket)
+                    .ToList();
 
-            dbContext.QbKvpStates.RemoveRange(savedStates);
+                dbContext.QbKvpStates.RemoveRange(savedStates);
 
-            var savedTickets = dbContext.QbTickets
-                .Where(m => m.Ticket == authenticatedTicket.Ticket)
-                .ToList();
+                var savedTickets = dbContext.QbTickets
+                    .Where(m => m.Ticket == authenticatedTicket.Ticket)
+                    .ToList();
 
-            dbContext.QbTickets.RemoveRange(savedTickets);
+                dbContext.QbTickets.RemoveRange(savedTickets);
 
-            await dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync();
+            }
         }
     }
 }

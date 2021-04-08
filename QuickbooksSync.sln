@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31105.61
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QbXml", "src\QbXml\QbXml.csproj", "{90BE199D-5652-46B9-9C96-DFA9229B129C}"
 EndProject
@@ -27,7 +27,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication.Sample", "te
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6FA50DB9-4875-48F0-940E-E37384B183F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebConnector.AspNetCore", "src\WebConnector.AspNetCore\WebConnector.AspNetCore.csproj", "{D640CFC6-5AB4-45A7-8AD3-465D2F1176EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebConnector.AspNetCore", "src\WebConnector.AspNetCore\WebConnector.AspNetCore.csproj", "{D640CFC6-5AB4-45A7-8AD3-465D2F1176EA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F2142018-7B77-4B49-ACC3-CCAE73D61E40}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

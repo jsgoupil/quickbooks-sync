@@ -13,7 +13,7 @@ namespace QbSync.QbXml.Extensions
         /// <param name="node"></param>
         /// <param name="xpath"></param>
         /// <returns></returns>
-        internal static string ReadNode(this XmlNode node, string xpath)
+        internal static string? ReadNode(this XmlNode node, string xpath)
         {
             var selectedNode = node.SelectSingleNode(xpath);
 
@@ -25,7 +25,7 @@ namespace QbSync.QbXml.Extensions
             return null;
         }
 
-        internal static string ReadAttribute(this XmlNode node, string attributeName)
+        internal static string? ReadAttribute(this XmlNode node, string attributeName)
         {
             var attributeCollection = node.Attributes;
             var attribute = attributeCollection.GetNamedItem(attributeName);
@@ -62,12 +62,15 @@ namespace QbSync.QbXml.Extensions
                 XmlType = attributes.XmlType
             };
 
-            var existingXmlElementAttributes = new List<XmlElementAttribute>(attributes.XmlElements.Count + customAttributes.Count());
+            var existingXmlElementAttributes = new List<XmlElementAttribute>(attributes.XmlElements.Count + (customAttributes?.Count() ?? 0));
             existingXmlElementAttributes.AddRange(attributes.XmlElements.Cast<XmlElementAttribute>());
 
-            foreach (var customAttribute in customAttributes)
+            if (customAttributes != null)
             {
-                existingXmlElementAttributes.Add(customAttribute);
+                foreach (var customAttribute in customAttributes)
+                {
+                    existingXmlElementAttributes.Add(customAttribute);
+                }
             }
 
             foreach (var xmlElementAttribute in existingXmlElementAttributes.Distinct(new XmlOverrider.XmlElementAttributeEqualityComparer()))

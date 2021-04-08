@@ -8,15 +8,15 @@ namespace QbSync.QbXml
     /// </summary>
     public sealed class QbXmlSerializer
     {
-        private static volatile QbXmlSerializer instance;
-        private static readonly object syncRoot = new System.Object();
+        private static volatile QbXmlSerializer? instance;
+        private static readonly object syncRoot = new object();
 
         /// <summary>
         /// Creates a serializer.
         /// </summary>
         public QbXmlSerializer()
         {
-            Initialize();
+            XmlSerializer = new XmlSerializer(typeof(QBXML));
         }
 
         /// <summary>
@@ -48,11 +48,6 @@ namespace QbSync.QbXml
         {
             get;
             private set;
-        }
-
-        private void Initialize()
-        {
-            XmlSerializer = new XmlSerializer(typeof(QBXML));
         }
     }
 }

@@ -42,12 +42,12 @@ namespace QbSync.WebConnector.Impl
                 throw new ArgumentException("The AppURL is required.", nameof(WebConnectorQwcModel.AppURL));
             }
 
-            if (model.FileID == default(Guid))
+            if (model.FileID == default)
             {
                 throw new ArgumentException("The FileID is required.", nameof(WebConnectorQwcModel.FileID));
             }
 
-            if (model.OwnerID == default(Guid))
+            if (model.OwnerID == default)
             {
                 throw new ArgumentException("The OwnerID is required.", nameof(WebConnectorQwcModel.OwnerID));
             }
@@ -81,10 +81,10 @@ namespace QbSync.WebConnector.Impl
             if (model.AuthFlags != null)
             {
                 var v = GetFlagValue(model.AuthFlags);
-                sb.Append($"<AuthFlags>0x{v.ToString("X1")}</AuthFlags>");
+                sb.Append($"<AuthFlags>0x{v:X1}</AuthFlags>");
             }
 
-            sb.Append($"<FileID>{model.FileID.ToString("B")}</FileID>");
+            sb.Append($"<FileID>{model.FileID:B}</FileID>");
 
             if (model.IsReadOnly)
             {
@@ -96,7 +96,7 @@ namespace QbSync.WebConnector.Impl
                 sb.Append($"<Notify>true</Notify>");
             }
 
-            sb.Append($"<OwnerID>{model.OwnerID.ToString("B")}</OwnerID>");
+            sb.Append($"<OwnerID>{model.OwnerID:B}</OwnerID>");
 
             if (model.PersonalDataPrep.HasValue)
             {

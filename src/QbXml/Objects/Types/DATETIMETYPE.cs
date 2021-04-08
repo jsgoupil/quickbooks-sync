@@ -85,7 +85,7 @@ namespace QbSync.QbXml.Objects
         /// Gets the original uncorrected raw string value parsed from QuickBooks, including
         /// the potentially incorrect offset value. Will be null if not deserialized from XML.
         /// </summary>
-        public string QuickBooksRawString { get; private set; }
+        public string? QuickBooksRawString { get; private set; }
 
         /// <summary>
         /// Gets the uncorrected <see cref="DateTimeOffset"/> value, as parsed from QuickBooks.
@@ -205,7 +205,7 @@ namespace QbSync.QbXml.Objects
         /// </summary>
         /// <param name="obj">A DATETIMETYPE.</param>
         /// <returns>True on equality.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is DATETIMETYPE other)
             {
@@ -231,7 +231,7 @@ namespace QbSync.QbXml.Objects
         /// <param name="a">Operand 1.</param>
         /// <param name="b">Operand 2.</param>
         /// <returns>True on equality.</returns>
-        public static bool operator ==(DATETIMETYPE a, DATETIMETYPE b)
+        public static bool operator ==(DATETIMETYPE? a, DATETIMETYPE? b)
         {
             // If both are null, or both are same instance, return true.
             if (ReferenceEquals(a, b))
@@ -245,7 +245,7 @@ namespace QbSync.QbXml.Objects
                 return false;
             }
 
-            return a.Equals(b);
+            return a?.Equals(b) ?? default;
         }
 
         /// <summary>
@@ -254,7 +254,7 @@ namespace QbSync.QbXml.Objects
         /// <param name="a">Operand 1.</param>
         /// <param name="b">Operand 2.</param>
         /// <returns>True on equality.</returns>
-        public static bool operator !=(DATETIMETYPE a, DATETIMETYPE b)
+        public static bool operator !=(DATETIMETYPE? a, DATETIMETYPE? b)
         {
             return !(a == b);
         }
@@ -265,9 +265,9 @@ namespace QbSync.QbXml.Objects
         /// <param name="a">Operand 1.</param>
         /// <param name="b">Operand 2.</param>
         /// <returns>True on equality.</returns>
-        public static bool operator <(DATETIMETYPE a, DATETIMETYPE b)
+        public static bool operator <(DATETIMETYPE? a, DATETIMETYPE? b)
         {
-            return a.CompareTo(b) < 0;
+            return (a?.CompareTo(b) ?? -1) < 0;
         }
 
         /// <summary>
@@ -276,9 +276,9 @@ namespace QbSync.QbXml.Objects
         /// <param name="a">Operand 1.</param>
         /// <param name="b">Operand 2.</param>
         /// <returns>True on equality.</returns>
-        public static bool operator >(DATETIMETYPE a, DATETIMETYPE b)
+        public static bool operator >(DATETIMETYPE? a, DATETIMETYPE? b)
         {
-            return a.CompareTo(b) > 0;
+            return (a?.CompareTo(b) ?? -1) > 0;
         }
 
         /// <summary>
@@ -286,7 +286,7 @@ namespace QbSync.QbXml.Objects
         /// </summary>
         /// <param name="other">Another DATETIMETYPE.</param>
         /// <returns>True if equals.</returns>
-        public int CompareTo(DATETIMETYPE other)
+        public int CompareTo(DATETIMETYPE? other)
         {
             if (other == null)
             {
@@ -305,7 +305,7 @@ namespace QbSync.QbXml.Objects
         /// Returns null.
         /// </summary>
         /// <returns>Null.</returns>
-        public System.Xml.Schema.XmlSchema GetSchema()
+        public System.Xml.Schema.XmlSchema? GetSchema()
         {
             return null;
         }
@@ -391,9 +391,9 @@ namespace QbSync.QbXml.Objects
         /// <param name="value">Date string in yyyy-mm-dd[Thh][:mm][:ss][K] format (though other standard formats will work as well). K is the offset from UTC (ie "Z", "-08:00", "+00:00", etc)</param>
         /// <param name="defaultValue">The default value to use if parsing is unsuccessful</param>
         /// <returns>A new instance of <see cref="DATETIMETYPE"/>, or <paramref name="defaultValue"/></returns>
-        public static DATETIMETYPE ParseOrDefault(string value, DATETIMETYPE defaultValue = default(DATETIMETYPE))
+        public static DATETIMETYPE? ParseOrDefault(string? value, DATETIMETYPE? defaultValue = default)
         {
-            if (TryParse(value, out var result))
+            if (value != null && TryParse(value, out var result))
             {
                 return result;
             }
@@ -408,7 +408,7 @@ namespace QbSync.QbXml.Objects
         /// <param name="value">Date string in yyyy-mm-dd[Thh][:mm][:ss][K] format (though other standard formats will work as well). K is the offset from UTC (ie "Z", "-08:00", "+00:00", etc)</param>
         /// <param name="date">If parsing was successful, the new instance of <see cref="DATETIMETYPE"/>, otherwise null</param>
         /// <returns>True is parsing was successful</returns>
-        public static bool TryParse(string value, out DATETIMETYPE date)
+        public static bool TryParse(string value, out DATETIMETYPE? date)
         {
             try
             {

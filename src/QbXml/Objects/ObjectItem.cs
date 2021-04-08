@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace QbSync.QbXml.Objects
@@ -51,14 +52,15 @@ namespace QbSync.QbXml.Objects
             SetItemOnInstance();
         }
 
+        [return: MaybeNull]
         public T GetItem<T>(string name)
         {
             if (property.Name == name)
             {
-                return (T)property.Value;
+                return (T?)property.Value;
             }
 
-            return default(T);
+            return default;
         }
 
         private void SetItemOnInstance()

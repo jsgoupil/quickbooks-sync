@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml.Serialization;
 
@@ -62,10 +63,9 @@ namespace QbSync.QbXml.Objects
         /// </summary>
         /// <param name="obj">A BOOLTYPE.</param>
         /// <returns>True on equality.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            var objType = obj as BOOLTYPE;
-            if (objType != null)
+            if (obj is BOOLTYPE objType)
             {
                 return _value == objType._value;
             }
@@ -88,10 +88,10 @@ namespace QbSync.QbXml.Objects
         /// <param name="a">Operand 1.</param>
         /// <param name="b">Operand 2.</param>
         /// <returns>True on equality.</returns>
-        public static bool operator ==(BOOLTYPE a, BOOLTYPE b)
+        public static bool operator ==(BOOLTYPE? a, BOOLTYPE? b)
         {
             // If both are null, or both are same instance, return true.
-            if (System.Object.ReferenceEquals(a, b))
+            if (ReferenceEquals(a, b))
             {
                 return true;
             }
@@ -102,7 +102,7 @@ namespace QbSync.QbXml.Objects
                 return false;
             }
 
-            return a.Equals(b);
+            return a?.Equals(b) ?? default;
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace QbSync.QbXml.Objects
         /// <param name="a">Operand 1.</param>
         /// <param name="b">Operand 2.</param>
         /// <returns>True on equality.</returns>
-        public static bool operator !=(BOOLTYPE a, BOOLTYPE b)
+        public static bool operator !=(BOOLTYPE? a, BOOLTYPE? b)
         {
             return !(a == b);
         }
@@ -129,14 +129,14 @@ namespace QbSync.QbXml.Objects
         /// Converts a BOOLTYPE to boolean automatically.
         /// </summary>
         /// <param name="value">A boolean.</param>
-        public static implicit operator bool(BOOLTYPE value)
+        public static implicit operator bool(BOOLTYPE? value)
         {
-            if (value != null)
+            if (value is null)
             {
-                return value.ToBoolean();
+                return default;
             }
 
-            return default(bool);
+            return value.ToBoolean();
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace QbSync.QbXml.Objects
         /// Returns null.
         /// </summary>
         /// <returns>Null.</returns>
-        public System.Xml.Schema.XmlSchema GetSchema()
+        public System.Xml.Schema.XmlSchema? GetSchema()
         {
             return null;
         }

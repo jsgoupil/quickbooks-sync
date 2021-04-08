@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace QbSync.QbXml.Objects
@@ -9,8 +10,8 @@ namespace QbSync.QbXml.Objects
         private readonly object instance;
         private readonly PropertyInfo itemProperty;
         private readonly PropertyInfo itemElementNameProperty;
-        private readonly object itemValue;
-        private readonly U itemElementNameValue;
+        private readonly object? itemValue;
+        private readonly U? itemElementNameValue;
         private ObjectItemValue property;
 
         public ObjectItem(object instance, string name)
@@ -42,14 +43,15 @@ namespace QbSync.QbXml.Objects
             SetItemOnInstance();
         }
 
+        [return: MaybeNull]
         public T GetItem<T>(U name)
         {
             if (property.Name == name.ToString())
             {
-                return (T)property.Value;
+                return (T?)property.Value;
             }
 
-            return default(T);
+            return default;
         }
 
         private void SetItemOnInstance()

@@ -66,8 +66,7 @@ namespace WebApplication.Sample.Application
 
             if (qbTicket == null)
             {
-                var ticketAsQbTicket = ticket as QbTicket;
-                if (ticketAsQbTicket != null)
+                if (ticket is QbTicket ticketAsQbTicket)
                 {
                     qbTicket = new QbTicket
                     {
@@ -80,7 +79,11 @@ namespace WebApplication.Sample.Application
                 }
             }
 
-            qbTicket.CurrentStep = ticket.CurrentStep;
+            if (qbTicket != null)
+            {
+                qbTicket.CurrentStep = ticket.CurrentStep;
+            }
+
             await dbContext.SaveChangesAsync();
         }
     }

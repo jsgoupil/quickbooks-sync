@@ -26,7 +26,7 @@ namespace WebApplication.Sample.Application.Steps
                 this.dbContext = dbContext;
             }
 
-            protected override Task<IEnumerable<IQbRequest>> ExecuteRequestAsync(IAuthenticatedTicket authenticatedTicket)
+            protected override Task<IEnumerable<IQbRequest>?> ExecuteRequestAsync(IAuthenticatedTicket authenticatedTicket)
             {
                 var list = new List<IQbRequest>
                 {
@@ -44,7 +44,7 @@ namespace WebApplication.Sample.Application.Steps
                     }
                 };
 
-                return Task.FromResult(list as IEnumerable<IQbRequest>);
+                return Task.FromResult<IEnumerable<IQbRequest>?>(list as IEnumerable<IQbRequest>);
             }
 
             protected override Task<QBXMLMsgsRqOnError> GetOnErrorAttributeAsync(IAuthenticatedTicket authenticatedTicket)

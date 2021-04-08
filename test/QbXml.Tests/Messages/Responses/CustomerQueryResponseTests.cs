@@ -50,7 +50,7 @@ namespace QbSync.QbXml.Tests.QbXml
             var customer = customers[0];
 
             Assert.AreEqual(1, customers.Length);
-            Assert.AreEqual(2, customer.AdditionalContactRef.Count());
+            Assert.AreEqual(2, customer.AdditionalContactRef.Length);
             Assert.AreEqual("Name1", customer.AdditionalContactRef.First().ContactName);
             Assert.AreEqual("Value1", customer.AdditionalContactRef.First().ContactValue);
             Assert.AreEqual("Name2", customer.AdditionalContactRef.Last().ContactName);

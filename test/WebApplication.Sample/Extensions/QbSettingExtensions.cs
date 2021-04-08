@@ -7,7 +7,7 @@ namespace WebApplication.Sample.Extensions
 {
     public static class QbSettingExtensions
     {
-        public static async Task SaveIfNewerAsync(this ApplicationDbContext applicationDbContext, string setting, QbSync.QbXml.Objects.DATETIMETYPE moment)
+        public static async Task SaveIfNewerAsync(this ApplicationDbContext applicationDbContext, string setting, DATETIMETYPE? moment)
         {
             if (moment != null)
             {

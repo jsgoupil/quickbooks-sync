@@ -48,15 +48,16 @@ namespace QbSync.WebConnector.Tests.Impl
             var services = new WebConnectorQwc();
 
             var model = new WebConnectorQwcModel
-            {
-                AppDescription = "Description",
-                AppName = "Name",
-                AppSupport = "Support",
-                AppURL = "URL",
-                FileID = Guid.Parse("56e8badb-7364-4e4a-ac08-28b988b3cd74"),
-                OwnerID = Guid.Parse("0d400059-de9a-4c67-85f4-dd912ea23398"),
-                UserName = "UserName"
-            };
+            (
+                appDescription: "Description",
+                appName: "Name",
+                appSupport: "Support",
+                appURL: "URL",
+                fileID: Guid.Parse("56e8badb-7364-4e4a-ac08-28b988b3cd74"),
+                ownerID: Guid.Parse("0d400059-de9a-4c67-85f4-dd912ea23398"),
+                userName: "UserName",
+                qbType: QBType.QBFS
+            );
 
             // Act
             var result = services.GetQwcFile(model);
@@ -72,25 +73,25 @@ namespace QbSync.WebConnector.Tests.Impl
             var services = new WebConnectorQwc();
 
             var model = new WebConnectorQwcModel
-            {
-                AppDescription = "Description",
-                AppName = "Name",
-                AppSupport = "Support",
-                AppURL = "URL",
-                FileID = Guid.Parse("56e8badb-7364-4e4a-ac08-28b988b3cd74"),
-                OwnerID = Guid.Parse("0d400059-de9a-4c67-85f4-dd912ea23398"),
-                UserName = "UserName",
+            (
+                appDescription: "Description",
+                appName: "Name",
+                appSupport: "Support",
+                appURL: "URL",
+                fileID: Guid.Parse("56e8badb-7364-4e4a-ac08-28b988b3cd74"),
+                ownerID: Guid.Parse("0d400059-de9a-4c67-85f4-dd912ea23398"),
+                userName: "UserName",
 
-                AppDisplayName = "DisplayName",
-                AppID = "AppID",
-                AppUniqueName = "UniqueName",
-                AuthFlags = AuthFlag.SupportQBEnterprise | AuthFlag.SupportQBPremier | AuthFlag.SupportQBPro | AuthFlag.SupportQBSimpleStart,
-                IsReadOnly = true,
-                Notify = true,
-                PersonalDataPrep = PersonalDataPref.PdpRequired,
-                QBType = QBType.QBPOS,
-                UnattendedModePref = UnattendedModePref.UmpRequired
-            };
+                appDisplayName: "DisplayName",
+                appID: "AppID",
+                appUniqueName: "UniqueName",
+                authFlags: AuthFlag.SupportQBEnterprise | AuthFlag.SupportQBPremier | AuthFlag.SupportQBPro | AuthFlag.SupportQBSimpleStart,
+                isReadOnly: true,
+                notify: true,
+                personalDataPrep: PersonalDataPref.PdpRequired,
+                qbType: QBType.QBPOS,
+                unattendedModePref: UnattendedModePref.UmpRequired
+            );
 
             // Act
             var result = services.GetQwcFile(model);
@@ -106,17 +107,18 @@ namespace QbSync.WebConnector.Tests.Impl
             var services = new WebConnectorQwc();
 
             var model = new WebConnectorQwcModel
-            {
-                AppDescription = "Description",
-                AppName = "Name",
-                AppSupport = "Support",
-                AppURL = "URL",
-                FileID = Guid.Parse("56e8badb-7364-4e4a-ac08-28b988b3cd74"),
-                OwnerID = Guid.Parse("0d400059-de9a-4c67-85f4-dd912ea23398"),
-                UserName = "UserName",
+            (
+                appDescription: "Description",
+                appName: "Name",
+                appSupport: "Support",
+                appURL: "URL",
+                fileID: Guid.Parse("56e8badb-7364-4e4a-ac08-28b988b3cd74"),
+                ownerID: Guid.Parse("0d400059-de9a-4c67-85f4-dd912ea23398"),
+                userName: "UserName",
+                qbType: QBType.QBFS,
 
-                RunEvery = new TimeSpan(0, 0, 30)
-            };
+                runEvery: new TimeSpan(0, 0, 30)
+            );
 
             // Act
             var result = services.GetQwcFile(model);
@@ -132,17 +134,18 @@ namespace QbSync.WebConnector.Tests.Impl
             var services = new WebConnectorQwc();
 
             var model = new WebConnectorQwcModel
-            {
-                AppDescription = "Description",
-                AppName = "Name",
-                AppSupport = "Support",
-                AppURL = "URL",
-                FileID = Guid.Parse("56e8badb-7364-4e4a-ac08-28b988b3cd74"),
-                OwnerID = Guid.Parse("0d400059-de9a-4c67-85f4-dd912ea23398"),
-                UserName = "UserName",
+            (
+                appDescription: "Description",
+                appName: "Name",
+                appSupport: "Support",
+                appURL: "URL",
+                fileID: Guid.Parse("56e8badb-7364-4e4a-ac08-28b988b3cd74"),
+                ownerID: Guid.Parse("0d400059-de9a-4c67-85f4-dd912ea23398"),
+                userName: "UserName",
+                qbType: QBType.QBFS,
 
-                RunEvery = new TimeSpan(0, 30, 0)
-            };
+                runEvery: new TimeSpan(0, 30, 0)
+            );
 
             // Act
             var result = services.GetQwcFile(model);
@@ -158,17 +161,18 @@ namespace QbSync.WebConnector.Tests.Impl
             var services = new WebConnectorQwc();
 
             var model = new WebConnectorQwcModel
-            {
-                AppDescription = "Description",
-                AppName = "Name",
-                AppSupport = "Support",
-                AppURL = "URL",
-                FileID = Guid.Parse("56e8badb-7364-4e4a-ac08-28b988b3cd74"),
-                OwnerID = Guid.Parse("0d400059-de9a-4c67-85f4-dd912ea23398"),
-                UserName = "UserName",
+            (
+                appDescription: "Description",
+                appName: "Name",
+                appSupport: "Support",
+                appURL: "URL",
+                fileID: Guid.Parse("56e8badb-7364-4e4a-ac08-28b988b3cd74"),
+                ownerID: Guid.Parse("0d400059-de9a-4c67-85f4-dd912ea23398"),
+                userName: "UserName",
+                qbType: QBType.QBFS,
 
-                RunEvery = new TimeSpan(0, 30, 59)
-            };
+                runEvery: new TimeSpan(0, 30, 59)
+            );
 
             // Act
             var result = services.GetQwcFile(model);

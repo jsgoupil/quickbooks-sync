@@ -12,8 +12,8 @@ namespace QbSync.QbXml.Objects
         private readonly string[] nameOrder;
         private readonly PropertyInfo itemsProperty;
         private readonly PropertyInfo itemsElementNameProperty;
-        private readonly object[] itemsValue;
-        private readonly U[] itemsElementNameValue;
+        private readonly object[]? itemsValue;
+        private readonly U[]? itemsElementNameValue;
         private List<ObjectItemValue> propertyList;
 
         public ObjectItems(object instance, string name, string[] nameOrder)
@@ -32,7 +32,7 @@ namespace QbSync.QbXml.Objects
 
         private void Initialize()
         {
-            if (itemsValue != null)
+            if (itemsValue != null && itemsElementNameValue != null)
             {
                 for (var i = 0; i < itemsValue.Length; i++)
                 {
