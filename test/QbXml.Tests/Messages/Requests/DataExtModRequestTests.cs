@@ -13,13 +13,15 @@ namespace QbSync.QbXml.Tests.QbXml
         public void BasicDataExtModRequestTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new DataExtModRqType();
-            innerRequest.DataExtMod = new DataExtMod
+            var innerRequest = new DataExtModRqType
             {
-                OwnerID = Guid.NewGuid(),
-                DataExtName = "name",
-                DataExtValue = "value",
-                OtherDataExtType = OtherDataExtType.Company
+                DataExtMod = new DataExtMod
+                {
+                    OwnerID = Guid.NewGuid(),
+                    DataExtName = "name",
+                    DataExtValue = "value",
+                    OtherDataExtType = OtherDataExtType.Company
+                }
             };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
@@ -41,17 +43,19 @@ namespace QbSync.QbXml.Tests.QbXml
         public void ListDataExtModRequestTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new DataExtModRqType();
-            innerRequest.DataExtMod = new DataExtMod
+            var innerRequest = new DataExtModRqType
             {
-                OwnerID = Guid.NewGuid(),
-                DataExtName = "name",
-                DataExtValue = "value",
-                ListDataExtType = ListDataExtType.Customer,
-                ListObjRef = new ListObjRef
+                DataExtMod = new DataExtMod
                 {
-                    FullName = "test",
-                    ListID = "12345"
+                    OwnerID = Guid.NewGuid(),
+                    DataExtName = "name",
+                    DataExtValue = "value",
+                    ListDataExtType = ListDataExtType.Customer,
+                    ListObjRef = new ListObjRef
+                    {
+                        FullName = "test",
+                        ListID = "12345"
+                    }
                 }
             };
             request.AddToSingle(innerRequest);
@@ -78,15 +82,17 @@ namespace QbSync.QbXml.Tests.QbXml
         public void TxnDataExtModRequestTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new DataExtModRqType();
-            innerRequest.DataExtMod = new DataExtMod
+            var innerRequest = new DataExtModRqType
             {
-                OwnerID = Guid.NewGuid(),
-                DataExtName = "name",
-                DataExtValue = "value",
-                TxnDataExtType = TxnDataExtType.Charge,
-                TxnID = "123",
-                TxnLineID = "345"
+                DataExtMod = new DataExtMod
+                {
+                    OwnerID = Guid.NewGuid(),
+                    DataExtName = "name",
+                    DataExtValue = "value",
+                    TxnDataExtType = TxnDataExtType.Charge,
+                    TxnID = "123",
+                    TxnLineID = "345"
+                }
             };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();

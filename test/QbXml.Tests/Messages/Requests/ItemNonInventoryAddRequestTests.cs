@@ -12,12 +12,14 @@ namespace QbSync.QbXml.Tests.QbXml
         public void BasicItemNonInventoryAddRequestTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new ItemNonInventoryAddRqType();
-            innerRequest.ItemNonInventoryAdd = new ItemNonInventoryAdd
+            var innerRequest = new ItemNonInventoryAddRqType
             {
-                Name = "Something here",
-                IsActive = true,
-                SalesAndPurchase = new SalesAndPurchase()
+                ItemNonInventoryAdd = new ItemNonInventoryAdd
+                {
+                    Name = "Something here",
+                    IsActive = true,
+                    SalesAndPurchase = new SalesAndPurchase()
+                }
             };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();

@@ -13,12 +13,14 @@ namespace QbSync.QbXml.Tests.QbXml
         public void BasicDataExtDelRequestTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new DataExtDelRqType();
-            innerRequest.DataExtDel = new DataExtDel
+            var innerRequest = new DataExtDelRqType
             {
-                OwnerID = Guid.NewGuid(),
-                DataExtName = "name",
-                OtherDataExtType = OtherDataExtType.Company
+                DataExtDel = new DataExtDel
+                {
+                    OwnerID = Guid.NewGuid(),
+                    DataExtName = "name",
+                    OtherDataExtType = OtherDataExtType.Company
+                }
             };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
@@ -39,16 +41,18 @@ namespace QbSync.QbXml.Tests.QbXml
         public void ListDataExtDelRequestTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new DataExtDelRqType();
-            innerRequest.DataExtDel = new DataExtDel
+            var innerRequest = new DataExtDelRqType
             {
-                OwnerID = Guid.NewGuid(),
-                DataExtName = "name",
-                ListDataExtType = ListDataExtType.Customer,
-                ListObjRef = new ListObjRef
+                DataExtDel = new DataExtDel
                 {
-                    FullName = "test",
-                    ListID = "12345"
+                    OwnerID = Guid.NewGuid(),
+                    DataExtName = "name",
+                    ListDataExtType = ListDataExtType.Customer,
+                    ListObjRef = new ListObjRef
+                    {
+                        FullName = "test",
+                        ListID = "12345"
+                    }
                 }
             };
             request.AddToSingle(innerRequest);
@@ -74,14 +78,16 @@ namespace QbSync.QbXml.Tests.QbXml
         public void TxnDataExtDelRequestTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new DataExtDelRqType();
-            innerRequest.DataExtDel = new DataExtDel
+            var innerRequest = new DataExtDelRqType
             {
-                OwnerID = Guid.NewGuid(),
-                DataExtName = "name",
-                TxnDataExtType = TxnDataExtType.Charge,
-                TxnID = "123",
-                TxnLineID = "345"
+                DataExtDel = new DataExtDel
+                {
+                    OwnerID = Guid.NewGuid(),
+                    DataExtName = "name",
+                    TxnDataExtType = TxnDataExtType.Charge,
+                    TxnID = "123",
+                    TxnLineID = "345"
+                }
             };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();

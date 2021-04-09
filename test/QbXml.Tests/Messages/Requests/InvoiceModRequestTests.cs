@@ -13,27 +13,29 @@ namespace QbSync.QbXml.Tests.QbXml
         public void BasicInvoiceModRequestTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new InvoiceModRqType();
-            innerRequest.InvoiceMod = new InvoiceMod
+            var innerRequest = new InvoiceModRqType
             {
-                TxnID = "123",
-                EditSequence = "456",
-                CustomerRef = new CustomerRef
+                InvoiceMod = new InvoiceMod
                 {
-                    ListID = "12345"
-                },
-                IsPending = true,
-                InvoiceLineMod = new InvoiceLineMod[]
-                {
-                    new InvoiceLineMod
+                    TxnID = "123",
+                    EditSequence = "456",
+                    CustomerRef = new CustomerRef
                     {
-                        TxnLineID = "1234",
-                        Desc = "Desc1"
+                        ListID = "12345"
                     },
-                    new InvoiceLineMod
+                    IsPending = true,
+                    InvoiceLineMod = new InvoiceLineMod[]
                     {
-                        TxnLineID = "5678",
-                        Desc = "Desc2"
+                        new InvoiceLineMod
+                        {
+                            TxnLineID = "1234",
+                            Desc = "Desc1"
+                        },
+                        new InvoiceLineMod
+                        {
+                            TxnLineID = "5678",
+                            Desc = "Desc2"
+                        }
                     }
                 }
             };

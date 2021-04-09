@@ -13,28 +13,29 @@ namespace QbSync.QbXml.Tests.QbXml
         public void BasicDataExtDefModRequestTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new DataExtDefModRqType();
-            innerRequest.DataExtDefMod = new DataExtDefMod
+            var innerRequest = new DataExtDefModRqType
             {
-                OwnerID = Guid.NewGuid(),
-                DataExtName = "name",
-                DataExtNewName = "newname",
-                AssignToObject = new AssignToObject[]
+                DataExtDefMod = new DataExtDefMod
                 {
-                    AssignToObject.Account,
-                    AssignToObject.Charge
+                    OwnerID = Guid.NewGuid(),
+                    DataExtName = "name",
+                    DataExtNewName = "newname",
+                    AssignToObject = new AssignToObject[]
+                    {
+                        AssignToObject.Account,
+                        AssignToObject.Charge
+                    },
+                    RemoveFromObject = new RemoveFromObject[]
+                    {
+                        RemoveFromObject.Bill,
+                        RemoveFromObject.Check
+                    }
                 },
-                RemoveFromObject = new RemoveFromObject[] 
+                IncludeRetElement = new string[]
                 {
-                    RemoveFromObject.Bill,
-                    RemoveFromObject.Check
+                    "ABC",
+                    "DEF"
                 }
-            };
-
-            innerRequest.IncludeRetElement = new string[]
-            {
-                "ABC",
-                "DEF"
             };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();

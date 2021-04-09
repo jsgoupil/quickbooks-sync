@@ -24,8 +24,10 @@ namespace QbSync.WebConnector.Tests.Impl
                 CurrentStep = "step4"
             };
 
-            var stepQueryRequestWithIteratorMock = new Mock<StepQueryRequestWithIterator<CustomerQueryRqType>>();
-            stepQueryRequestWithIteratorMock.CallBase = true;
+            var stepQueryRequestWithIteratorMock = new Mock<StepQueryRequestWithIterator<CustomerQueryRqType>>
+            {
+                CallBase = true
+            };
 
             var xml = await stepQueryRequestWithIteratorMock.Object.SendXMLAsync(authenticatedTicket);
 
@@ -101,8 +103,10 @@ namespace QbSync.WebConnector.Tests.Impl
                 CurrentStep = "step4"
             };
 
-            var stepQueryRequestWithIteratorMock = new Mock<StepQueryRequestWithIteratorMaxReturnedHarness>(defaultMaxResult);
-            stepQueryRequestWithIteratorMock.CallBase = true;
+            var stepQueryRequestWithIteratorMock = new Mock<StepQueryRequestWithIteratorMaxReturnedHarness>(defaultMaxResult)
+            {
+                CallBase = true
+            };
 
             var xml = await stepQueryRequestWithIteratorMock.Object.SendXMLAsync(authenticatedTicket);
 
@@ -129,8 +133,10 @@ namespace QbSync.WebConnector.Tests.Impl
                 CurrentStep = "step4"
             };
 
-            var stepQueryRequestWithIteratorMock = new Mock<StepQueryRequestWithIteratorMaxReturnedHarness>(defaultMaxResult);
-            stepQueryRequestWithIteratorMock.CallBase = true;
+            var stepQueryRequestWithIteratorMock = new Mock<StepQueryRequestWithIteratorMaxReturnedHarness>(defaultMaxResult)
+            {
+                CallBase = true
+            };
 
             var xml = await stepQueryRequestWithIteratorMock.Object.SendXMLAsync(authenticatedTicket);
 
@@ -157,8 +163,10 @@ namespace QbSync.WebConnector.Tests.Impl
                 CurrentStep = "step4"
             };
 
-            var stepQueryRequestWithIteratorMock = new Mock<StepQueryRequestWithIteratorMaxReturnedHarness>(defaultMaxResult);
-            stepQueryRequestWithIteratorMock.CallBase = true;
+            var stepQueryRequestWithIteratorMock = new Mock<StepQueryRequestWithIteratorMaxReturnedHarness>(defaultMaxResult)
+            {
+                CallBase = true
+            };
 
             var xml = await stepQueryRequestWithIteratorMock.Object.SendXMLAsync(authenticatedTicket);
 
@@ -183,8 +191,10 @@ namespace QbSync.WebConnector.Tests.Impl
                 CurrentStep = "step4"
             };
 
-            var stepQueryRequestWithIteratorMock = new Mock<StepQueryRequestWithIteratorMaxReturnedHarness>(defaultMaxResult);
-            stepQueryRequestWithIteratorMock.CallBase = true;
+            var stepQueryRequestWithIteratorMock = new Mock<StepQueryRequestWithIteratorMaxReturnedHarness>(defaultMaxResult)
+            {
+                CallBase = true
+            };
 
             var xml = await stepQueryRequestWithIteratorMock.Object.SendXMLAsync(authenticatedTicket);
 

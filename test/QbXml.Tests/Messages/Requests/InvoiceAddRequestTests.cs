@@ -14,26 +14,28 @@ namespace QbSync.QbXml.Tests.QbXml
         public void BasicInvoiceAddRequestTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new InvoiceAddRqType();
-            innerRequest.InvoiceAdd = new InvoiceAdd
+            var innerRequest = new InvoiceAddRqType
             {
-                CustomerRef = new CustomerRef
+                InvoiceAdd = new InvoiceAdd
                 {
-                    ListID = "12345"
-                },
-                IsPending = true,
-                InvoiceLineAdd = new InvoiceLineAdd[]
-                {
-                    new InvoiceLineAdd
+                    CustomerRef = new CustomerRef
                     {
-                         Desc = "Desc1"
+                        ListID = "12345"
                     },
-                    new InvoiceLineAdd
+                    IsPending = true,
+                    InvoiceLineAdd = new InvoiceLineAdd[]
                     {
-                         Desc = "Desc2",
-                         SerialNumber = "123",
-                    }
-                },
+                        new InvoiceLineAdd
+                        {
+                             Desc = "Desc1"
+                        },
+                        new InvoiceLineAdd
+                        {
+                             Desc = "Desc2",
+                             SerialNumber = "123",
+                        }
+                    },
+                }
             };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
@@ -59,22 +61,24 @@ namespace QbSync.QbXml.Tests.QbXml
         public void BasicInvoiceAddRequest_TooLong_Test()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new InvoiceAddRqType();
-            innerRequest.InvoiceAdd = new InvoiceAdd
+            var innerRequest = new InvoiceAddRqType
             {
-                CustomerRef = new CustomerRef
+                InvoiceAdd = new InvoiceAdd
                 {
-                    ListID = "12345"
-                },
-                IsPending = true,
-                InvoiceLineAdd = new InvoiceLineAdd[]
-                {
-                    new InvoiceLineAdd
+                    CustomerRef = new CustomerRef
                     {
-                         Desc = "Desc1",
-                         LotNumber = "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ" // 52 characters > 40
+                        ListID = "12345"
                     },
-                },
+                    IsPending = true,
+                    InvoiceLineAdd = new InvoiceLineAdd[]
+                    {
+                        new InvoiceLineAdd
+                        {
+                             Desc = "Desc1",
+                             LotNumber = "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ" // 52 characters > 40
+                        },
+                    },
+                }
             };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
@@ -100,14 +104,16 @@ namespace QbSync.QbXml.Tests.QbXml
         public void BasicInvoiceAddRequest_Order_Test()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new InvoiceAddRqType();
-            innerRequest.InvoiceAdd = new InvoiceAdd
+            var innerRequest = new InvoiceAddRqType
             {
-                CustomerRef = new CustomerRef
+                InvoiceAdd = new InvoiceAdd
                 {
-                    ListID = "12345"
-                },
-                IsPending = true
+                    CustomerRef = new CustomerRef
+                    {
+                        ListID = "12345"
+                    },
+                    IsPending = true
+                }
             };
 
             var items = new List<InvoiceLineAdd>();

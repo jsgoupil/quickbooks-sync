@@ -31,7 +31,7 @@ namespace QbSync.QbXml.Tests.Types
 
             Assert.AreEqual(3, itemsProperty.CustomAttributes.Count());
             var xmlElementAttributes = itemsProperty.CustomAttributes.Where(m => m.AttributeType == typeof(XmlElementAttribute)).ToList();
-            Assert.AreEqual(2, xmlElementAttributes.Count());
+            Assert.AreEqual(2, xmlElementAttributes.Count);
             Assert.AreEqual(1, xmlElementAttributes.First().NamedArguments.Count);
             Assert.AreEqual("Order", xmlElementAttributes.First().NamedArguments[0].MemberName);
             Assert.AreEqual(25, xmlElementAttributes.First().NamedArguments[0].TypedValue.Value);

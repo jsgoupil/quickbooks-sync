@@ -14,16 +14,18 @@ namespace QbSync.QbXml.Tests.QbXml
         public void OwnerIDDataExtDefQueryRequestTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new DataExtDefQueryRqType();
-            innerRequest.OwnerID = new List<GUIDTYPE>
+            var innerRequest = new DataExtDefQueryRqType
             {
-                Guid.NewGuid(),
-                Guid.NewGuid()
-            };
-            innerRequest.IncludeRetElement = new string[]
-            {
-                "ABC",
-                "DEF"
+                OwnerID = new List<GUIDTYPE>
+                {
+                    Guid.NewGuid(),
+                    Guid.NewGuid()
+                },
+                IncludeRetElement = new string[]
+                {
+                    "ABC",
+                    "DEF"
+                }
             };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
@@ -47,16 +49,18 @@ namespace QbSync.QbXml.Tests.QbXml
         public void AssignToObjectDataExtDefQueryRequestTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new DataExtDefQueryRqType();
-            innerRequest.AssignToObject = new List<AssignToObject>
+            var innerRequest = new DataExtDefQueryRqType
             {
-                AssignToObject.Account,
-                AssignToObject.Charge
-            };
-            innerRequest.IncludeRetElement = new string[]
-            {
-                "ABC",
-                "DEF"
+                AssignToObject = new List<AssignToObject>
+                {
+                    AssignToObject.Account,
+                    AssignToObject.Charge
+                },
+                IncludeRetElement = new string[]
+                {
+                    "ABC",
+                    "DEF"
+                }
             };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
