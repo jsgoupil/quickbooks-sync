@@ -2,7 +2,7 @@ language: csharp
 mono: latest
 dist: xenial
 sudo: required
-dotnet: 5.0.5
+dotnet: 5.0.202
 solution: QuickbooksSync.sln
 install:
   - dotnet restore
