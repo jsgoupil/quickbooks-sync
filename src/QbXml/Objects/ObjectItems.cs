@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
@@ -88,7 +89,8 @@ namespace QbSync.QbXml.Objects
             SetItemsOnInstance();
         }
 
-        public T? GetItem<T>(string name)
+        [return: MaybeNull]
+        public T GetItem<T>(string name)
         {
             return GetItems<T>(name).FirstOrDefault();
         }
