@@ -14,7 +14,7 @@ namespace QbSync.WebConnector.Tests.Impl
     [TestFixture]
     class GroupStepQueryResponseBaseTests
     {
-        private string customerAddRs = @"<CustomerAddRs requestID=""1"" statusCode=""0"" statusSeverity=""Info"" statusMessage=""Status OK"">" +
+        private readonly string customerAddRs = @"<CustomerAddRs requestID=""1"" statusCode=""0"" statusSeverity=""Info"" statusMessage=""Status OK"">" +
                 "<CustomerRet>" +
                     "<ListID>110000-1232697602</ListID>" +
                     "<TimeCreated>2009-01-23T03:00:02-05:00</TimeCreated>" +
@@ -29,7 +29,7 @@ namespace QbSync.WebConnector.Tests.Impl
                     "<JobStatus>None</JobStatus>" +
                 "</CustomerRet>" +
                 "</CustomerAddRs>";
-        private string customerQueryRs = @"<CustomerQueryRs requestID=""1"" statusCode=""0"" statusSeverity=""Info"" statusMessage=""Status OK"">" +
+        private readonly string customerQueryRs = @"<CustomerQueryRs requestID=""1"" statusCode=""0"" statusSeverity=""Info"" statusMessage=""Status OK"">" +
                 "<CustomerRet>" +
                     "<ListID>110000-1232697602</ListID>" +
                     "<TimeCreated>2009-01-23T03:00:02-05:00</TimeCreated>" +
@@ -45,8 +45,8 @@ namespace QbSync.WebConnector.Tests.Impl
                 "</CustomerRet>" +
                 "</CustomerQueryRs>";
 
-        private string customerResponseError = @"<CustomerAddRs statusCode=""3090"" statusSeverity=""Error"" statusMessage=""There was an error when storing &quot;Incorrect : Name&quot; in the &quot;customer name&quot; field.QuickBooks error message: Names in this list cannot contain a colon.The colon is a special character used to indicate a parent/child relationship."" />";
-        private string customerResponseAborted = @"<CustomerQueryRs statusCode=""3231"" statusSeverity=""Error"" statusMessage=""The request has not been processed."" />";
+        private readonly string customerResponseError = @"<CustomerAddRs statusCode=""3090"" statusSeverity=""Error"" statusMessage=""There was an error when storing &quot;Incorrect : Name&quot; in the &quot;customer name&quot; field.QuickBooks error message: Names in this list cannot contain a colon.The colon is a special character used to indicate a parent/child relationship."" />";
+        private readonly string customerResponseAborted = @"<CustomerQueryRs statusCode=""3231"" statusSeverity=""Error"" statusMessage=""The request has not been processed."" />";
 
         [Test]
         public async Task GroupStepQueryResponseBaseTests_DoubleResponse()

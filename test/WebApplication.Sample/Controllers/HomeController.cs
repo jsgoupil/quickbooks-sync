@@ -27,18 +27,17 @@ namespace WebApplication.Sample.Controllers
             var fileName = $"my.qwc";
 
             var url = Request.Scheme + System.Uri.SchemeDelimiter + Request.Host;
-            var data = webConnectorQwc.GetQwcFile(new QbSync.WebConnector.Models.WebConnectorQwcModel
-            {
-                AppName = "My App",
-                AppDescription = "Sync QuickBooks with My Website",
-                AppSupport = $"{url}/support",
-                AppURL = $"{url}/QBConnectorAsync.asmx",
-                FileID = Guid.NewGuid(), // Don't generate a new guid all the time, save it somewhere
-                OwnerID = Guid.NewGuid(), // Don't generate a new guid all the time, save it somewhere
-                UserName = "jsgoupil",
-                RunEvery = new TimeSpan(0, 30, 0),
-                QBType = QbSync.WebConnector.Models.QBType.QBFS
-            });
+            var data = webConnectorQwc.GetQwcFile(new QbSync.WebConnector.Models.WebConnectorQwcModel(
+                appName: "My App",
+                appDescription: "Sync QuickBooks with My Website",
+                appSupport: $"{url}/support",
+                appURL: $"{url}/QBConnectorAsync.asmx",
+                fileID: Guid.NewGuid(), // Don't generate a new guid all the time, save it somewhere
+                ownerID: Guid.NewGuid(), // Don't generate a new guid all the time, save it somewhere
+                userName: "jsgoupil",
+                runEvery: new TimeSpan(0, 30, 0),
+                qbType: QbSync.WebConnector.Models.QBType.QBFS
+            ));
 
             byte[] fileBytes = Encoding.ASCII.GetBytes(data);
             return File(fileBytes, "application/download", fileName);

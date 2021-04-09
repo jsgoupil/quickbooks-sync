@@ -44,6 +44,6 @@ namespace QbSync.WebConnector.Core
         /// If you return a non null step, we will go to that step.
         /// </summary>
         /// <returns>Step name to go to. Null to continue.</returns>
-        Task<string> GotoStepAsync();
+        Task<string?> GotoStepAsync();
     }
 }

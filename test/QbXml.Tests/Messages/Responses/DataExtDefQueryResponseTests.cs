@@ -17,10 +17,10 @@ namespace QbSync.QbXml.Tests.QbXml
             var rs = response.GetSingleItemFromResponse<DataExtDefQueryRsType>(QuickBooksTestHelper.CreateQbXmlWithEnvelope(ret, "DataExtDefQueryRs"));
             var dataExtDefList = rs.DataExtDefRet;
 
-            Assert.AreEqual(1, dataExtDefList.Count());
+            Assert.AreEqual(1, dataExtDefList.Length);
             Assert.AreEqual("name", dataExtDefList[0].DataExtName);
             Assert.AreEqual(DataExtType.STR255TYPE, dataExtDefList[0].DataExtType);
-            Assert.AreEqual(2, dataExtDefList[0].AssignToObject.Count());
+            Assert.AreEqual(2, dataExtDefList[0].AssignToObject.Length);
             Assert.AreEqual(AssignToObject.Account, dataExtDefList[0].AssignToObject.First());
             Assert.AreEqual(AssignToObject.Charge, dataExtDefList[0].AssignToObject.Last());
         }

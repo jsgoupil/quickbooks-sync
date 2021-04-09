@@ -14,7 +14,7 @@ namespace QbSync.WebConnector.Impl
         /// </summary>
         /// <param name="authenticatedTicket">The ticket.</param>
         /// <returns>Completed Task.</returns>
-        public virtual Task CloseConnectionAsync(IAuthenticatedTicket authenticatedTicket)
+        public virtual Task CloseConnectionAsync(IAuthenticatedTicket? authenticatedTicket)
         {
             return Task.CompletedTask;
         }
@@ -46,7 +46,7 @@ namespace QbSync.WebConnector.Impl
         /// <param name="authenticatedTicket">The ticket.</param>
         /// <param name="exception">The exception.</param>
         /// <returns>Completed Task.</returns>
-        public virtual Task OnExceptionAsync(IAuthenticatedTicket authenticatedTicket, Exception exception)
+        public virtual Task OnExceptionAsync(IAuthenticatedTicket? authenticatedTicket, Exception exception)
         {
             return Task.CompletedTask;
         }
@@ -57,7 +57,7 @@ namespace QbSync.WebConnector.Impl
         /// <param name="authenticatedTicket">The ticket.</param>
         /// <param name="response">XML data.</param>
         /// <returns>Completed Task.</returns>
-        public virtual Task ProcessClientInformationAsync(IAuthenticatedTicket authenticatedTicket, string response)
+        public virtual Task ProcessClientInformationAsync(IAuthenticatedTicket? authenticatedTicket, string response)
         {
             return Task.CompletedTask;
         }

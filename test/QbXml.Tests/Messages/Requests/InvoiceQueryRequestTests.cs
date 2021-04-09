@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using QbSync.QbXml.Extensions;
 using QbSync.QbXml.Objects;
 using QbSync.QbXml.Tests.Helpers;
 using System;
@@ -33,9 +32,12 @@ namespace QbSync.QbXml.Tests.QbXml
         public void InvoiceQueryRequest_FilterByTxnId_Test()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new InvoiceQueryRqType();
-            innerRequest.TxnID = new List<string> {
-                "1234", "3456"
+            var innerRequest = new InvoiceQueryRqType
+            {
+                TxnID = new List<string>
+                {
+                    "1234", "3456"
+                }
             };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
@@ -53,9 +55,12 @@ namespace QbSync.QbXml.Tests.QbXml
         public void InvoiceQueryRequest_FilterByRefNumber_Test()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new InvoiceQueryRqType();
-            innerRequest.RefNumber = new List<string> {
-                "abc", "def"
+            var innerRequest = new InvoiceQueryRqType
+            {
+                RefNumber = new List<string>
+                {
+                    "abc", "def"
+                }
             };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
@@ -73,11 +78,13 @@ namespace QbSync.QbXml.Tests.QbXml
         public void InvoiceQueryRequest_ModifiedDateRange_Test()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new InvoiceQueryRqType();
-            innerRequest.ModifiedDateRangeFilter = new ModifiedDateRangeFilter
+            var innerRequest = new InvoiceQueryRqType
             {
-                FromModifiedDate = new DATETIMETYPE(new DateTime(2014, 1, 1, 1, 2, 3)),
-                ToModifiedDate = new DATETIMETYPE(new DateTime(2014, 1, 1, 1, 2, 3))
+                ModifiedDateRangeFilter = new ModifiedDateRangeFilter
+                {
+                    FromModifiedDate = new DATETIMETYPE(new DateTime(2014, 1, 1, 1, 2, 3)),
+                    ToModifiedDate = new DATETIMETYPE(new DateTime(2014, 1, 1, 1, 2, 3))
+                }
             };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();

@@ -19,7 +19,7 @@ namespace QbSync.QbXml.Tests.QbXml
 
             Assert.AreEqual("name", dataExtDef.DataExtName);
             Assert.AreEqual(DataExtType.STR255TYPE, dataExtDef.DataExtType);
-            Assert.AreEqual(2, dataExtDef.AssignToObject.Count());
+            Assert.AreEqual(2, dataExtDef.AssignToObject.Length);
             Assert.AreEqual(AssignToObject.Account, dataExtDef.AssignToObject.First());
             Assert.AreEqual(AssignToObject.Charge, dataExtDef.AssignToObject.Last());
         }

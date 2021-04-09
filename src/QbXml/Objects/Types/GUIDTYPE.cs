@@ -71,10 +71,9 @@ namespace QbSync.QbXml.Objects
         /// </summary>
         /// <param name="obj">A GUIDTYPE.</param>
         /// <returns>True on equality.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            var objType = obj as GUIDTYPE;
-            if (objType != null)
+            if (obj is GUIDTYPE objType)
             {
                 return _value == objType._value;
             }
@@ -97,7 +96,7 @@ namespace QbSync.QbXml.Objects
         /// <param name="a">Operand 1.</param>
         /// <param name="b">Operand 2.</param>
         /// <returns>True on equality.</returns>
-        public static bool operator ==(GUIDTYPE a, GUIDTYPE b)
+        public static bool operator ==(GUIDTYPE? a, GUIDTYPE? b)
         {
             // If both are null, or both are same instance, return true.
             if (System.Object.ReferenceEquals(a, b))
@@ -106,7 +105,7 @@ namespace QbSync.QbXml.Objects
             }
 
             // If one is null, but not both, return false.
-            if ((a is null) ^ (b is null))
+            if ((a is null) || (b is null))
             {
                 return false;
             }
@@ -138,14 +137,14 @@ namespace QbSync.QbXml.Objects
         /// Converts a GUIDTYPE to GUID automatically.
         /// </summary>
         /// <param name="value">A GUID.</param>
-        public static implicit operator Guid(GUIDTYPE value)
+        public static implicit operator Guid(GUIDTYPE? value)
         {
-            if (value != null)
+            if (value is null)
             {
-                return value.ToGuid();
+                return default;
             }
 
-            return default(Guid);
+            return value.ToGuid();
         }
 
         /// <summary>
@@ -153,28 +152,28 @@ namespace QbSync.QbXml.Objects
         /// The string can be "0".
         /// </summary>
         /// <param name="value">A GUIDTYPE.</param>
-        public static implicit operator GUIDTYPE(string value)
+        public static implicit operator GUIDTYPE?(string value)
         {
             if (value != null)
             {
                 return new GUIDTYPE(value);
             }
 
-            return default(GUIDTYPE);
+            return default;
         }
 
         /// <summary>
         /// Converts the GUIDTYPE to a string automatically.
         /// </summary>
         /// <param name="value">A GUID or "0").</param>
-        public static implicit operator string(GUIDTYPE value)
+        public static implicit operator string?(GUIDTYPE value)
         {
-            if (value != null)
+            if (value is null)
             {
-                return value.ToString();
+                return default;
             }
 
-            return default(string);
+            return value.ToString();
         }
 
         /// <summary>
@@ -182,16 +181,16 @@ namespace QbSync.QbXml.Objects
         /// </summary>
         /// <param name="other">Another GUIDTYPE.</param>
         /// <returns>True if equals.</returns>
-        public int CompareTo(GUIDTYPE other)
+        public int CompareTo(GUIDTYPE? other)
         {
-            return this._value.CompareTo(other._value);
+            return this._value.CompareTo(other?._value);
         }
 
         /// <summary>
         /// Returns null.
         /// </summary>
         /// <returns>Null.</returns>
-        public System.Xml.Schema.XmlSchema GetSchema()
+        public System.Xml.Schema.XmlSchema? GetSchema()
         {
             return null;
         }

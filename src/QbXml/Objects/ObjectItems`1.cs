@@ -12,8 +12,8 @@ namespace QbSync.QbXml.Objects
         private readonly string[] nameOrder;
         private readonly PropertyInfo itemsProperty;
         private readonly PropertyInfo itemsElementNameProperty;
-        private readonly object[] itemsValue;
-        private readonly U[] itemsElementNameValue;
+        private readonly object[]? itemsValue;
+        private readonly U[]? itemsElementNameValue;
         private List<ObjectItemValue> propertyList;
 
         public ObjectItems(object instance, string name, string[] nameOrder)
@@ -22,8 +22,8 @@ namespace QbSync.QbXml.Objects
             this.nameOrder = nameOrder;
             propertyList = new List<ObjectItemValue>();
 
-            itemsProperty = instance.GetType().GetProperty(name);
-            itemsElementNameProperty = instance.GetType().GetProperty(name + "ElementName");
+            itemsProperty = instance.GetType().GetProperty(name) ?? throw new ArgumentException("The name must match to a property.", nameof(name));
+            itemsElementNameProperty = instance.GetType().GetProperty(name + "ElementName") ?? throw new ArgumentException("The name must match to a property ending with \"ElementName\".", nameof(name));
             itemsValue = itemsProperty.GetValue(instance, null) as object[];
             itemsElementNameValue = itemsElementNameProperty.GetValue(instance, null) as U[];
 
@@ -32,7 +32,7 @@ namespace QbSync.QbXml.Objects
 
         private void Initialize()
         {
-            if (itemsValue != null)
+            if (itemsValue != null && itemsElementNameValue != null)
             {
                 for (var i = 0; i < itemsValue.Length; i++)
                 {
@@ -62,19 +62,19 @@ namespace QbSync.QbXml.Objects
         {
             RemoveItems(name);
 
-            for (var i = 0; i < values.Length; i++)
+            foreach (var value in values)
             {
                 propertyList.Add(new ObjectItemValue
                 {
                     Name = name.ToString(),
-                    Value = values[i]
+                    Value = value
                 });
             }
 
             SetItemsOnInstance();
         }
 
-        public T GetItem<T>(U name)
+        public T? GetItem<T>(U name)
         {
             return GetItems<T>(name).FirstOrDefault();
         }
@@ -91,35 +91,21 @@ namespace QbSync.QbXml.Objects
 
         private void SetItemsOnInstance()
         {
-            if (nameOrder != null)
-            {
-                propertyList = propertyList
-                               .OrderBy(m => Array.FindIndex(nameOrder, n => n == m.Name))
-                               .ToList();
-            }
+            propertyList = propertyList
+                .OrderBy(m => Array.FindIndex(nameOrder, n => n == m.Name))
+                .ToList();
 
-            var itemsValue = propertyList
-                .Select(m => m.Value);
+            var values = propertyList
+                .Select(m => m.Value)
+                .ToArray();
 
-            if (itemsValue.Count() == 0)
-            {
-                itemsValue = null;
-            }
+            itemsProperty.SetValue(instance, values, null);
 
-            itemsProperty.SetValue(instance, itemsValue.ToArray(), null);
+            var names = propertyList
+                .Select(m => (U)Enum.Parse(typeof(U), m.Name!))
+                .ToArray();
 
-            var itemsElementNameValue = propertyList
-                .Select(m => (U)Enum.Parse(typeof(U), m.Name));
-
-            if (itemsElementNameValue.Count() == 0)
-            {
-                itemsElementNameValue = null;
-            }
-
-            if (itemsElementNameValue != null)
-            {
-                itemsElementNameProperty.SetValue(instance, itemsElementNameValue.ToArray(), null);
-            }
+            itemsElementNameProperty.SetValue(instance, names, null);
         }
     }
 }

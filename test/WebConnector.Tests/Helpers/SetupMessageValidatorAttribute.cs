@@ -16,8 +16,7 @@ namespace QbSync.WebConnector.Tests.Helpers
 
         public override void BeforeTest(ITest testDetails)
         {
-            var baseTests = testDetails.Fixture as QbManagerTests;
-            if (baseTests != null)
+            if (testDetails.Fixture is QbManagerTests baseTests)
             {
                 baseTests.messageValidatorMock
                     .Setup(m => m.ValidateMessageAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))

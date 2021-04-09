@@ -336,7 +336,7 @@ If you want to change the step order at runtime, you may implement the following
 ```C#
 public interface IStepQueryResponse
 {
-    Task<string> GotoStepAsync();
+    Task<string?> GotoStepAsync();
     Task<bool> GotoNextStepAsync();
 }
 ```

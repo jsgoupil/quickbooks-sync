@@ -88,6 +88,66 @@ namespace QbSync.WebConnector.Models
     public class WebConnectorQwcModel
     {
         /// <summary>
+        /// Creates the WebConnectorQwcModel.
+        /// To get more information about each parameter, look at each property.
+        /// </summary>
+        /// <param name="appName">The name of the application visible to the user.</param>
+        /// <param name="appURL">The URL of your web service.</param>
+        /// <param name="appDescription">This brief description of the application.</param>
+        /// <param name="appSupport">The URL where your user can go to get support for your application.</param>
+        /// <param name="userName">The name your user must use to access your web service.</param>
+        /// <param name="ownerID">This is a GUID that represents your application or suite of applications.</param>
+        /// <param name="fileID">The Web Connector stores this as an extension to the company record with a specific OwnerID known only to your web service.</param>
+        /// <param name="qbType">Specify the value QBFS if your web service is designed for use with QuickBooks Financial software.</param>
+        /// <param name="appID">The AppID of the application.</param>
+        /// <param name="runEvery">Your end user can specify the update interval in the QB web connector UI. Be aware that the user can override your settings in the UI.</param>
+        /// <param name="appDisplayName">QBWC will use this to display name in the QBWC UI.</param>
+        /// <param name="appUniqueName">If this element is available in QWC file, QBWC will not go into it's typical clone/replace mode for AppName and directly use the replace routine.</param>
+        /// <param name="authFlags">This element is used only for QuickBooks (QBType=QBFS)</param>
+        /// <param name="isReadOnly">Used to inform QBXMLRP2 whether your service is reading data only, or is also writing data to the company</param>
+        /// <param name="notify">Value of true will enable notification (pop up at systray) at app level.</param>
+        /// <param name="personalDataPrep">Used to inform QBXMLRP2 (request processor) whether your service requires access to personal/sensitive data.</param>
+        /// <param name="unattendedModePref">Used to inform QBXMLRP2 (request processor) whether your service needs permissions to run in Unattended Mode supply the value umpRequired if it does, or umpOptional if it does not.</param>
+        public WebConnectorQwcModel(
+            string appName,
+            string appURL,
+            string appDescription,
+            string appSupport,
+            string userName,
+            Guid ownerID,
+            Guid fileID,
+            QBType qbType,
+            string? appID = default,
+            TimeSpan? runEvery = default,
+            string? appDisplayName = default,
+            string? appUniqueName = default,
+            AuthFlag? authFlags = default,
+            bool isReadOnly = default,
+            bool notify = default,
+            PersonalDataPref? personalDataPrep = default,
+            UnattendedModePref? unattendedModePref = default
+        )
+        {
+            AppName = appName;
+            AppURL = appURL;
+            AppDescription = appDescription;
+            AppSupport = appSupport;
+            UserName = userName;
+            OwnerID = ownerID;
+            FileID = fileID;
+            QBType = qbType;
+            AppID = appID;
+            RunEvery = runEvery;
+            AppDisplayName = appDisplayName;
+            AppUniqueName = appUniqueName;
+            AuthFlags = authFlags;
+            IsReadOnly = isReadOnly;
+            Notify = notify;
+            PersonalDataPrep = personalDataPrep;
+            UnattendedModePref = unattendedModePref;
+        }
+
+        /// <summary>
         /// <para>Required.</para>
         /// <para>The name of the application visible to the user. This name is
         /// displayed in the QB web connector. It is also the name supplied in
@@ -98,11 +158,11 @@ namespace QbSync.WebConnector.Models
         /// <summary>
         /// <para>Optional.</para>
         /// <para>The AppID of the application, supplied in the call to OpenConnection.
-        /// Currently QB and QB POS don’t do much with the AppID, so you can
+        /// Currently QB and QB POS don't do much with the AppID, so you can
         /// supply the tag without supplying any value for it. However, you can
         /// supply an AppID value here if you want.</para>
         /// </summary>
-        public string AppID { get; set; }
+        public string? AppID { get; set; }
 
         /// <summary>
         /// <para>Required.</para>
@@ -116,8 +176,8 @@ namespace QbSync.WebConnector.Models
         /// the domain name specified in AppSupport and in AppURL must
         /// match.</para>
         /// <para>To maintain a secure exchange of financial data, your AppURL must
-        /// use the HTTP protocol over SSL(https://...). If you don’t use HTTPS,
-        /// the web connector won’t connect with your web service.</para>
+        /// use the HTTP protocol over SSL(https://...). If you don't use HTTPS,
+        /// the web connector won't connect with your web service.</para>
         /// </summary>
         public string AppURL { get; set; }
 
@@ -196,15 +256,15 @@ namespace QbSync.WebConnector.Models
         /// <see cref="AppName"/> as usual. This is just for UI purpose. Update process
         /// still uses the <see cref="AppName"/> (or, AppUniqueName if provided).</para>
         /// </summary>
-        public string AppDisplayName { get; set; }
+        public string? AppDisplayName { get; set; }
 
         /// <summary>
         /// <para>Optional.</para>
-        /// <para>If this element is available in QWC file, QBWC will not go into it’s
+        /// <para>If this element is available in QWC file, QBWC will not go into it's
         /// typical clone/replace mode for AppName and directly use the replace
         /// routine.</para>
         /// </summary>
-        public string AppUniqueName { get; set; }
+        public string? AppUniqueName { get; set; }
 
         /// <summary>
         /// <para>Optional.</para>
@@ -228,7 +288,7 @@ namespace QbSync.WebConnector.Models
 
         /// <summary>
         /// <para>Optional.</para>
-        /// <para> Value of true will enable notification (pop up at systray) at app level.
+        /// <para>Value of true will enable notification (pop up at systray) at app level.
         /// Anything else will disable notification.</para>
         /// </summary>
         public bool Notify { get; set; }

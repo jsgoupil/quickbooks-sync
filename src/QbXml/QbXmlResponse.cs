@@ -28,12 +28,10 @@ namespace QbSync.QbXml
         public QBXML ParseResponseRaw(string response, XmlDeserializationEvents? events = null)
         {
             var reader = new StringReader(response);
-            if (events.HasValue)
-            {
-                return QbXmlSerializer.Instance.XmlSerializer.Deserialize(XmlReader.Create(reader), events.Value) as QBXML;
-            }
-
-            return QbXmlSerializer.Instance.XmlSerializer.Deserialize(reader) as QBXML;
+            var qbXml = events.HasValue
+                ? QbXmlSerializer.Instance.XmlSerializer.Deserialize(XmlReader.Create(reader), events.Value) as QBXML
+                : QbXmlSerializer.Instance.XmlSerializer.Deserialize(reader) as QBXML;
+            return qbXml ?? throw new System.ArgumentException("We were not able to materialize the QBXML.", nameof(response));
         }
 
         /// <summary>
@@ -43,7 +41,7 @@ namespace QbSync.QbXml
         /// <param name="response">XML.</param>
         /// <param name="events">XmlDeserializationEvents that could be triggered while deserializing.</param>
         /// <returns>Object instance.</returns>
-        public T GetSingleItemFromResponse<T>(string response, XmlDeserializationEvents? events = null)
+        public T? GetSingleItemFromResponse<T>(string response, XmlDeserializationEvents? events = null)
             where T : class
         {
             return GetSingleItemFromResponse(response, typeof(T), events) as T;
@@ -69,7 +67,7 @@ namespace QbSync.QbXml
         /// <param name="type">Object to get.</param>
         /// <param name="events">XmlDeserializationEvents that could be triggered while deserializing.</param>
         /// <returns>Object instance.</returns>
-        public object GetSingleItemFromResponse(string response, System.Type type, XmlDeserializationEvents? events = null)
+        public object? GetSingleItemFromResponse(string response, System.Type type, XmlDeserializationEvents? events = null)
         {
             return GetItemsFromResponse(response, type, events).FirstOrDefault();
         }

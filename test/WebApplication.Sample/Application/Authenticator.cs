@@ -18,7 +18,7 @@ namespace WebApplication.Sample.Application
             this.dbContext = dbContext;
         }
 
-        public async Task<IAuthenticatedTicket> GetAuthenticationFromLoginAsync(string login, string password)
+        public async Task<IAuthenticatedTicket?> GetAuthenticationFromLoginAsync(string login, string password)
         {
             // Log in the user via the database.
             var user = await dbContext.Users
@@ -48,7 +48,7 @@ namespace WebApplication.Sample.Application
             };
         }
 
-        public async Task<IAuthenticatedTicket> GetAuthenticationFromTicketAsync(string ticket)
+        public async Task<IAuthenticatedTicket?> GetAuthenticationFromTicketAsync(string ticket)
         {
             // Fetch the ticket based on the guid.
             var qbTicket = await dbContext.QbTickets
@@ -59,15 +59,14 @@ namespace WebApplication.Sample.Application
 
         public async Task SaveTicketAsync(IAuthenticatedTicket ticket)
         {
-            // Save the ticket to the databse.
+            // Save the ticket to the database.
             // It contains the information about the current step.
             var qbTicket = await dbContext.QbTickets
                 .FirstOrDefaultAsync(m => m.Ticket == ticket.Ticket);
 
             if (qbTicket == null)
             {
-                var ticketAsQbTicket = ticket as QbTicket;
-                if (ticketAsQbTicket != null)
+                if (ticket is QbTicket ticketAsQbTicket)
                 {
                     qbTicket = new QbTicket
                     {
@@ -80,7 +79,11 @@ namespace WebApplication.Sample.Application
                 }
             }
 
-            qbTicket.CurrentStep = ticket.CurrentStep;
+            if (qbTicket != null)
+            {
+                qbTicket.CurrentStep = ticket.CurrentStep;
+            }
+
             await dbContext.SaveChangesAsync();
         }
     }

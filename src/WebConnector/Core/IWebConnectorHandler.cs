@@ -14,7 +14,7 @@ namespace QbSync.WebConnector.Core
         /// <param name="authenticatedTicket">The ticket.</param>
         /// <param name="response">XML data.</param>
         /// <returns>Completed Task.</returns>
-        Task ProcessClientInformationAsync(IAuthenticatedTicket authenticatedTicket, string response);
+        Task ProcessClientInformationAsync(IAuthenticatedTicket? authenticatedTicket, string response);
 
         /// <summary>
         /// Called when any types of exception occur on the server.
@@ -22,7 +22,7 @@ namespace QbSync.WebConnector.Core
         /// <param name="authenticatedTicket">The ticket.</param>
         /// <param name="exception">The exception.</param>
         /// <returns>Completed Task.</returns>
-        Task OnExceptionAsync(IAuthenticatedTicket authenticatedTicket, Exception exception);
+        Task OnExceptionAsync(IAuthenticatedTicket? authenticatedTicket, Exception exception);
 
         /// <summary>
         /// Tells the Web Connector to come back later after X seconds.
@@ -44,6 +44,6 @@ namespace QbSync.WebConnector.Core
         /// </summary>
         /// <param name="authenticatedTicket">The ticket.</param>
         /// <returns>Completed Task.</returns>
-        Task CloseConnectionAsync(IAuthenticatedTicket authenticatedTicket);
+        Task CloseConnectionAsync(IAuthenticatedTicket? authenticatedTicket);
     }
 }

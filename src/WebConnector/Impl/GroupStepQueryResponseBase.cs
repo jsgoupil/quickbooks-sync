@@ -55,9 +55,9 @@ namespace QbSync.WebConnector.Impl
         /// If you return a non null step, we will go to that step.
         /// </summary>
         /// <returns>Step name to go to. Null to continue.</returns>
-        public virtual Task<string> GotoStepAsync()
+        public virtual Task<string?> GotoStepAsync()
         {
-            return Task.FromResult<string>((string)null);
+            return Task.FromResult<string?>(null);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace QbSync.WebConnector.Impl
         /// <returns>Task.</returns>
         protected internal virtual Task ExecuteResponseAsync(IAuthenticatedTicket authenticatedTicket, IEnumerable<IQbResponse> responses)
         {
-            return Task.FromResult<object>(null);
+            return Task.FromResult<object?>(null);
         }
     }
 }

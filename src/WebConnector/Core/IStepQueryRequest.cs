@@ -19,6 +19,6 @@ namespace QbSync.WebConnector.Core
         /// </summary>
         /// <param name="authenticatedTicket">The authenticated ticket.</param>
         /// <returns>QbXml or null to execute the next step.</returns>
-        Task<string> SendXMLAsync(IAuthenticatedTicket authenticatedTicket);
+        Task<string?> SendXMLAsync(IAuthenticatedTicket authenticatedTicket);
     }
 }

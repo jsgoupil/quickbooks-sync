@@ -39,8 +39,10 @@ namespace QbSync.WebConnector.Impl
 
             if (!string.IsNullOrEmpty(response))
             {
-                var msgResponseObject = responseObject.GetSingleItemFromResponse(response, typeof(QbResponse)) as QbResponse;
-                await ExecuteResponseAsync(authenticatedTicket, msgResponseObject);
+                if (responseObject.GetSingleItemFromResponse(response, typeof(QbResponse)) is QbResponse msgResponseObject)
+                {
+                    await ExecuteResponseAsync(authenticatedTicket, msgResponseObject);
+                }
 
                 return 0;
             }
@@ -53,9 +55,9 @@ namespace QbSync.WebConnector.Impl
         /// If you return a non null step, we will go to that step.
         /// </summary>
         /// <returns>Step name to go to. Null to continue.</returns>
-        public virtual Task<string> GotoStepAsync()
+        public virtual Task<string?> GotoStepAsync()
         {
-            return Task.FromResult<string>((string)null);
+            return Task.FromResult<string?>(null);
         }
 
         /// <summary>
@@ -66,7 +68,7 @@ namespace QbSync.WebConnector.Impl
         /// <returns>False stays on the current step. True goes to the next step.</returns>
         public virtual Task<bool> GotoNextStepAsync()
         {
-            return Task.FromResult<bool>(true);
+            return Task.FromResult(true);
         }
 
         /// <summary>
@@ -88,7 +90,7 @@ namespace QbSync.WebConnector.Impl
         /// <returns>Task.</returns>
         protected virtual Task ExecuteResponseAsync(IAuthenticatedTicket authenticatedTicket, QbResponse response)
         {
-            return Task.FromResult<object>(null);
+            return Task.FromResult<object?>(null);
         }
     }
 }

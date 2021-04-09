@@ -23,8 +23,10 @@ namespace QbSync.WebConnector.Tests.Impl
                 CurrentStep = "step4"
             };
 
-            var groupStepQueryRequestMock = new Mock<GroupStepQueryRequestBase>();
-            groupStepQueryRequestMock.CallBase = true;
+            var groupStepQueryRequestMock = new Mock<GroupStepQueryRequestBase>
+            {
+                CallBase = true
+            };
 
             var xml = await groupStepQueryRequestMock.Object.SendXMLAsync(authenticatedTicket);
             Assert.IsNull(xml);

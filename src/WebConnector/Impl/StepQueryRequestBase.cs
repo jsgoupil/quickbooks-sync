@@ -31,7 +31,7 @@ namespace QbSync.WebConnector.Impl
         /// </summary>
         /// <param name="authenticatedTicket">The authenticated ticket.</param>
         /// <returns>QbXml or null to execute the next step.</returns>
-        public virtual async Task<string> SendXMLAsync(IAuthenticatedTicket authenticatedTicket)
+        public virtual async Task<string?> SendXMLAsync(IAuthenticatedTicket authenticatedTicket)
         {
             var requestObject = await CreateRequestAsync(authenticatedTicket);
             if (requestObject != null)
@@ -53,9 +53,9 @@ namespace QbSync.WebConnector.Impl
         /// </summary>
         /// <param name="authenticatedTicket">The ticket.</param>
         /// <returns>The QbRequest.</returns>
-        protected virtual Task<QbRequest> CreateRequestAsync(IAuthenticatedTicket authenticatedTicket)
+        protected virtual Task<QbRequest?> CreateRequestAsync(IAuthenticatedTicket authenticatedTicket)
         {
-            return Task.FromResult(new QbRequest());
+            return Task.FromResult<QbRequest?>(new QbRequest());
         }
 
         /// <summary>

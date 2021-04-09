@@ -60,6 +60,6 @@ namespace QbSync.WebConnector.Impl
         /// <param name="ticket">The ticket.</param>
         /// <param name="key">The key.</param>
         /// <returns>Previously saved message.</returns>
-        protected abstract Task<string> RetrieveMessageAsync(IAuthenticatedTicket ticket, string key);
+        protected abstract Task<string?> RetrieveMessageAsync(IAuthenticatedTicket ticket, string key);
     }
 }

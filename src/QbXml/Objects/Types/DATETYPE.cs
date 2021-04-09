@@ -39,7 +39,7 @@ namespace QbSync.QbXml.Objects
         /// <summary>
         /// Gets the original raw string value parsed from QuickBooks. Will be null if not deserialized from XML.
         /// </summary>
-        public string QuickBooksRawString { get; private set; }
+        public string? QuickBooksRawString { get; private set; }
 
         /// <summary>
         /// Gets the number of ticks for the date.
@@ -84,10 +84,9 @@ namespace QbSync.QbXml.Objects
         /// </summary>
         /// <param name="obj">A DATETYPE.</param>
         /// <returns>True on equality.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            var objType = obj as DATETYPE;
-            if (objType != null)
+            if (obj is DATETYPE objType)
             {
                 return _value == objType._value;
             }
@@ -110,16 +109,16 @@ namespace QbSync.QbXml.Objects
         /// <param name="a">Operand 1.</param>
         /// <param name="b">Operand 2.</param>
         /// <returns>True on equality.</returns>
-        public static bool operator ==(DATETYPE a, DATETYPE b)
+        public static bool operator ==(DATETYPE? a, DATETYPE? b)
         {
             // If both are null, or both are same instance, return true.
-            if (System.Object.ReferenceEquals(a, b))
+            if (ReferenceEquals(a, b))
             {
                 return true;
             }
 
             // If one is null, but not both, return false.
-            if ((a is null) ^ (b is null))
+            if ((a is null) || (b is null))
             {
                 return false;
             }
@@ -133,7 +132,7 @@ namespace QbSync.QbXml.Objects
         /// <param name="a">Operand 1.</param>
         /// <param name="b">Operand 2.</param>
         /// <returns>True on equality.</returns>
-        public static bool operator !=(DATETYPE a, DATETYPE b)
+        public static bool operator !=(DATETYPE? a, DATETYPE? b)
         {
             return !(a == b);
         }
@@ -151,14 +150,14 @@ namespace QbSync.QbXml.Objects
         /// Converts a DATETYPE to DateTime automatically.
         /// </summary>
         /// <param name="value">A DateTime.</param>
-        public static implicit operator DateTime(DATETYPE value)
+        public static implicit operator DateTime(DATETYPE? value)
         {
             if (value != null)
             {
                 return value.ToDateTime();
             }
 
-            return default(DateTime);
+            return default;
         }
 
         /// <summary>
@@ -166,16 +165,16 @@ namespace QbSync.QbXml.Objects
         /// </summary>
         /// <param name="other">Another DATETYPE.</param>
         /// <returns>True if equals.</returns>
-        public int CompareTo(DATETYPE other)
+        public int CompareTo(DATETYPE? other)
         {
-            return this._value.CompareTo(other._value);
+            return this._value.CompareTo(other?._value);
         }
 
         /// <summary>
         /// Returns null.
         /// </summary>
         /// <returns>Null.</returns>
-        public System.Xml.Schema.XmlSchema GetSchema()
+        public System.Xml.Schema.XmlSchema? GetSchema()
         {
             return null;
         }

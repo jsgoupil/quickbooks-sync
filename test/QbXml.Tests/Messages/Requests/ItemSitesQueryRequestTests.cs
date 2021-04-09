@@ -14,12 +14,14 @@ namespace QbSync.QbXml.Tests.QbXml
         public void BasicItemSitesQueryRequestTests()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new ItemSitesQueryRqType();
-            innerRequest.ItemSiteFilter = new ItemSiteFilter
+            var innerRequest = new ItemSitesQueryRqType
             {
-                ItemFilter = new ItemFilter
+                ItemSiteFilter = new ItemSiteFilter
                 {
-                    FullName = new List<string> { "NameHere" }
+                    ItemFilter = new ItemFilter
+                    {
+                        FullName = new List<string> { "NameHere" }
+                    }
                 }
             };
 

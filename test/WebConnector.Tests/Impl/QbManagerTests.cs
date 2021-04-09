@@ -147,7 +147,7 @@ namespace QbSync.WebConnector.Tests.Impl
         public void QbManager_ClientVersionWithSpecifiedVersion()
         {
             var specifiedVersion = new Version(1, 1, 1, 1);
-            var serviceMock = GetServiceMock(); new Mock<QbManager>(null);
+            var serviceMock = GetServiceMock();
             serviceMock
                 .Protected()
                 .Setup<Version>("GetMinimumRequiredVersion")

@@ -12,10 +12,12 @@ namespace QbSync.QbXml.Tests.QbXml
         public void BasicCustomerAddRequestTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new CustomerAddRqType();
-            innerRequest.CustomerAdd = new CustomerAdd
+            var innerRequest = new CustomerAddRqType
             {
-                Name = "Some Name"
+                CustomerAdd = new CustomerAdd
+                {
+                    Name = "Some Name"
+                }
             };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
@@ -32,10 +34,12 @@ namespace QbSync.QbXml.Tests.QbXml
         public void BasicCustomerAddRequest_TooLong_Test()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new CustomerAddRqType();
-            innerRequest.CustomerAdd = new CustomerAdd
+            var innerRequest = new CustomerAddRqType
             {
-                Name = "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ" // 52 characters > 41
+                CustomerAdd = new CustomerAdd
+                {
+                    Name = "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ" // 52 characters > 41
+                }
             };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
@@ -53,11 +57,13 @@ namespace QbSync.QbXml.Tests.QbXml
         public void UTF8CharactersMustBeEncoded()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new CustomerAddRqType();
-            innerRequest.CustomerAdd = new CustomerAdd
+            var innerRequest = new CustomerAddRqType
             {
-                Name = "Name",
-                Notes = "Note—1é"
+                CustomerAdd = new CustomerAdd
+                {
+                    Name = "Name",
+                    Notes = "Note—1é"
+                }
             };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
@@ -73,11 +79,13 @@ namespace QbSync.QbXml.Tests.QbXml
         public void SpecialCharactersMustBeEncoded()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new CustomerAddRqType();
-            innerRequest.CustomerAdd = new CustomerAdd
+            var innerRequest = new CustomerAddRqType
             {
-                Name = "Name",
-                Notes = "<>'\"&é—"
+                CustomerAdd = new CustomerAdd
+                {
+                    Name = "Name",
+                    Notes = "<>'\"&é—"
+                }
             };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
@@ -93,18 +101,20 @@ namespace QbSync.QbXml.Tests.QbXml
         public void LForCRCountsAsTwoCharacters()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new CustomerAddRqType();
-            innerRequest.CustomerAdd = new CustomerAdd
+            var innerRequest = new CustomerAddRqType
             {
-                Name = "Name",
-                BillAddress = new BillAddress
+                CustomerAdd = new CustomerAdd
                 {
-                    Addr1 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ\nABCDEFGHIJKLMNOPQRSTUVWXYZ",
-                    //                                                ^ is the 41st character but M should be the last character
-                    Addr2 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ\rABCDEFGHIJKLMNOPQRSTUVWXYZ",
-                    //                                                ^ is the 41st character but M should be the last character
-                    Addr3 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ\r\nABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                    //                                                 ^ is the 41st
+                    Name = "Name",
+                    BillAddress = new BillAddress
+                    {
+                        Addr1 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ\nABCDEFGHIJKLMNOPQRSTUVWXYZ",
+                        //                                                ^ is the 41st character but M should be the last character
+                        Addr2 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ\rABCDEFGHIJKLMNOPQRSTUVWXYZ",
+                        //                                                ^ is the 41st character but M should be the last character
+                        Addr3 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ\r\nABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                        //                                                 ^ is the 41st
+                    }
                 }
             };
             request.AddToSingle(innerRequest);

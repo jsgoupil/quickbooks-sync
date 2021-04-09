@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace QbSync.QbXml.Objects
@@ -7,7 +9,7 @@ namespace QbSync.QbXml.Objects
     {
         private readonly object instance;
         private readonly PropertyInfo itemProperty;
-        private readonly object itemValue;
+        private readonly object? itemValue;
         private readonly Dictionary<System.Type, string> typeMapping;
         private ObjectItemValue property;
 
@@ -16,7 +18,7 @@ namespace QbSync.QbXml.Objects
             this.instance = instance;
             this.typeMapping = typeMapping;
             property = new ObjectItemValue();
-            itemProperty = instance.GetType().GetProperty(name);
+            itemProperty = instance.GetType().GetProperty(name) ?? throw new ArgumentException("The name must match to a property.", nameof(name));
             itemValue = itemProperty.GetValue(instance, null) as object;
 
             Initialize();
@@ -51,14 +53,15 @@ namespace QbSync.QbXml.Objects
             SetItemOnInstance();
         }
 
+        [return: MaybeNull]
         public T GetItem<T>(string name)
         {
-            if (property.Name == name)
+            if (property.Name == name && property.Value != null)
             {
                 return (T)property.Value;
             }
 
-            return default(T);
+            return default;
         }
 
         private void SetItemOnInstance()

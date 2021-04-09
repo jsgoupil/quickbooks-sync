@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace QbSync.QbXml.Objects
@@ -9,18 +10,18 @@ namespace QbSync.QbXml.Objects
         private readonly object instance;
         private readonly PropertyInfo itemProperty;
         private readonly PropertyInfo itemElementNameProperty;
-        private readonly object itemValue;
-        private readonly U itemElementNameValue;
+        private readonly object? itemValue;
+        private readonly U? itemElementNameValue;
         private ObjectItemValue property;
 
         public ObjectItem(object instance, string name)
         {
             this.instance = instance;
             property = new ObjectItemValue();
-            itemProperty = instance.GetType().GetProperty(name);
-            itemElementNameProperty = instance.GetType().GetProperty(name + "ElementName");
+            itemProperty = instance.GetType().GetProperty(name) ?? throw new ArgumentException("The name must match to a property.", nameof(name));
+            itemElementNameProperty = instance.GetType().GetProperty(name + "ElementName") ?? throw new ArgumentException("The name must match to a property ending with \"ElementName\".", nameof(name));
             itemValue = itemProperty.GetValue(instance, null) as object;
-            itemElementNameValue = (U)itemElementNameProperty.GetValue(instance, null);
+            itemElementNameValue = (U?)itemElementNameProperty.GetValue(instance, null);
 
             Initialize();
         }
@@ -42,14 +43,15 @@ namespace QbSync.QbXml.Objects
             SetItemOnInstance();
         }
 
+        [return: MaybeNull]
         public T GetItem<T>(U name)
         {
             if (property.Name == name.ToString())
             {
-                return (T)property.Value;
+                return (T?)property.Value;
             }
 
-            return default(T);
+            return default;
         }
 
         private void SetItemOnInstance()

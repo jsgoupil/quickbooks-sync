@@ -8,6 +8,6 @@
         /// <summary>
         /// Path where the WebConnector should connect.
         /// </summary>
-        public string SoapPath { get; set; }
+        public string? SoapPath { get; set; }
     }
 }

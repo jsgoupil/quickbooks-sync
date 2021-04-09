@@ -24,7 +24,7 @@ namespace QbSync.WebConnector.AspNetCore
         internal readonly ILogger<QbManager> logger;
 
         /// <summary>
-        /// Creates a QbManager. The main program which handles all the WebConnector interations.
+        /// Creates a QbManager. The main program which handles all the WebConnector interactions.
         /// </summary>
         /// <param name="authenticator">An authenticator.</param>
         /// <param name="messageValidator">A message validator.</param>
@@ -56,7 +56,7 @@ namespace QbSync.WebConnector.AspNetCore
         /// <param name="strUserName">Login.</param>
         /// <param name="strPassword">Password.</param>
         /// <returns>Array of 4 strings. 0: ticket; 1: nvu if invalid user, or empty string if valid; 2: time to wait in seconds before coming back; 3: not used</returns>
-        public virtual async Task<string[]> AuthenticateAsync(string strUserName, string strPassword)
+        public virtual async Task<string[]?> AuthenticateAsync(string strUserName, string strPassword)
         {
             try
             {
@@ -104,7 +104,7 @@ namespace QbSync.WebConnector.AspNetCore
         /// <returns>Server version.</returns>
         public virtual string ServerVersion()
         {
-            return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            return Assembly.GetExecutingAssembly()!.GetName().Version!.ToString();
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace QbSync.WebConnector.AspNetCore
         /// <param name="qbXMLMajorVers">QbXml Major Version.</param>
         /// <param name="qbXMLMinorVers">QbXml Minor Version.</param>
         /// <returns>XML command.</returns>
-        public virtual async Task<string> SendRequestXMLAsync(string ticket, string strHCPResponse, string strCompanyFileName, string qbXMLCountry, int qbXMLMajorVers, int qbXMLMinorVers)
+        public virtual async Task<string?> SendRequestXMLAsync(string ticket, string strHCPResponse, string strCompanyFileName, string qbXMLCountry, int qbXMLMajorVers, int qbXMLMinorVers)
         {
             try
             {
@@ -160,7 +160,7 @@ namespace QbSync.WebConnector.AspNetCore
                         }
                         else
                         {
-                            IStepQueryRequest stepQueryRequest = null;
+                            IStepQueryRequest? stepQueryRequest = null;
                             while ((stepQueryRequest = FindStepRequest(authenticatedTicket.CurrentStep)) != null)
                             {
                                 if (string.IsNullOrEmpty(authenticatedTicket.CurrentStep))
@@ -214,7 +214,7 @@ namespace QbSync.WebConnector.AspNetCore
         }
 
         /// <summary>
-        /// Response from the Web Connector based on the previous comamnd sent.
+        /// Response from the Web Connector based on the previous command sent.
         /// </summary>
         /// <param name="ticket">The ticket.</param>
         /// <param name="response">The XML response.</param>
@@ -287,7 +287,7 @@ namespace QbSync.WebConnector.AspNetCore
         /// </summary>
         /// <param name="ticket">The ticket.</param>
         /// <returns>Tell the Web Connector what is the error.</returns>
-        public virtual async Task<string> GetLastErrorAsync(string ticket)
+        public virtual async Task<string?> GetLastErrorAsync(string ticket)
         {
             try
             {
@@ -341,13 +341,13 @@ namespace QbSync.WebConnector.AspNetCore
         }
 
         /// <summary>
-        /// An error happened with the Web Conenctor.
+        /// An error happened with the Web Connector.
         /// </summary>
         /// <param name="ticket">The ticket.</param>
         /// <param name="hresult">Code in case of an error.</param>
         /// <param name="message">Human message in case of an error.</param>
         /// <returns>Tell the Web Connector what is the error.</returns>
-        public virtual async Task<string> ConnectionErrorAsync(string ticket, string hresult, string message)
+        public virtual async Task<string?> ConnectionErrorAsync(string ticket, string hresult, string message)
         {
             try
             {
@@ -389,11 +389,11 @@ namespace QbSync.WebConnector.AspNetCore
         }
 
         /// <summary>
-        /// Closing the conneciton.
+        /// Closing the connection.
         /// </summary>
         /// <param name="ticket">The ticket</param>
         /// <returns>String to display to the user.</returns>
-        public virtual async Task<string> CloseConnectionAsync(string ticket)
+        public virtual async Task<string?> CloseConnectionAsync(string ticket)
         {
             try
             {
@@ -444,7 +444,7 @@ namespace QbSync.WebConnector.AspNetCore
         /// </summary>
         /// <param name="ticket">The ticket if found. It might be null if no ticket has been provided or if the code failed when trying to create the authenticated ticket.</param>
         /// <param name="exception">Exception.</param>
-        protected internal virtual Task OnExceptionAsync(IAuthenticatedTicket ticket, Exception exception)
+        protected internal virtual Task OnExceptionAsync(IAuthenticatedTicket? ticket, Exception exception)
         {
             return webConnectorHandler.OnExceptionAsync(ticket, exception);
         }
@@ -457,7 +457,7 @@ namespace QbSync.WebConnector.AspNetCore
         /// <param name="direction">Direction of the message (In the WebService, or Out the WebService).</param>
         /// <param name="ticket">The ticket.</param>
         /// <param name="arguments">Other arguments to save.</param>
-        protected internal virtual void LogMessage(IAuthenticatedTicket authenticatedTicket, LogMessageType messageType, LogDirection direction, string ticket, params string[] arguments)
+        protected internal virtual void LogMessage(IAuthenticatedTicket? authenticatedTicket, LogMessageType messageType, LogDirection direction, string ticket, params string[] arguments)
         {
             logger.LogTrace("Ticket: {TICKET}; Type: {TYPE}; Direction: {DIRECTION}; Arguments: {Arguments}", ticket, messageType, direction, arguments);
         }
@@ -465,9 +465,12 @@ namespace QbSync.WebConnector.AspNetCore
         /// <summary>
         /// Implement this function in order to save the states to your database.
         /// </summary>
-        protected internal virtual Task SaveChangesAsync(IAuthenticatedTicket authenticatedTicket)
+        protected internal virtual async Task SaveChangesAsync(IAuthenticatedTicket? authenticatedTicket)
         {
-            return authenticator.SaveTicketAsync(authenticatedTicket);
+            if (authenticatedTicket != null)
+            {
+                await authenticator.SaveTicketAsync(authenticatedTicket);
+            }
         }
 
         /// <summary>
@@ -475,7 +478,7 @@ namespace QbSync.WebConnector.AspNetCore
         /// </summary>
         /// <param name="authenticatedTicket">The ticket.</param>
         /// <param name="response">First Message.</param>
-        protected virtual Task ProcessClientInformationAsync(IAuthenticatedTicket authenticatedTicket, string response)
+        protected virtual Task ProcessClientInformationAsync(IAuthenticatedTicket? authenticatedTicket, string response)
         {
             return webConnectorHandler.ProcessClientInformationAsync(authenticatedTicket, response);
         }
@@ -549,7 +552,7 @@ namespace QbSync.WebConnector.AspNetCore
         /// </summary>
         /// <param name="step">Step name.</param>
         /// <returns>A IStepQueryRequest.</returns>
-        protected internal IStepQueryRequest FindStepRequest(string step)
+        protected internal IStepQueryRequest? FindStepRequest(string step)
         {
             if (string.IsNullOrEmpty(step))
             {
@@ -564,7 +567,7 @@ namespace QbSync.WebConnector.AspNetCore
         /// </summary>
         /// <param name="step">Step name.</param>
         /// <returns>A IStepQueryResponse.</returns>
-        protected internal IStepQueryResponse FindStepResponse(string step)
+        protected internal IStepQueryResponse? FindStepResponse(string step)
         {
             if (string.IsNullOrEmpty(step))
             {
@@ -582,24 +585,22 @@ namespace QbSync.WebConnector.AspNetCore
         protected internal string FindNextStepName(string step)
         {
             var hasStep = false;
-            using (var enumerator = stepRequest.GetEnumerator())
+            using var enumerator = stepRequest.GetEnumerator();
+            while (enumerator.MoveNext())
             {
-                while (enumerator.MoveNext())
+                if (string.IsNullOrEmpty(step) || enumerator.Current.Name == step)
                 {
-                    if (string.IsNullOrEmpty(step) || enumerator.Current.Name == step)
-                    {
-                        hasStep = enumerator.MoveNext();
-                        break;
-                    }
+                    hasStep = enumerator.MoveNext();
+                    break;
                 }
-
-                if (hasStep)
-                {
-                    return enumerator.Current.Name;
-                }
-
-                return FINISHED_STEP;
             }
+
+            if (hasStep)
+            {
+                return enumerator.Current.Name;
+            }
+
+            return FINISHED_STEP;
         }
     }
 }

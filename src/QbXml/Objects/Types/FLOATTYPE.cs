@@ -59,10 +59,9 @@ namespace QbSync.QbXml.Objects
         /// </summary>
         /// <param name="obj">A FLOATTYPE.</param>
         /// <returns>True on equality.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            var objType = obj as FLOATTYPE;
-            if (objType != null)
+            if (obj is FLOATTYPE objType)
             {
                 return _value == objType._value;
             }
@@ -85,16 +84,16 @@ namespace QbSync.QbXml.Objects
         /// <param name="a">Operand 1.</param>
         /// <param name="b">Operand 2.</param>
         /// <returns>True on equality.</returns>
-        public static bool operator ==(FLOATTYPE a, FLOATTYPE b)
+        public static bool operator ==(FLOATTYPE? a, FLOATTYPE? b)
         {
             // If both are null, or both are same instance, return true.
-            if (System.Object.ReferenceEquals(a, b))
+            if (ReferenceEquals(a, b))
             {
                 return true;
             }
 
             // If one is null, but not both, return false.
-            if ((a is null) ^ (b is null))
+            if ((a is null) || (b is null))
             {
                 return false;
             }
@@ -108,7 +107,7 @@ namespace QbSync.QbXml.Objects
         /// <param name="a">Operand 1.</param>
         /// <param name="b">Operand 2.</param>
         /// <returns>True on equality.</returns>
-        public static bool operator !=(FLOATTYPE a, FLOATTYPE b)
+        public static bool operator !=(FLOATTYPE? a, FLOATTYPE? b)
         {
             return !(a == b);
         }
@@ -126,14 +125,14 @@ namespace QbSync.QbXml.Objects
         /// Converts a FLOATTYPE to decimal automatically.
         /// </summary>
         /// <param name="value">A decimal.</param>
-        public static implicit operator decimal(FLOATTYPE value)
+        public static implicit operator decimal(FLOATTYPE? value)
         {
             if (value != null)
             {
                 return value.ToDecimal();
             }
 
-            return default(decimal);
+            return default;
         }
 
         /// <summary>
@@ -141,16 +140,16 @@ namespace QbSync.QbXml.Objects
         /// </summary>
         /// <param name="other">Another FLOATTYPE.</param>
         /// <returns>True if equals.</returns>
-        public int CompareTo(FLOATTYPE other)
+        public int CompareTo(FLOATTYPE? other)
         {
-            return this._value.CompareTo(other._value);
+            return this._value.CompareTo(other?._value);
         }
 
         /// <summary>
         /// Returns null.
         /// </summary>
         /// <returns>Null.</returns>
-        public System.Xml.Schema.XmlSchema GetSchema()
+        public System.Xml.Schema.XmlSchema? GetSchema()
         {
             return null;
         }

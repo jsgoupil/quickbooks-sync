@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using QbSync.QbXml.Extensions;
 using QbSync.QbXml.Objects;
 using QbSync.QbXml.Tests.Helpers;
 using System;
@@ -14,9 +13,11 @@ namespace QbSync.QbXml.Tests.QbXml
         public void BasicDataExtDefDelRequestTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new DataExtDefDelRqType();
-            innerRequest.OwnerID = Guid.NewGuid();
-            innerRequest.DataExtName = "name";
+            var innerRequest = new DataExtDefDelRqType
+            {
+                OwnerID = Guid.NewGuid(),
+                DataExtName = "name"
+            };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
 

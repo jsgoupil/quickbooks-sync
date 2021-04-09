@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using QbSync.QbXml.Extensions;
 using QbSync.QbXml.Objects;
 using QbSync.QbXml.Tests.Helpers;
 using System;
@@ -14,13 +13,15 @@ namespace QbSync.QbXml.Tests.QbXml
         public void BasicDataExtAddRequestTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new DataExtAddRqType();
-            innerRequest.DataExtAdd = new DataExtAdd
+            var innerRequest = new DataExtAddRqType
             {
-                OwnerID = new GUIDTYPE(Guid.NewGuid()),
-                DataExtName = "name",
-                DataExtValue = "value",
-                OtherDataExtType = OtherDataExtType.Company
+                DataExtAdd = new DataExtAdd
+                {
+                    OwnerID = new GUIDTYPE(Guid.NewGuid()),
+                    DataExtName = "name",
+                    DataExtValue = "value",
+                    OtherDataExtType = OtherDataExtType.Company
+                }
             };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
@@ -42,17 +43,19 @@ namespace QbSync.QbXml.Tests.QbXml
         public void ListDataExtAddRequestTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new DataExtAddRqType();
-            innerRequest.DataExtAdd = new DataExtAdd
+            var innerRequest = new DataExtAddRqType
             {
-                OwnerID = Guid.NewGuid().ToString(),
-                DataExtName = "name",
-                DataExtValue = "value",
-                ListDataExtType = ListDataExtType.Customer,
-                ListObjRef = new ListObjRef
+                DataExtAdd = new DataExtAdd
                 {
-                    FullName = "test",
-                    ListID = "12345"
+                    OwnerID = Guid.NewGuid().ToString(),
+                    DataExtName = "name",
+                    DataExtValue = "value",
+                    ListDataExtType = ListDataExtType.Customer,
+                    ListObjRef = new ListObjRef
+                    {
+                        FullName = "test",
+                        ListID = "12345"
+                    }
                 }
             };
             request.AddToSingle(innerRequest);
@@ -79,18 +82,20 @@ namespace QbSync.QbXml.Tests.QbXml
         public void TxnDataExtAddRequestTest()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new DataExtAddRqType();
-            innerRequest.DataExtAdd = new DataExtAdd
+            var innerRequest = new DataExtAddRqType
             {
-                OwnerID = Guid.NewGuid().ToString(),
-                DataExtName = "name",
-                DataExtValue = "value",
-                TxnDataExtType = TxnDataExtType.Charge,
-                TxnID = new DataExtAddTxnID
+                DataExtAdd = new DataExtAdd
                 {
-                    Value = "123"
-                },
-                TxnLineID = "345"
+                    OwnerID = Guid.NewGuid().ToString(),
+                    DataExtName = "name",
+                    DataExtValue = "value",
+                    TxnDataExtType = TxnDataExtType.Charge,
+                    TxnID = new DataExtAddTxnID
+                    {
+                        Value = "123"
+                    },
+                    TxnLineID = "345"
+                }
             };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
@@ -114,18 +119,20 @@ namespace QbSync.QbXml.Tests.QbXml
         public void ListDataExtAddRequestValidAfterReorder()
         {
             var request = new QbXmlRequest();
-            var innerRequest = new DataExtAddRqType();
-            innerRequest.DataExtAdd = new DataExtAdd
+            var innerRequest = new DataExtAddRqType
             {
-                OwnerID = Guid.NewGuid().ToString(),
-                DataExtName = "name",
-                DataExtValue = "value",
-                ListObjRef = new ListObjRef
+                DataExtAdd = new DataExtAdd
                 {
-                    FullName = "test",
-                    ListID = "12345"
-                },
-                ListDataExtType = ListDataExtType.Customer
+                    OwnerID = Guid.NewGuid().ToString(),
+                    DataExtName = "name",
+                    DataExtValue = "value",
+                    ListObjRef = new ListObjRef
+                    {
+                        FullName = "test",
+                        ListID = "12345"
+                    },
+                    ListDataExtType = ListDataExtType.Customer
+                }
             };
             request.AddToSingle(innerRequest);
             var xml = request.GetRequest();
