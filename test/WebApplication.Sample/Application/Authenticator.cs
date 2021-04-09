@@ -75,7 +75,7 @@ namespace WebApplication.Sample.Application
                         User = ticketAsQbTicket.User,
                         UserId = ticketAsQbTicket.UserId
                     };
-                    await dbContext.QbTickets.AddAsync(qbTicket);
+                    dbContext.QbTickets.Add(qbTicket);
                 }
             }
 
