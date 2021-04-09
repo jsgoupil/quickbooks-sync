@@ -14,7 +14,7 @@ namespace QbSync.WebConnector.Core
         /// <param name="authenticatedTicket">The ticket.</param>
         /// <param name="response">XML data.</param>
         /// <returns>Completed Task.</returns>
-        Task ProcessClientInformationAsync(IAuthenticatedTicket authenticatedTicket, string response);
+        Task ProcessClientInformationAsync(IAuthenticatedTicket? authenticatedTicket, string response);
 
         /// <summary>
         /// Called when any types of exception occur on the server.

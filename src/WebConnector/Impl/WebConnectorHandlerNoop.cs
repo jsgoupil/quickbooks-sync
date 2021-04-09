@@ -57,7 +57,7 @@ namespace QbSync.WebConnector.Impl
         /// <param name="authenticatedTicket">The ticket.</param>
         /// <param name="response">XML data.</param>
         /// <returns>Completed Task.</returns>
-        public virtual Task ProcessClientInformationAsync(IAuthenticatedTicket authenticatedTicket, string response)
+        public virtual Task ProcessClientInformationAsync(IAuthenticatedTicket? authenticatedTicket, string response)
         {
             return Task.CompletedTask;
         }

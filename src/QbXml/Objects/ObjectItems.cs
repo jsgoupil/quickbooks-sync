@@ -31,15 +31,15 @@ namespace QbSync.QbXml.Objects
         {
             if (itemsValue != null)
             {
-                for (var i = 0; i < itemsValue.Length; i++)
+                foreach (var value in itemsValue)
                 {
-                    var name = GetMappingName(itemsValue[i].GetType());
+                    var name = GetMappingName(value.GetType());
                     if (name != null)
                     {
                         propertyList.Add(new ObjectItemValue
                         {
                             Name = name,
-                            Value = itemsValue[i]
+                            Value = value
                         });
                     }
                 }
@@ -76,19 +76,19 @@ namespace QbSync.QbXml.Objects
         {
             RemoveItems(name);
 
-            for (var i = 0; i < values.Length; i++)
+            foreach (var value in values)
             {
                 propertyList.Add(new ObjectItemValue
                 {
                     Name = name,
-                    Value = values[i]
+                    Value = value
                 });
             }
 
             SetItemsOnInstance();
         }
 
-        public T GetItem<T>(string name)
+        public T? GetItem<T>(string name)
         {
             return GetItems<T>(name).FirstOrDefault();
         }
@@ -105,25 +105,15 @@ namespace QbSync.QbXml.Objects
 
         private void SetItemsOnInstance()
         {
-            if (nameOrder != null)
-            {
-                propertyList = propertyList
-                               .OrderBy(m => Array.FindIndex(nameOrder, n => n == m.Name))
-                               .ToList();
-            }
+            propertyList = propertyList
+                .OrderBy(m => Array.FindIndex(nameOrder, n => n == m.Name))
+                .ToList();
 
-            var itemsValue = propertyList
-                .Select(m => m.Value);
+            var values = propertyList
+                .Select(m => m.Value)
+                .ToArray();
 
-            if (itemsValue.Count() == 0)
-            {
-                itemsValue = null;
-            }
-
-            if (itemsValue != null)
-            {
-                itemsProperty.SetValue(instance, itemsValue.ToArray(), null);
-            }
+            itemsProperty.SetValue(instance, values, null);
         }
     }
 }
