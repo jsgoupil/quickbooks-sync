@@ -12,7 +12,7 @@ namespace QbSync.WebConnector.Core
         /// </summary>
         /// <param name="ticket">The ticket.</param>
         /// <param name="innerException">Inner Exception.</param>
-        public QbSyncException(IAuthenticatedTicket ticket, Exception innerException)
+        public QbSyncException(IAuthenticatedTicket? ticket, Exception innerException)
             : base(null, innerException)
         {
             this.Ticket = ticket;
@@ -21,6 +21,6 @@ namespace QbSync.WebConnector.Core
         /// <summary>
         /// The ticket.
         /// </summary>
-        public IAuthenticatedTicket Ticket { get; private set; }
+        public IAuthenticatedTicket? Ticket { get; private set; }
     }
 }

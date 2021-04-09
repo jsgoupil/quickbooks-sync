@@ -12,20 +12,23 @@ namespace QbSync.QbXml
         {
         }
 
-        public override void WriteString(string text)
+        public override void WriteString(string? text)
         {
-            base.WriteRaw(HtmlEncodeSpecialCharacters(text));
+            if (text != null)
+            {
+               base.WriteRaw(HtmlEncodeSpecialCharacters(text));
+            }
         }
 
         private string HtmlEncodeSpecialCharacters(string text)
         {
             text = HttpUtility.HtmlEncode(text);
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (char c in text)
             {
                 if (c > 127)
                 {
-                    sb.Append(string.Format("&#{0};", (int)c));
+                    sb.Append($"&#{(int) c};");
                 }
                 else
                 {

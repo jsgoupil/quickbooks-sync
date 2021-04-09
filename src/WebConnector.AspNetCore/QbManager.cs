@@ -24,7 +24,7 @@ namespace QbSync.WebConnector.AspNetCore
         internal readonly ILogger<QbManager> logger;
 
         /// <summary>
-        /// Creates a QbManager. The main program which handles all the WebConnector interations.
+        /// Creates a QbManager. The main program which handles all the WebConnector interactions.
         /// </summary>
         /// <param name="authenticator">An authenticator.</param>
         /// <param name="messageValidator">A message validator.</param>
@@ -214,7 +214,7 @@ namespace QbSync.WebConnector.AspNetCore
         }
 
         /// <summary>
-        /// Response from the Web Connector based on the previous comamnd sent.
+        /// Response from the Web Connector based on the previous command sent.
         /// </summary>
         /// <param name="ticket">The ticket.</param>
         /// <param name="response">The XML response.</param>
@@ -341,7 +341,7 @@ namespace QbSync.WebConnector.AspNetCore
         }
 
         /// <summary>
-        /// An error happened with the Web Conenctor.
+        /// An error happened with the Web Connector.
         /// </summary>
         /// <param name="ticket">The ticket.</param>
         /// <param name="hresult">Code in case of an error.</param>
@@ -389,7 +389,7 @@ namespace QbSync.WebConnector.AspNetCore
         }
 
         /// <summary>
-        /// Closing the conneciton.
+        /// Closing the connection.
         /// </summary>
         /// <param name="ticket">The ticket</param>
         /// <returns>String to display to the user.</returns>
@@ -465,9 +465,12 @@ namespace QbSync.WebConnector.AspNetCore
         /// <summary>
         /// Implement this function in order to save the states to your database.
         /// </summary>
-        protected internal virtual Task SaveChangesAsync(IAuthenticatedTicket authenticatedTicket)
+        protected internal virtual async Task SaveChangesAsync(IAuthenticatedTicket? authenticatedTicket)
         {
-            return authenticator.SaveTicketAsync(authenticatedTicket);
+            if (authenticatedTicket != null)
+            {
+                await authenticator.SaveTicketAsync(authenticatedTicket);
+            }
         }
 
         /// <summary>
@@ -475,7 +478,7 @@ namespace QbSync.WebConnector.AspNetCore
         /// </summary>
         /// <param name="authenticatedTicket">The ticket.</param>
         /// <param name="response">First Message.</param>
-        protected virtual Task ProcessClientInformationAsync(IAuthenticatedTicket authenticatedTicket, string response)
+        protected virtual Task ProcessClientInformationAsync(IAuthenticatedTicket? authenticatedTicket, string response)
         {
             return webConnectorHandler.ProcessClientInformationAsync(authenticatedTicket, response);
         }
@@ -549,7 +552,7 @@ namespace QbSync.WebConnector.AspNetCore
         /// </summary>
         /// <param name="step">Step name.</param>
         /// <returns>A IStepQueryRequest.</returns>
-        protected internal IStepQueryRequest FindStepRequest(string step)
+        protected internal IStepQueryRequest? FindStepRequest(string step)
         {
             if (string.IsNullOrEmpty(step))
             {
@@ -564,7 +567,7 @@ namespace QbSync.WebConnector.AspNetCore
         /// </summary>
         /// <param name="step">Step name.</param>
         /// <returns>A IStepQueryResponse.</returns>
-        protected internal IStepQueryResponse FindStepResponse(string step)
+        protected internal IStepQueryResponse? FindStepResponse(string step)
         {
             if (string.IsNullOrEmpty(step))
             {

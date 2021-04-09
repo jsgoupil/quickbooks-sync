@@ -16,7 +16,7 @@ namespace QbSync.WebConnector.Core
         /// <param name="login">Login.</param>
         /// <param name="password">Password.</param>
         /// <returns>Always an AuthenticatedTicket.</returns>
-        Task<IAuthenticatedTicket> GetAuthenticationFromLoginAsync(string login, string password);
+        Task<IAuthenticatedTicket?> GetAuthenticationFromLoginAsync(string login, string password);
 
         /// <summary>
         /// Returns the AuthenticatedTicket based on the ticket string.
@@ -25,7 +25,7 @@ namespace QbSync.WebConnector.Core
         /// </summary>
         /// <param name="ticket">The ticket.</param>
         /// <returns>The AuthenticatedTicket if found, null if invalid ticket.</returns>
-        Task<IAuthenticatedTicket> GetAuthenticationFromTicketAsync(string ticket);
+        Task<IAuthenticatedTicket?> GetAuthenticationFromTicketAsync(string ticket);
 
         /// <summary>
         /// Saves the ticket in the database for future retrieval.

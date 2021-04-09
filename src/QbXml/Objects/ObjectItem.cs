@@ -56,9 +56,9 @@ namespace QbSync.QbXml.Objects
         [return: MaybeNull]
         public T GetItem<T>(string name)
         {
-            if (property.Name == name)
+            if (property.Name == name && property.Value != null)
             {
-                return (T?)property.Value;
+                return (T)property.Value;
             }
 
             return default;
