@@ -170,9 +170,9 @@ namespace QbSync.WebConnector.Impl
         private static int GetFlagValue(Enum input)
         {
             int v = 0;
-            foreach (Enum value in Enum.GetValues(input.GetType()))
+            foreach (Enum? value in Enum.GetValues(input.GetType()))
             {
-                if (input.HasFlag(value))
+                if (value != null && input.HasFlag(value))
                 {
                     var tempV = (int)(object)value;
                     v += tempV;

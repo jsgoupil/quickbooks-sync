@@ -97,12 +97,12 @@ namespace QbSync.QbXml.Objects
             }
 
             // If one is null, but not both, return false.
-            if ((a is null) ^ (b is null))
+            if ((a is null) || (b is null))
             {
                 return false;
             }
 
-            return a?.Equals(b) ?? default;
+            return a.Equals(b);
         }
 
         /// <summary>
@@ -144,9 +144,9 @@ namespace QbSync.QbXml.Objects
         /// </summary>
         /// <param name="other">Another BOOLTYPE.</param>
         /// <returns>True if equals.</returns>
-        public int CompareTo(BOOLTYPE other)
+        public int CompareTo(BOOLTYPE? other)
         {
-            return _value.CompareTo(other._value);
+            return _value.CompareTo(other?._value);
         }
 
         /// <summary>

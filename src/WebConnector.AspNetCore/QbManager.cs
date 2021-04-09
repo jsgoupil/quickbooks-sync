@@ -104,7 +104,7 @@ namespace QbSync.WebConnector.AspNetCore
         /// <returns>Server version.</returns>
         public virtual string ServerVersion()
         {
-            return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            return Assembly.GetExecutingAssembly()!.GetName().Version!.ToString();
         }
 
         /// <summary>

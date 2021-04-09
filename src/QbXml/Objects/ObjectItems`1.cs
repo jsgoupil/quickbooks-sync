@@ -22,8 +22,8 @@ namespace QbSync.QbXml.Objects
             this.nameOrder = nameOrder;
             propertyList = new List<ObjectItemValue>();
 
-            itemsProperty = instance.GetType().GetProperty(name);
-            itemsElementNameProperty = instance.GetType().GetProperty(name + "ElementName");
+            itemsProperty = instance.GetType().GetProperty(name) ?? throw new ArgumentException("The name must match to a property.", nameof(name));
+            itemsElementNameProperty = instance.GetType().GetProperty(name + "ElementName") ?? throw new ArgumentException("The name must match to a property ending with \"ElementName\".", nameof(name));
             itemsValue = itemsProperty.GetValue(instance, null) as object[];
             itemsElementNameValue = itemsElementNameProperty.GetValue(instance, null) as U[];
 
@@ -109,7 +109,7 @@ namespace QbSync.QbXml.Objects
             itemsProperty.SetValue(instance, itemsValue.ToArray(), null);
 
             var itemsElementNameValue = propertyList
-                .Select(m => (U)Enum.Parse(typeof(U), m.Name));
+                .Select(m => (U)Enum.Parse(typeof(U), m.Name!));
 
             if (itemsElementNameValue.Count() == 0)
             {

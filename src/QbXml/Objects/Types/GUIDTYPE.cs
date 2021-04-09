@@ -105,12 +105,12 @@ namespace QbSync.QbXml.Objects
             }
 
             // If one is null, but not both, return false.
-            if ((a is null) ^ (b is null))
+            if ((a is null) || (b is null))
             {
                 return false;
             }
 
-            return a?.Equals(b) ?? default;
+            return a.Equals(b);
         }
 
         /// <summary>
@@ -181,9 +181,9 @@ namespace QbSync.QbXml.Objects
         /// </summary>
         /// <param name="other">Another GUIDTYPE.</param>
         /// <returns>True if equals.</returns>
-        public int CompareTo(GUIDTYPE other)
+        public int CompareTo(GUIDTYPE? other)
         {
-            return this._value.CompareTo(other._value);
+            return this._value.CompareTo(other?._value);
         }
 
         /// <summary>

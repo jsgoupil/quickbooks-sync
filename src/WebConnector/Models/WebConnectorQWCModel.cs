@@ -122,8 +122,8 @@ namespace QbSync.WebConnector.Models
             string? appDisplayName = default,
             string? appUniqueName = default,
             AuthFlag? authFlags = default,
-            bool isReadOnly = false,
-            bool notify = false,
+            bool isReadOnly = default,
+            bool notify = default,
             PersonalDataPref? personalDataPrep = default,
             UnattendedModePref? unattendedModePref = default
         )

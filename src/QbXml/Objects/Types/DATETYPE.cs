@@ -118,12 +118,12 @@ namespace QbSync.QbXml.Objects
             }
 
             // If one is null, but not both, return false.
-            if ((a is null) ^ (b is null))
+            if ((a is null) || (b is null))
             {
                 return false;
             }
 
-            return a?.Equals(b) ?? default;
+            return a.Equals(b);
         }
 
         /// <summary>
@@ -165,9 +165,9 @@ namespace QbSync.QbXml.Objects
         /// </summary>
         /// <param name="other">Another DATETYPE.</param>
         /// <returns>True if equals.</returns>
-        public int CompareTo(DATETYPE other)
+        public int CompareTo(DATETYPE? other)
         {
-            return this._value.CompareTo(other._value);
+            return this._value.CompareTo(other?._value);
         }
 
         /// <summary>

@@ -18,10 +18,10 @@ namespace QbSync.QbXml.Objects
         {
             this.instance = instance;
             property = new ObjectItemValue();
-            itemProperty = instance.GetType().GetProperty(name);
-            itemElementNameProperty = instance.GetType().GetProperty(name + "ElementName");
+            itemProperty = instance.GetType().GetProperty(name) ?? throw new ArgumentException("The name must match to a property.", nameof(name));
+            itemElementNameProperty = instance.GetType().GetProperty(name + "ElementName") ?? throw new ArgumentException("The name must match to a property ending with \"ElementName\".", nameof(name));
             itemValue = itemProperty.GetValue(instance, null) as object;
-            itemElementNameValue = (U)itemElementNameProperty.GetValue(instance, null);
+            itemElementNameValue = (U?)itemElementNameProperty.GetValue(instance, null);
 
             Initialize();
         }

@@ -21,7 +21,7 @@ namespace QbSync.QbXml.Objects
             this.typeMapping = typeMapping;
             propertyList = new List<ObjectItemValue>();
 
-            itemsProperty = instance.GetType().GetProperty(name);
+            itemsProperty = instance.GetType().GetProperty(name) ?? throw new ArgumentException("The name must match to a property.", nameof(name));
             itemsValue = itemsProperty.GetValue(instance, null) as object[];
 
             Initialize();

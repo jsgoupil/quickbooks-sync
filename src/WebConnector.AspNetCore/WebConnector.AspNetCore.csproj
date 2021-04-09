@@ -1,15 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <Title>QuickBooks Sync - WebConnector.AspNetCore</Title>
     <Description>Communicates with QuickBooks Web Connector. Includes dependency on AspNetCore.</Description>
     <Author>Jean-Sébastien Goupil</Author>
     <Authors>Jean-Sébastien Goupil</Authors>
-    <Copyright>Copyright © Jean-Sébastien Goupil 2015-2020</Copyright>
-    <Version>2.1.0-beta3</Version>
+    <Copyright>Copyright © Jean-Sébastien Goupil 2015-2021</Copyright>
+    <Version>3.0.0</Version>
     <AssemblyName>QbSync.WebConnector.AspNetCore</AssemblyName>
     <RootNamespace>QbSync.WebConnector.AspNetCore</RootNamespace>
     <PackageId>QbSync.WebConnector.AspNetCore</PackageId>
@@ -29,5 +28,10 @@
   <ItemGroup>
     <ProjectReference Include="..\WebConnector\WebConnector.csproj" />
   </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" PrivateAssets="All" Version="1.0.0-alpha.160" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[5.0.0]" />
+  </ItemGroup>
 </Project>

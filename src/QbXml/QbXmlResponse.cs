@@ -28,12 +28,10 @@ namespace QbSync.QbXml
         public QBXML ParseResponseRaw(string response, XmlDeserializationEvents? events = null)
         {
             var reader = new StringReader(response);
-            if (events.HasValue)
-            {
-                return (QbXmlSerializer.Instance.XmlSerializer.Deserialize(XmlReader.Create(reader), events.Value) as QBXML)!;
-            }
-
-            return (QbXmlSerializer.Instance.XmlSerializer.Deserialize(reader) as QBXML)!;
+            var qbXml = events.HasValue
+                ? QbXmlSerializer.Instance.XmlSerializer.Deserialize(XmlReader.Create(reader), events.Value) as QBXML
+                : QbXmlSerializer.Instance.XmlSerializer.Deserialize(reader) as QBXML;
+            return qbXml ?? throw new System.ArgumentException("We were not able to materialize the QBXML.", nameof(response));
         }
 
         /// <summary>
