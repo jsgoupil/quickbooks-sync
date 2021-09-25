@@ -9,7 +9,7 @@ namespace QbSync.QbXml.Objects
     /// </summary>
     public partial class FLOATTYPE : ITypeWrapper, IComparable<FLOATTYPE>, IXmlSerializable
     {
-        private decimal _value;
+        protected decimal _value;
 
         /// <summary>
         /// Creates a FLOATTYPE class.

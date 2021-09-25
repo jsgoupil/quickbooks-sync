@@ -1,4 +1,6 @@
-﻿namespace QbSync.QbXml.Objects
+﻿
+using System.Globalization;
+namespace QbSync.QbXml.Objects
 {
     /// <summary>
     /// Represents a quantity. Handled as a FLOATYPE.
@@ -38,6 +40,14 @@
         public static implicit operator QUANTYPE(decimal value)
         {
             return new QUANTYPE(value);
+        }
+         /// <summary>
+        /// A string representation of the decimal.
+        /// </summary>
+        /// <returns>Decimal in F format.</returns>
+        public override string ToString()
+        {
+            return _value.ToString("F5", CultureInfo.InvariantCulture);
         }
     }
 }
