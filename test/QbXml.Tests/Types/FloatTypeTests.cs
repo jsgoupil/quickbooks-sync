@@ -1,9 +1,5 @@
 ﻿using NUnit.Framework;
 using QbSync.QbXml.Objects;
-using QbSync.QbXml.Tests.Helpers;
-using System;
-using System.Xml;
-
 
 namespace QbSync.QbXml.Tests.Types
 {
@@ -11,16 +7,31 @@ namespace QbSync.QbXml.Tests.Types
     public class FloatTypeTests
     {
         [Test]
-        public void QUANTypeSupportsFiveDecimalPoints()
+        public void ToStringTooManyDecimal()
         {
-            var Q = new QUANTYPE(0.16667M);
-            Assert.AreEqual("0.16667", Q.ToString());
+            var floatType = new FLOATTYPE(0.166667M);
+            Assert.AreEqual("0.16667", floatType.ToString());
         }
+
         [Test]
-        public void AMTTypeLimitedTwoDecimalPoints()
+        public void ToStringTooManyDecimal_DoesNotDoBanker()
         {
-            var Q = new AMTTYPE(0.16667M);
-            Assert.AreEqual("0.17", Q.ToString());
+            var floatType = new FLOATTYPE(0.166665M);
+            Assert.AreEqual("0.16667", floatType.ToString());
+        }
+
+        [Test]
+        public void ToStringFiveDecimalPoints()
+        {
+            var floatType = new FLOATTYPE(0.16667M);
+            Assert.AreEqual("0.16667", floatType.ToString());
+        }
+
+        [Test]
+        public void ToStringDoesNotAddSignificantZeros()
+        {
+            var floatType = new FLOATTYPE(0.16M);
+            Assert.AreEqual("0.16", floatType.ToString());
         }
     }
 }
