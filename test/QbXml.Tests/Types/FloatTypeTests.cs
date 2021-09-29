@@ -16,22 +16,29 @@ namespace QbSync.QbXml.Tests.Types
         [Test]
         public void ToStringTooManyDecimal_DoesNotDoBanker()
         {
-            var floatType = new FLOATTYPE(0.166665M);
+            var floatType = new FLOATTYPE(0.166665m);
             Assert.AreEqual("0.16667", floatType.ToString());
         }
 
         [Test]
         public void ToStringFiveDecimalPoints()
         {
-            var floatType = new FLOATTYPE(0.16667M);
+            var floatType = new FLOATTYPE(0.16667m);
             Assert.AreEqual("0.16667", floatType.ToString());
         }
 
         [Test]
         public void ToStringDoesNotAddSignificantZeros()
         {
-            var floatType = new FLOATTYPE(0.16M);
+            var floatType = new FLOATTYPE(0.16m);
             Assert.AreEqual("0.16", floatType.ToString());
+        }
+
+        [Test]
+        public void ToStringDoesNotAddSignificantZeros_WithInteger()
+        {
+            var floatType = new FLOATTYPE(16m);
+            Assert.AreEqual("16", floatType.ToString());
         }
     }
 }
