@@ -9,7 +9,10 @@ namespace QbSync.QbXml.Objects
     /// </summary>
     public partial class FLOATTYPE : ITypeWrapper, IComparable<FLOATTYPE>, IXmlSerializable
     {
-        private decimal _value;
+        /// <summary>
+        /// The internal value.
+        /// </summary>
+        protected decimal _value;
 
         /// <summary>
         /// Creates a FLOATTYPE class.
@@ -39,10 +42,10 @@ namespace QbSync.QbXml.Objects
         /// <summary>
         /// A string representation of the decimal.
         /// </summary>
-        /// <returns>Decimal in F format.</returns>
+        /// <returns>Decimal in 10.5 format.</returns>
         public override string ToString()
         {
-            return _value.ToString("F", CultureInfo.InvariantCulture);
+            return _value.ToString("0.#####", CultureInfo.InvariantCulture);
         }
 
         /// <summary>
