@@ -42,7 +42,7 @@ namespace QbSync.QbXml.Objects
         /// <summary>
         /// A string representation of the decimal.
         /// </summary>
-        /// <returns>Decimal in G format.</returns>
+        /// <returns>Decimal in 10.5 format.</returns>
         public override string ToString()
         {
             return _value.ToString("0.#####", CultureInfo.InvariantCulture);
