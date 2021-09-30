@@ -21,6 +21,13 @@ namespace QbSync.QbXml.Tests.Types
         }
 
         [Test]
+        public void ToStringBigNumber()
+        {
+            var amtType = new AMTTYPE(123456.16m);
+            Assert.AreEqual("123456.16", amtType.ToString());
+        }
+
+        [Test]
         public void ToStringAlwaysExactDecimals()
         {
             var amtType = new AMTTYPE(0.1m);

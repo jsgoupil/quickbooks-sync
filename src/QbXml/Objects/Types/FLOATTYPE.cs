@@ -45,7 +45,7 @@ namespace QbSync.QbXml.Objects
         /// <returns>Decimal in G format.</returns>
         public override string ToString()
         {
-            return _value.ToString("G5", CultureInfo.InvariantCulture);
+            return _value.ToString("0.#####", CultureInfo.InvariantCulture);
         }
 
         /// <summary>

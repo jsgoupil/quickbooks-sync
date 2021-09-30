@@ -21,6 +21,13 @@ namespace QbSync.QbXml.Tests.Types
         }
 
         [Test]
+        public void ToStringBigNumber()
+        {
+            var floatType = new FLOATTYPE(123456.16666m);
+            Assert.AreEqual("123456.16666", floatType.ToString());
+        }
+
+        [Test]
         public void ToStringFiveDecimalPoints()
         {
             var floatType = new FLOATTYPE(0.16667m);
