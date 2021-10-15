@@ -87,15 +87,18 @@ namespace QbSync.QbXml
 
         private IEnumerable<object> SearchFor(QBXML qbXml, System.Type type)
         {
-            foreach (var item in qbXml.Items)
+            if (qbXml.Items != null)
             {
-                if (item is QBXMLMsgsRs typedItem)
+                foreach (var item in qbXml.Items)
                 {
-                    foreach (var innerItem in typedItem.Items)
+                    if (item is QBXMLMsgsRs typedItem && typedItem.Items != null)
                     {
-                        if (innerItem.GetType() == type || type.IsAssignableFrom(innerItem.GetType()))
+                        foreach (var innerItem in typedItem.Items)
                         {
-                            yield return innerItem;
+                            if (innerItem.GetType() == type || type.IsAssignableFrom(innerItem.GetType()))
+                            {
+                                yield return innerItem;
+                            }
                         }
                     }
                 }

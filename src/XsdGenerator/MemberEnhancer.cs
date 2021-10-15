@@ -390,7 +390,7 @@ namespace QbSync.XsdGenerator
                     .FirstOrDefault(m => m.QualifiedName?.Name == name);
 
                 // Let's try to search in the choices.
-                if (xmlSchemaElementFound == null)
+                if (xmlSchemaElementFound == null && xmlSchemaSequence.Items != null)
                 {
                     foreach (var choice in xmlSchemaSequence.Items.OfType<XmlSchemaChoice>())
                     {
