@@ -741,6 +741,9 @@
 			<xsd:enumeration value="Invoice"/>
 			<xsd:enumeration value="ItemReceipt"/>
 			<xsd:enumeration value="JournalEntry"/>
+			<xsd:enumeration value="PayrollLiabilityAdjustment"/>
+			<xsd:enumeration value="PayrollPriorPayment"/>
+			<xsd:enumeration value="PayrollYearToDateAdjustment"/>
 			<xsd:enumeration value="PurchaseOrder"/>
 			<xsd:enumeration value="ReceivePayment"/>
 			<xsd:enumeration value="SalesOrder"/>
@@ -1038,6 +1041,8 @@
 			<xsd:enumeration value="PurchaseOrder"/>
 			<xsd:enumeration value="SalesOrder"/>
 			<xsd:enumeration value="SalesReceipt"/>
+			<xsd:enumeration value="PaymentReceipt"/>
+			<xsd:enumeration value="BillPayment"/>
 		</xsd:restriction>
 	</xsd:simpleType>
 </xsd:element>
@@ -1339,6 +1344,7 @@
 			<xsd:enumeration value="BOX10"/>
 			<xsd:enumeration value="BOX13"/>
 			<xsd:enumeration value="BOX14"/>
+			<xsd:enumeration value="BOX15"/>
 		</xsd:restriction>
 	</xsd:simpleType>
 </xsd:element>
