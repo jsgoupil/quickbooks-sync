@@ -2,11 +2,11 @@ language: csharp
 mono: latest
 dist: xenial
 sudo: required
-dotnet: 5.0.202
+dotnet: 7.0.100
 solution: QuickbooksSync.sln
 install:
   - dotnet restore
-  - nuget install NUnit.ConsoleRunner -Version 3.7.0 -OutputDirectory testrunner
+  - nuget install NUnit.ConsoleRunner -Version 3.16.0 -OutputDirectory testrunner
 script:
   - dotnet build --configuration Release ./src/QbXml/QbXml.csproj
   - dotnet build --configuration Release --no-restore ./test/QbXml.Tests/QbXml.Tests.csproj

@@ -8,7 +8,7 @@
     <Author>Jean-Sébastien Goupil</Author>
     <Authors>Jean-Sébastien Goupil</Authors>
     <Copyright>Copyright © Jean-Sébastien Goupil 2015-2021</Copyright>
-    <Version>3.0.2</Version>
+    <Version>3.1.0</Version>
     <AssemblyName>QbSync.WebConnector.AspNetCore</AssemblyName>
     <RootNamespace>QbSync.WebConnector.AspNetCore</RootNamespace>
     <PackageId>QbSync.WebConnector.AspNetCore</PackageId>
@@ -23,7 +23,7 @@
     <None Include="..\..\LICENSE.md" Link="LICENSE.md" Pack="true" PackagePath="$(PackageLicenseFile)" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="SoapCore" Version="1.0.0" />
+    <PackageReference Include="SoapCore" Version="[1.1.0.36, 1.1.1.0)" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WebConnector\WebConnector.csproj" />
