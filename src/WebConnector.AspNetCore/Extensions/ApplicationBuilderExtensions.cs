@@ -42,7 +42,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     SoapSerializer.XmlSerializer,
                     false,
                     null,
-                    new BasicHttpBinding()
+                    new WsdlFileOptions()
                 );
 
             return app;
