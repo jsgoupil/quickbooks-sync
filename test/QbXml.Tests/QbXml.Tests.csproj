@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <Title>QbXml.Tests</Title>
     <Author>Jean-Sébastien Goupil</Author>
     <Copyright>Copyright © Jean-Sébastien Goupil 2015-2020</Copyright>
