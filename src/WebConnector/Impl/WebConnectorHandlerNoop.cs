@@ -61,5 +61,14 @@ namespace QbSync.WebConnector.Impl
         {
             return Task.CompletedTask;
         }
+
+        /// <summary>
+        /// Returns the version that is requested to communicate with the Web Connector.
+        /// </summary>
+        /// <returns>The requested QBXML version.</returns>
+        public Task<Version> GetQBXMLVersion()
+        {
+            return Task.FromResult(QbXml.QbXmlRequest.VERSION);
+        }
     }
 }

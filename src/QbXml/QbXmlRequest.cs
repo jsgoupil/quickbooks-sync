@@ -16,16 +16,28 @@ namespace QbSync.QbXml
         /// <summary>
         /// Version used by QBXML.
         /// </summary>
-        public static readonly Version VERSION = new Version(13, 0);
+        public static readonly Version VERSION = new Version(16, 0);
 
         private readonly List<QBXMLMsgsRq> qbxmlMsgsRqList;
+        private readonly Version version;
 
         /// <summary>
         /// Creates a QbXmlRequest.
         /// </summary>
         public QbXmlRequest()
+            : this(VERSION)
         {
             qbxmlMsgsRqList = new List<QBXMLMsgsRq>();
+        }
+
+        /// <summary>
+        /// Creates a QbXmlRequest with a specific version.
+        /// </summary>
+        /// <param name="version">The requested QBXML version.</param>
+        public QbXmlRequest(Version version)
+        {
+            qbxmlMsgsRqList = new List<QBXMLMsgsRq>();
+            this.version = version;
         }
 
         /// <summary>
@@ -58,13 +70,13 @@ namespace QbSync.QbXml
             var qbXml = new QBXML
             {
                 Items = qbxmlMsgsRqList.ToArray(),
-                ItemsElementName = Enumerable.Repeat(ItemsChoiceType99.QBXMLMsgsRq, qbxmlMsgsRqList.Count()).ToArray()
+                ItemsElementName = Enumerable.Repeat(ItemsChoiceType106.QBXMLMsgsRq, qbxmlMsgsRqList.Count()).ToArray()
             };
 
             using var writer = new StringWriter();
             using XmlWriter xmlWriter = new QbXmlTextWriter(writer);
             xmlWriter.WriteProcessingInstruction("xml", "version=\"1.0\" encoding=\"utf-8\"");
-            xmlWriter.WriteProcessingInstruction("qbxml", string.Format("version=\"{0}.{1}\"", VERSION.Major, VERSION.Minor));
+            xmlWriter.WriteProcessingInstruction("qbxml", string.Format("version=\"{0}.{1}\"", version.Major, version.Minor));
             var ns = new XmlSerializerNamespaces();
             ns.Add("", "");
             QbXmlSerializer.Instance.XmlSerializer.Serialize(xmlWriter, qbXml, ns);
