@@ -15,10 +15,10 @@ namespace QbSync.QbXml.Tests.Helpers
         public static string GetXmlValidation(string xml)
         {
             var schemas = new XmlSchemaSet();
-            schemas.Add(string.Empty, "./Schemas/qbxmltypes130.xsd");
-            schemas.Add(string.Empty, "./Schemas/qbxmlso130.xsd");
-            schemas.Add(string.Empty, "./Schemas/qbxmlops130.xsd");
-            schemas.Add(string.Empty, "./Schemas/qbxml130_modified.xsd");
+            schemas.Add(string.Empty, "./Schemas/qbxmltypes160.xsd");
+            schemas.Add(string.Empty, "./Schemas/qbxmlso160.xsd");
+            schemas.Add(string.Empty, "./Schemas/qbxmlops160.xsd");
+            schemas.Add(string.Empty, "./Schemas/qbxml160_modified.xsd");
 
             var doc = new XmlDocument();
             doc.Schemas.Add(schemas);

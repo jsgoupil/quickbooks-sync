@@ -45,5 +45,11 @@ namespace QbSync.WebConnector.Core
         /// <param name="authenticatedTicket">The ticket.</param>
         /// <returns>Completed Task.</returns>
         Task CloseConnectionAsync(IAuthenticatedTicket? authenticatedTicket);
+
+        /// <summary>
+        /// Returns the version that is requested to communicate with the Web Connector.
+        /// </summary>
+        /// <returns>The requested QBXML version.</returns>
+        Task<Version> GetQBXMLVersion();
     }
 }
