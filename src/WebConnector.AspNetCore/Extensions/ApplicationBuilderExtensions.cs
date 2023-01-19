@@ -2,7 +2,6 @@
 using QbSync.WebConnector.Core;
 using SoapCore;
 using System;
-using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Text;
 using System.Xml;
@@ -41,8 +40,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     },
                     SoapSerializer.XmlSerializer,
                     false,
-                    null,
-                    new WsdlFileOptions()
+                    null
                 );
 
             return app;

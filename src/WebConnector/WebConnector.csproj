@@ -8,7 +8,7 @@
     <Author>Jean-Sébastien Goupil</Author>
     <Authors>Jean-Sébastien Goupil</Authors>
     <Copyright>Copyright © Jean-Sébastien Goupil 2015-2021</Copyright>
-    <Version>3.1.0</Version>
+    <Version>3.1.1</Version>
     <AssemblyName>QbSync.WebConnector</AssemblyName>
     <RootNamespace>QbSync.WebConnector</RootNamespace>
     <PackageId>QbSync.WebConnector</PackageId>
@@ -23,7 +23,7 @@
     <None Include="..\..\LICENSE.md" Link="LICENSE.md" Pack="true" PackagePath="$(PackageLicenseFile)" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.ServiceModel.Primitives" Version="4.5.3" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="4.10.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\QbXml\QbXml.csproj" />
