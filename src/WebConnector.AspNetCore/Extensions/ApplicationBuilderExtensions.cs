@@ -40,9 +40,11 @@ namespace Microsoft.Extensions.DependencyInjection
                         MessageVersion = MessageVersion.Soap11
                     },
                     SoapSerializer.XmlSerializer,
-                    false,
-                    null,
-                    new WsdlFileOptions()
+                    caseInsensitivePath: false,
+                    soapModelBounder: null,
+                    wsdlFileOptions: null,
+                    indentXml: true,
+                    omitXmlDeclaration: false
                 );
 
             return app;
