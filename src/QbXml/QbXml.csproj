@@ -8,7 +8,7 @@
     <Author>Jean-Sébastien Goupil</Author>
     <Authors>Jean-Sébastien Goupil</Authors>
     <Copyright>Copyright © Jean-Sébastien Goupil 2015-2021</Copyright>
-    <Version>3.1.1</Version>
+    <Version>3.1.2</Version>
     <AssemblyName>QbSync.QbXml</AssemblyName>
     <RootNamespace>QbSync.QbXml</RootNamespace>
     <PackageId>QbSync.QbXml</PackageId>

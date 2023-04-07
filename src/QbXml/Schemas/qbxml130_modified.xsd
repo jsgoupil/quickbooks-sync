@@ -2332,6 +2332,7 @@
 			<xsd:enumeration value="TxnID"/>
 			<xsd:enumeration value="TxnNumber"/>
 			<xsd:enumeration value="TxnType"/>
+			<xsd:enumeration value="UnitOfMeasureUnit"/>
 			<xsd:enumeration value="UnitPrice"/>
 			<xsd:enumeration value="UserEdit"/>
 			<xsd:enumeration value="ValueOnHand"/>
