@@ -13,7 +13,7 @@
         /// <summary>
         /// State indicating what to exchange with the Web Connector.
         /// </summary>
-        string CurrentStep { get; set; }
+        string? CurrentStep { get; set; }
 
         /// <summary>
         /// Simple boolean indicating if the ticket is authenticated.

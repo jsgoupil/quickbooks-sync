@@ -552,7 +552,7 @@ namespace QbSync.WebConnector.AspNetCore
         /// </summary>
         /// <param name="step">Step name.</param>
         /// <returns>A IStepQueryRequest.</returns>
-        protected internal IStepQueryRequest? FindStepRequest(string step)
+        protected internal IStepQueryRequest? FindStepRequest(string? step)
         {
             if (string.IsNullOrEmpty(step))
             {
@@ -567,7 +567,7 @@ namespace QbSync.WebConnector.AspNetCore
         /// </summary>
         /// <param name="step">Step name.</param>
         /// <returns>A IStepQueryResponse.</returns>
-        protected internal IStepQueryResponse? FindStepResponse(string step)
+        protected internal IStepQueryResponse? FindStepResponse(string? step)
         {
             if (string.IsNullOrEmpty(step))
             {
@@ -582,7 +582,7 @@ namespace QbSync.WebConnector.AspNetCore
         /// </summary>
         /// <param name="step">Step name.</param>
         /// <returns>The next step name or null if none.</returns>
-        protected internal string FindNextStepName(string step)
+        protected internal string FindNextStepName(string? step)
         {
             var hasStep = false;
             using var enumerator = stepRequest.GetEnumerator();

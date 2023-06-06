@@ -42,7 +42,7 @@ namespace WebApplication.Sample.Db
         public string Ticket { get; set; } = default!;
         public string Key { get; set; } = default!;
         public string? Value { get; set; }
-        public string CurrentStep { get; set; } = default!;
+        public string? CurrentStep { get; set; }
     }
 
     public class QbTicket : IAuthenticatedTicket
@@ -50,7 +50,7 @@ namespace WebApplication.Sample.Db
         [Key]
         public string Ticket { get; set; } = default!;
 
-        public string CurrentStep { get; set; } = default!;
+        public string? CurrentStep { get; set; }
 
         public bool Authenticated { get; set; }
 
